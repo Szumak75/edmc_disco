@@ -36,7 +36,7 @@ class CreateToolTip(BData):
         self._data[DialogKeys.WIDGET].bind("<Enter>", self.enter)
         self._data[DialogKeys.WIDGET].bind("<Leave>", self.leave)
         self._data[DialogKeys.WIDGET].bind("<ButtonPress>", self.leave)
-        self.__set_tooltip_text(tooltip_text)
+        self.tooltip = tooltip_text
 
     @property
     def tooltip(self) -> str:
@@ -106,10 +106,6 @@ class CreateToolTip(BData):
         self._data[DialogKeys.TW] = None
         if __tw:
             __tw.destroy()
-
-    def __set_tooltip_text(self, value: Union[str, List, Tuple]) -> None:
-        """Setter wraper."""
-        self.tooltip = value
 
 
 # #[EOF]#######################################################################
