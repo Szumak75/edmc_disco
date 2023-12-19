@@ -41,7 +41,7 @@ class CreateToolTip(BData):
     @property
     def tooltip(self) -> str:
         """Return text message."""
-        if DialogKeys.TT_TEXT not in self.__data:
+        if DialogKeys.TT_TEXT not in self._data:
             self._data[DialogKeys.TT_TEXT] = ""
         if isinstance(self._data[DialogKeys.TT_TEXT], (List, Tuple)):
             tmp = ""
