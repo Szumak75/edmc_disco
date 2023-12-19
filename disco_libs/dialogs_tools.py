@@ -31,13 +31,13 @@ class CreateToolTip(BData):
         self._data[DialogKeys.WIDGET] = widget  # parent widget
         self._data[DialogKeys.ID] = None
         self._data[DialogKeys.TW] = None
-        self._data[DialogKeys.TEXT] = ""
+        self._data[DialogKeys.TT_TEXT] = ""
 
         # set message
-        self.text = text
         self._data[DialogKeys.WIDGET].bind("<Enter>", self.enter)
         self._data[DialogKeys.WIDGET].bind("<Leave>", self.leave)
         self._data[DialogKeys.WIDGET].bind("<ButtonPress>", self.leave)
+        self.tooltip = text
 
     def enter(self, event: Optional[tk.Event] = None) -> None:
         """Call on <Enter> event."""
@@ -75,7 +75,7 @@ class CreateToolTip(BData):
         self._data[DialogKeys.TW].wm_geometry(f"+{__x}+{__y}")
         label = tk.Label(
             self._data[DialogKeys.TW],
-            text=self.text,
+            text=self.tooltip,
             justify="left",
             background="#ffffff",
             relief="solid",
@@ -92,21 +92,21 @@ class CreateToolTip(BData):
             __tw.destroy()
 
     @property
-    def text(self) -> str:
+    def tooltip(self) -> str:
         """Return text message."""
         if DialogKeys.TEXT not in self.__data:
-            self._data[DialogKeys.TEXT] = ""
-        if isinstance(self._data[DialogKeys.TEXT], (List, Tuple)):
+            self._data[DialogKeys.TT_TEXT] = ""
+        if isinstance(self._data[DialogKeys.TT_TEXT], (List, Tuple)):
             tmp = ""
-            for msg in self._data[DialogKeys.TEXT]:
+            for msg in self._data[DialogKeys.TT_TEXT]:
                 tmp += msg if not tmp else f"\n{msg}"
             return tmp
-        return self._data[DialogKeys.TEXT]
+        return self._data[DialogKeys.TT_TEXT]
 
-    @text.setter
-    def text(self, value: Union[str, List, Tuple]) -> None:
+    @tooltip.setter
+    def tooltip(self, value: Union[str, List, Tuple]) -> None:
         """Set text message object."""
-        self._data[DialogKeys.TEXT] = value
+        self._data[DialogKeys.TT_TEXT] = value
 
 
 # #[EOF]#######################################################################
