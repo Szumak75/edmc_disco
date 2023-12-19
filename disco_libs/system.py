@@ -384,7 +384,7 @@ class LogProcessor(BData):
 
     def close(self) -> None:
         """Close log subsystem."""
-        if self._data[_Keys.ENGINE] is not None:
+        if _Keys.ENGINE in self._data and self._data[_Keys.ENGINE] is not None:
             for handler in self._data[_Keys.ENGINE].handlers:
                 handler.close()
                 self._data[_Keys.ENGINE].removeHandler(handler)
