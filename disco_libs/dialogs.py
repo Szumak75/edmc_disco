@@ -17,7 +17,7 @@ from typing import Dict, List, Optional, Union
 from jsktoolbox.raisetool import Raise
 from jsktoolbox.libs.base_data import BData
 from jsktoolbox.attribtool import ReadOnlyClass
-from jsktoolbox.attribtool import NoDynamicAttributes
+from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
 
 
 import disco_libs.db_models as db
@@ -26,6 +26,22 @@ from disco_libs.dialogs_tools import CreateToolTip
 from disco_libs.base_logs import BLogClient
 from disco_libs.pics import Pics
 from disco_libs.system import LogClient
+
+
+class DialogKeys(object, metaclass=ReadOnlyClass):
+    """Keys container class for dialogs."""
+
+    WAITTIME = "_waittime_"
+    WRAPLENGTH = "_wraplength_"
+    WIDGET = "_widget_"
+    WIDGETS = "_widgets_"
+    ID = "_id_"
+    TW = "_tw_"
+    TEXT = DialogKeys.TEXT
+
+    BUTTON = "_button_"
+    PARENT = "_parent_"
+    WINDOWS = "_windows_"
 
 
 class ImageHelper(NoDynamicAttributes):
@@ -217,7 +233,7 @@ class DiscoMainDialog(BLogClient, DiscoData, NoDynamicAttributes):
             )
 
         if isinstance(parent, tk.Frame):
-            self._data["parent"] = parent
+            self._data[DialogKeys.PARENT] = parent
         else:
             raise Raise.error(
                 f"Expected tk.Frame type, received: '{type(parent)}'",
@@ -227,41 +243,41 @@ class DiscoMainDialog(BLogClient, DiscoData, NoDynamicAttributes):
             )
 
         # created dialogs
-        self._data["windows"] = []
+        self._data[DialogKeys.WINDOWS] = []
 
     def button(self) -> ttk.Button:
         """Create the button for main application frame."""
-        if "button" not in self._data or self._data["button"] is None:
-            self._data["button"] = ttk.Button(
-                self._data["parent"],
+        if DialogKeys.BUTTON not in self._data or self._data[DialogKeys.BUTTON] is None:
+            self._data[DialogKeys.BUTTON] = ttk.Button(
+                self._data[DialogKeys.PARENT],
                 text="Search System",
                 command=self.__bt_callback,
                 default=tk.ACTIVE,
             )
-            self._data["button"].grid(sticky=tk.NSEW)
-        return self._data["button"]
+            self._data[DialogKeys.BUTTON].grid(sticky=tk.NSEW)
+        return self._data[DialogKeys.BUTTON]
 
     def update(self, system: db.TSystem) -> None:
         """Update dialog."""
         self.system = system
-        button: ttk.Button = self._data["button"]
-        button["text"] = f"{self.system.name} [{self.system.progress}]"
+        button: ttk.Button = self._data[DialogKeys.BUTTON]
+        button[DialogKeys.TEXT] = f"{self.system.name} [{self.system.progress}]"
         self.logger.debug = f"UPDATE: {self._data}"
 
         # propagate update
-        for window in self._data["windows"]:
+        for window in self._data[DialogKeys.WINDOWS]:
             window.update(system)
 
     def __bt_callback(self) -> None:
         """Run main button callback."""
         self.debug(currentframe(), "click!")
         # purge closed window from list
-        for window in self._data["windows"]:
+        for window in self._data[DialogKeys.WINDOWS]:
             if window.is_closed:
-                self._data["windows"].remove(window)
+                self._data[DialogKeys.WINDOWS].remove(window)
         # create new window
         window = DiscoSystemDialog(self.logger.queue, self._data)
-        self._data["windows"].append(window)
+        self._data[DialogKeys.WINDOWS].append(window)
         self.debug(
             currentframe(),
             f"numbers of windows: {len(self._data['windows'])}",
@@ -303,14 +319,14 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
             )
         self._data["closed"] = False
         #  widgets container
-        self._data["widgets"] = {}
+        self._data[DialogKeys.WIDGETS] = {}
         #  widgets declaration (if any):
-        self._data["widgets"]["status"]: Optional[tk.StringVar] = None
-        self._data["widgets"]["system"]: Optional[tk.Entry] = None
-        self._data["widgets"]["sbutton"]: Optional[tk.Button] = None
-        self._data["widgets"]["fdata"]: Optional[tk.LabelFrame] = None
-        self._data["widgets"]["scrollbar"]: Optional[tk.Scrollbar] = None
-        self._data["widgets"]["spanel"]: Optional[VerticalScrolledFrame] = None
+        self._data[DialogKeys.WIDGETS]["status"]: Optional[tk.StringVar] = None
+        self._data[DialogKeys.WIDGETS]["system"]: Optional[tk.Entry] = None
+        self._data[DialogKeys.WIDGETS]["sbutton"]: Optional[tk.Button] = None
+        self._data[DialogKeys.WIDGETS]["fdata"]: Optional[tk.LabelFrame] = None
+        self._data[DialogKeys.WIDGETS]["scrollbar"]: Optional[tk.Scrollbar] = None
+        self._data[DialogKeys.WIDGETS]["spanel"]: Optional[VerticalScrolledFrame] = None
 
         # bodys data
         self._data["bodys"] = []
@@ -379,22 +395,22 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
             system_name.delete(0, tk.END)
             system_name.insert(0, self.system.name)
         system_name.focus_set()
-        self._data["widgets"]["system"] = system_name
+        self._data[DialogKeys.WIDGETS]["system"] = system_name
 
         bsearch = tk.Button(command_frame, text="Search", command=self.__search_cb)
         bsearch.grid(row=0, column=2, sticky=tk.E)
         CreateToolTip(bsearch, "Find system.")
-        self._data["widgets"]["sbutton"] = bsearch
+        self._data[DialogKeys.WIDGETS]["sbutton"] = bsearch
 
         # create data panel
         data_frame = tk.LabelFrame(self, text=" System ")
         data_frame.grid(row=r_data_idx, padx=5, pady=5, sticky=tk.NSEW)
-        self._data["widgets"]["fdata"] = data_frame
+        self._data[DialogKeys.WIDGETS]["fdata"] = data_frame
 
         # create scrolled panel
         spanel = VerticalScrolledFrame(data_frame)
         spanel.pack(ipadx=1, ipady=1, fill=tk.BOTH, expand=tk.TRUE)
-        self._data["widgets"]["spanel"] = spanel
+        self._data[DialogKeys.WIDGETS]["spanel"] = spanel
 
         # create status panel
         status_frame = tk.LabelFrame(self, text="")
@@ -402,7 +418,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
         status_string = tk.StringVar()
         status = tk.Label(status_frame, textvariable=status_string)
         status.pack(side=tk.LEFT)
-        self._data["widgets"]["status"] = status_string
+        self._data[DialogKeys.WIDGETS]["status"] = status_string
 
         # closing event
         self.protocol("WM_DELETE_WINDOW", self.__on_closing)
@@ -416,7 +432,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
     def __search_cb(self, event=None) -> None:
         """Search system button callback."""
         self.status = ""
-        system = self._data["widgets"]["system"].get()
+        system = self._data[DialogKeys.WIDGETS]["system"].get()
 
         if not system:
             self.status = "System name must be set for processing request."
@@ -503,7 +519,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
 
         # frame
         frame = tk.Frame(
-            self._data["widgets"]["spanel"].interior,
+            self._data[DialogKeys.WIDGETS]["spanel"].interior,
             borderwidth=1,
             relief=tk.GROOVE,
         )
@@ -594,7 +610,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
 
         # [2] frame
         frame = tk.Frame(
-            self._data["widgets"]["spanel"].interior,
+            self._data[DialogKeys.WIDGETS]["spanel"].interior,
             # background="#ffffff",
             # relief='solid',
             # borderwidth=1,
@@ -753,18 +769,18 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
     @property
     def status(self) -> object:
         """Return status object."""
-        if "status" not in self._data["widgets"]:
+        if "status" not in self._data[DialogKeys.WIDGETS]:
             return None
-        return self._data["widgets"]["status"]
+        return self._data[DialogKeys.WIDGETS]["status"]
 
     @status.setter
     def status(self, message: Optional[Union[str, int, float]]) -> None:
         """Set status message."""
-        if self._data["widgets"]["status"] is not None:
+        if self._data[DialogKeys.WIDGETS]["status"] is not None:
             if message:
-                self._data["widgets"]["status"].set(f"{message}")
+                self._data[DialogKeys.WIDGETS]["status"].set(f"{message}")
             else:
-                self._data["widgets"]["status"].set("")
+                self._data[DialogKeys.WIDGETS]["status"].set("")
 
 
 class VerticalScrolledFrame(tk.Frame):
