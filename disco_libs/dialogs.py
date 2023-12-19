@@ -26,22 +26,7 @@ from disco_libs.dialogs_tools import CreateToolTip
 from disco_libs.base_logs import BLogClient
 from disco_libs.pics import Pics
 from disco_libs.system import LogClient
-
-
-class DialogKeys(object, metaclass=ReadOnlyClass):
-    """Keys container class for dialogs."""
-
-    WAITTIME = "_waittime_"
-    WRAPLENGTH = "_wraplength_"
-    WIDGET = "_widget_"
-    WIDGETS = "_widgets_"
-    ID = "_id_"
-    TW = "_tw_"
-    TEXT = DialogKeys.TEXT
-
-    BUTTON = "_button_"
-    PARENT = "_parent_"
-    WINDOWS = "_windows_"
+from disco_libs.dialogs_helper import DialogKeys
 
 
 class ImageHelper(NoDynamicAttributes):

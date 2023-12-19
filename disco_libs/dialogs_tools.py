@@ -12,7 +12,7 @@ from typing import List, Tuple, Union, Optional
 from jsktoolbox.libs.base_data import BData
 from jsktoolbox.attribtool import ReadOnlyClass
 
-from disco_libs.dialogs import DialogKeys
+from disco_libs.dialogs_helper import DialogKeys
 
 
 class CreateToolTip(BData):
