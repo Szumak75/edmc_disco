@@ -10,7 +10,6 @@ import tkinter as tk
 from typing import List, Tuple, Union, Optional
 
 from jsktoolbox.libs.base_data import BData
-from jsktoolbox.attribtool import ReadOnlyClass
 
 from disco_libs.dialogs_helper import DialogKeys
 
@@ -21,7 +20,7 @@ class CreateToolTip(BData):
     def __init__(
         self,
         widget,
-        text: Union[str, List, Tuple] = "widget info",
+        tooltip_text: Union[str, List, Tuple] = "widget info",
         wait_time: int = 500,
         wrap_length: int = 300,
     ) -> None:
@@ -37,7 +36,24 @@ class CreateToolTip(BData):
         self._data[DialogKeys.WIDGET].bind("<Enter>", self.enter)
         self._data[DialogKeys.WIDGET].bind("<Leave>", self.leave)
         self._data[DialogKeys.WIDGET].bind("<ButtonPress>", self.leave)
-        self.__set_tooltip_text(text)
+        self.__set_tooltip_text(tooltip_text)
+
+    @property
+    def tooltip(self) -> str:
+        """Return text message."""
+        if DialogKeys.TT_TEXT not in self.__data:
+            self._data[DialogKeys.TT_TEXT] = ""
+        if isinstance(self._data[DialogKeys.TT_TEXT], (List, Tuple)):
+            tmp = ""
+            for msg in self._data[DialogKeys.TT_TEXT]:
+                tmp += msg if not tmp else f"\n{msg}"
+            return tmp
+        return self._data[DialogKeys.TT_TEXT]
+
+    @tooltip.setter
+    def tooltip(self, value: Union[str, List, Tuple]) -> None:
+        """Set text message object."""
+        self._data[DialogKeys.TT_TEXT] = value
 
     def enter(self, event: Optional[tk.Event] = None) -> None:
         """Call on <Enter> event."""
@@ -90,23 +106,6 @@ class CreateToolTip(BData):
         self._data[DialogKeys.TW] = None
         if __tw:
             __tw.destroy()
-
-    @property
-    def tooltip(self) -> str:
-        """Return text message."""
-        if DialogKeys.TEXT not in self.__data:
-            self._data[DialogKeys.TT_TEXT] = ""
-        if isinstance(self._data[DialogKeys.TT_TEXT], (List, Tuple)):
-            tmp = ""
-            for msg in self._data[DialogKeys.TT_TEXT]:
-                tmp += msg if not tmp else f"\n{msg}"
-            return tmp
-        return self._data[DialogKeys.TT_TEXT]
-
-    @tooltip.setter
-    def tooltip(self, value: Union[str, List, Tuple]) -> None:
-        """Set text message object."""
-        self._data[DialogKeys.TT_TEXT] = value
 
     def __set_tooltip_text(self, value: Union[str, List, Tuple]) -> None:
         """Setter wraper."""
