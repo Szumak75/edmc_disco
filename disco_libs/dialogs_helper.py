@@ -19,7 +19,7 @@ class DialogKeys(object, metaclass=ReadOnlyClass):
     WIDGETS = "_widgets_"
     ID = "_id_"
     TW = "_tw_"
-    TEXT = DialogKeys.TEXT
+    TEXT = "text"
 
     BUTTON = "_button_"
     PARENT = "_parent_"
