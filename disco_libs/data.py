@@ -7,7 +7,7 @@
 """
 
 from inspect import currentframe
-from typing import Dict, Optional, Union
+from typing import Optional, Union
 from jsktoolbox.attribtool import ReadOnlyClass
 from jsktoolbox.libs.base_data import BData
 from jsktoolbox.raisetool import Raise
@@ -149,7 +149,7 @@ class RscanData(SimpleData):
     def __repr__(self) -> str:
         """Give me class dump."""
         return (
-            f"{self.__class__.__name__}(cmdr='{self._data[_Keys.CMDR]}', "
+            f"{self._c_name}(cmdr='{self._data[_Keys.CMDR]}', "
             f"pluginname='{self._data[_Keys.PLUGINNAME]}', "
             f"version='{self._data[_Keys.VERSION]}', "
             f"jumprange={self._data[_Keys.JUMPRANGE]}, "

@@ -7,7 +7,7 @@
 """
 
 from inspect import currentframe
-from typing import Optional, List
+from typing import List
 from jsktoolbox.attribtool import ReadOnlyClass
 from jsktoolbox.raisetool import Raise
 from jsktoolbox.libs.base_data import BData
@@ -17,7 +17,7 @@ from disco_libs.db_models import (
     TBodyFeatures,
     TBodyGenuses,
     TGenus,
-    TGenusScan,
+    # TGenusScan,
     TBodySignals,
     TSignal,
     TCodex,
@@ -41,7 +41,7 @@ class ScansAnalysis(BData):
         """Constructor."""
 
         if not isinstance(body, TBody):
-            raise Raise.type_error(
+            raise Raise.error(
                 f"Expected TBody type, received: '{type(body)}'.",
                 TypeError,
                 self._c_name,

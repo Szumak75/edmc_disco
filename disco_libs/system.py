@@ -318,7 +318,7 @@ class Log(BClasses):
         if isinstance(level, int) and ll_test.has_key(level):
             self.__level = level
         else:
-            raise Raise.type_error(
+            raise Raise.error(
                 f"Expected Int type, received: '{type(level)}'.",
                 TypeError,
                 self._c_name,

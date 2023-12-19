@@ -6,23 +6,19 @@
   Purpose: main class
 """
 
-import tkinter as tk
-
 from inspect import currentframe
 from queue import Queue
 from threading import Thread
-from typing import Any, Dict, Optional, Tuple
+from typing import Optional
 
-from jsktoolbox.attribtool import ReadOnlyClass
 from jsktoolbox.raisetool import Raise
 
 
-from config import config
 from disco_libs.data import DiscoData
 from disco_libs.database import Database, DBProcessor
 
 from disco_libs.base_logs import BLogClient, BLogProcessor
-from disco_libs.system import LogClient, LogLevels, LogProcessor
+from disco_libs.system import LogClient, LogProcessor
 
 
 class Disco(BLogProcessor, BLogClient):
@@ -36,7 +32,7 @@ class Disco(BLogProcessor, BLogClient):
         self.data = DiscoData()
 
         self.data.pluginname = "EDDisco"
-        self.data.version = "0.1.2"
+        self.data.version = "1.0.0"
 
         # database
         self.data.db_processor = DBProcessor(Database(False).session)
