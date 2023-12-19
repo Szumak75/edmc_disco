@@ -15,9 +15,7 @@ from tkinter import ttk
 from types import FrameType
 from typing import Dict, List, Optional, Union
 from jsktoolbox.raisetool import Raise
-from jsktoolbox.libs.base_data import BData
-from jsktoolbox.attribtool import ReadOnlyClass
-from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
+from jsktoolbox.attribtool import NoDynamicAttributes
 
 
 import disco_libs.db_models as db
@@ -265,7 +263,7 @@ class DiscoMainDialog(BLogClient, DiscoData, NoDynamicAttributes):
         self._data[DialogKeys.WINDOWS].append(window)
         self.debug(
             currentframe(),
-            f"numbers of windows: {len(self._data['windows'])}",
+            f"numbers of windows: {len(self._data[DialogKeys.WINDOWS])}",
         )
 
     def debug(self, currentframe: FrameType, message: str = "") -> None:
