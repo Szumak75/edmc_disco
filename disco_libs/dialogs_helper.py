@@ -26,5 +26,14 @@ class DialogKeys(object, metaclass=ReadOnlyClass):
     PARENT = "_parent_"
     WINDOWS = "_windows_"
 
+    CLOSED = "_closed_"
+    STATUS = "_status_"
+    SYSTEM = "_system_"
+    SBUTTON = "_sbutton_"
+    FDATA = "_fdata_"
+    SCROLLBAR = "_scrollbar_"
+    SPANEL = "_spanel_"
+    BODIES = "_bodies_"
+
 
 # #[EOF]#######################################################################
