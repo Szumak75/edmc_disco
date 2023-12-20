@@ -13,27 +13,25 @@ from jsktoolbox.attribtool import ReadOnlyClass
 class DialogKeys(object, metaclass=ReadOnlyClass):
     """Keys container class for dialogs."""
 
-    WAITTIME = "_waittime_"
-    WRAPLENGTH = "_wraplength_"
-    WIDGET = "_widget_"
-    WIDGETS = "_widgets_"
-    ID = "_id_"
-    TW = "_tw_"
-    TT_TEXT = "_tool_tip_text_"
-    TEXT = "text"
-
+    BODIES = "_bodies_"
     BUTTON = "_button_"
-    PARENT = "_parent_"
-    WINDOWS = "_windows_"
-
     CLOSED = "_closed_"
-    STATUS = "_status_"
-    SYSTEM = "_system_"
-    SBUTTON = "_sbutton_"
     FDATA = "_fdata_"
+    ID = "_id_"
+    PARENT = "_parent_"
+    SBUTTON = "_sbutton_"
     SCROLLBAR = "_scrollbar_"
     SPANEL = "_spanel_"
-    BODIES = "_bodies_"
+    STATUS = "_status_"
+    SYSTEM = "_system_"
+    TEXT = "text"
+    TT_TEXT = "_tool_tip_text_"
+    TW = "_tw_"
+    WAITTIME = "_waittime_"
+    WIDGET = "_widget_"
+    WIDGETS = "_widgets_"
+    WINDOWS = "_windows_"
+    WRAPLENGTH = "_wraplength_"
 
 
 # #[EOF]#######################################################################

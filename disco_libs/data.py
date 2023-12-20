@@ -3,7 +3,7 @@
   Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
   Created: 18.12.2023
 
-  Purpose:
+  Purpose: data container classes.
 """
 
 from inspect import currentframe
@@ -20,14 +20,14 @@ class _Keys(object, metaclass=ReadOnlyClass):
     """Keys container class."""
 
     CMDR = "cmdr"
-    PLUGINNAME = "pluginname"
-    VERSION = "version"
-    SHUTDOWN = "shutdown"
-    SYSTEM = "system"
-    PROCESSOR = "processor"
     DIALOG = "dialog"
     JUMPRANGE = "jump_range"
+    PLUGINNAME = "pluginname"
+    PROCESSOR = "processor"
+    SHUTDOWN = "shutdown"
     STARSSYSTEM = "stars_system"
+    SYSTEM = "system"
+    VERSION = "version"
 
 
 class SimpleData(BData):

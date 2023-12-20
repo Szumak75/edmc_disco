@@ -9,7 +9,7 @@ Created on 30 jan 2023.
 from sqlalchemy.orm import DeclarativeBase
 
 
-class Base(DeclarativeBase):
+class DiscoBase(DeclarativeBase):
     """Declarative Base class."""
 
 

@@ -5,7 +5,7 @@ Created on 02 feb 2023.
 @author: szumak@virthost.pl
 """
 
-from disco_libs.db_models.base import Base
+from disco_libs.db_models.base import DiscoBase
 from disco_libs.db_models.body import TBody
 from disco_libs.db_models.body_features import TBodyFeatures
 from disco_libs.db_models.codex import TBodyCodexes, TCodex

@@ -17,8 +17,8 @@ from jsktoolbox.libs.base_data import BData
 class _Keys(object, metaclass=ReadOnlyClass):
     """Keys container class."""
 
-    NAME = "__name__"
     ADDRESS = "__address__"
+    NAME = "__name__"
     POS_X = "__x__"
     POS_Y = "__y__"
     POS_Z = "__z__"

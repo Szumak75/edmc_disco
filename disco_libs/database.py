@@ -26,13 +26,12 @@ from disco_libs.system import Env
 class _Keys(object, metaclass=ReadOnlyClass):
     """Keys container class."""
 
+    BODY_COUNT = "body_count"
+    BODY_SCAN = "body_scan"
     DB = "__db__"
     DEBUG = "__debug__"
     ENGINE = "__engine__"
     SESSION = "__session__"
-
-    BODY_COUNT = "body_count"
-    BODY_SCAN = "body_scan"
 
 
 class DataAnalyzer(BData):
@@ -75,7 +74,7 @@ class Database(BData):
 
         if self._data[_Keys.ENGINE] is not None:
             # metadata
-            db.Base.metadata.create_all(self._data[_Keys.ENGINE])
+            db.DiscoBase.metadata.create_all(self._data[_Keys.ENGINE])
         else:
             raise Raise.error(
                 "Database creation error.", OSError, self._c_name, currentframe()

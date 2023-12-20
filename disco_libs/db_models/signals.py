@@ -7,26 +7,22 @@ Created on 30 jan 2023.
 
 from typing import List
 
-from disco_libs.db_models.base import Base
+from disco_libs.db_models.base import DiscoBase
 from sqlalchemy import ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
-class TSignal(Base):
+class TSignal(DiscoBase):
     """Table of Signals."""
 
-    __tablename__ = 'signals'
+    __tablename__ = "signals"
 
     id: Mapped[int] = mapped_column(
         primary_key=True, nullable=False, autoincrement=True
     )
-    body_signals_id: Mapped[int] = mapped_column(
-        ForeignKey("body_signals.id")
-    )
+    body_signals_id: Mapped[int] = mapped_column(ForeignKey("body_signals.id"))
     type: Mapped[str] = mapped_column(String)
-    type_localised: Mapped[str] = mapped_column(
-        String, nullable=True, default=None
-    )
+    type_localised: Mapped[str] = mapped_column(String, nullable=True, default=None)
     count: Mapped[int] = mapped_column(Integer, default=0)
 
     def __repr__(self):
@@ -41,10 +37,10 @@ class TSignal(Base):
         )
 
 
-class TBodySignals(Base):
+class TBodySignals(DiscoBase):
     """Table of Body Signals."""
 
-    __tablename__ = 'body_signals'
+    __tablename__ = "body_signals"
 
     id: Mapped[int] = mapped_column(
         primary_key=True, nullable=False, autoincrement=True
@@ -67,21 +63,21 @@ class TBodySignals(Base):
         Analyze dict from journal and import data into the object.
         """
         ret = False
-        if 'Signals' in entry and entry['Signals']:
-            for esignal in entry['Signals']:
+        if "Signals" in entry and entry["Signals"]:
+            for esignal in entry["Signals"]:
                 test = False
                 for item in self.signals:
-                    if item.type == esignal['Type']:
+                    if item.type == esignal["Type"]:
                         test = True
-                        if item.count != esignal['Count']:
-                            item.count = esignal['Count']
+                        if item.count != esignal["Count"]:
+                            item.count = esignal["Count"]
                             ret = True
                 if not test:
                     signal = TSignal()
-                    signal.type = esignal['Type']
-                    if 'Type_Localised' in esignal:
-                        signal.type_localised = esignal['Type_Localised']
-                    signal.count = esignal['Count']
+                    signal.type = esignal["Type"]
+                    if "Type_Localised" in esignal:
+                        signal.type_localised = esignal["Type_Localised"]
+                    signal.count = esignal["Count"]
                     self.signals.append(signal)
                     ret = True
         return ret
@@ -99,17 +95,17 @@ class TBodySignals(Base):
     @property
     def count_bio_signals(self) -> int:
         """Return number of biological signals if any."""
-        return self.__count_type_signals('Biological')
+        return self.__count_type_signals("Biological")
 
     @property
     def count_geo_signals(self) -> int:
         """Return number of geological signals if any."""
-        return self.__count_type_signals('Geological')
+        return self.__count_type_signals("Geological")
 
     @property
     def count_humans_signals(self) -> int:
         """Return number of humans signals if any."""
-        return self.__count_type_signals('Human')
+        return self.__count_type_signals("Human")
 
 
 # #[EOF]#######################################################################

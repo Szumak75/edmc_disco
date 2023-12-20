@@ -7,30 +7,24 @@ Created on 30 jan 2023.
 
 from typing import Optional
 
-from disco_libs.db_models.base import Base
+from disco_libs.db_models.base import DiscoBase
 from sqlalchemy import ForeignKey, Integer, String
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Mapped, mapped_column
 
 
-class TSystemFeatures(Base):
+class TSystemFeatures(DiscoBase):
     """Table of System Features."""
 
-    __tablename__ = 'system_features'
+    __tablename__ = "system_features"
 
     id: Mapped[int] = mapped_column(
         Integer, primary_key=True, nullable=False, autoincrement=True
     )
     system_id: Mapped[int] = mapped_column(ForeignKey("systems.id"))
-    _allegiance: Mapped[str] = mapped_column(
-        String, nullable=False, default=''
-    )
-    _security: Mapped[str] = mapped_column(
-        String, nullable=False, default=''
-    )
-    _population: Mapped[int] = mapped_column(
-        Integer, nullable=False, default=0
-    )
+    _allegiance: Mapped[str] = mapped_column(String, nullable=False, default="")
+    _security: Mapped[str] = mapped_column(String, nullable=False, default="")
+    _population: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
 
     def __repr__(self) -> str:
         """Return string object."""
@@ -48,18 +42,15 @@ class TSystemFeatures(Base):
 
         Analyze dict from journal and import data into the object.
         """
+        if "SystemAllegiance" in entry and entry["SystemAllegiance"] != self.allegiance:
+            self.allegiance = entry["SystemAllegiance"]
         if (
-            'SystemAllegiance' in entry
-            and entry['SystemAllegiance'] != self.allegiance
+            "SystemSecurity_Localised" in entry
+            and entry["SystemSecurity_Localised"] != self.security
         ):
-            self.allegiance = entry['SystemAllegiance']
-        if (
-            'SystemSecurity_Localised' in entry
-            and entry['SystemSecurity_Localised'] != self.security
-        ):
-            self.security = entry['SystemSecurity_Localised']
-        if 'Population' in entry and entry['Population'] != self.population:
-            self.population = entry['Population']
+            self.security = entry["SystemSecurity_Localised"]
+        if "Population" in entry and entry["Population"] != self.population:
+            self.population = entry["Population"]
 
     @hybrid_property
     def allegiance(self) -> Optional[str]:

@@ -10,20 +10,18 @@ from typing import List, Dict
 from sqlalchemy import Float, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from disco_libs.db_models.base import Base
+from disco_libs.db_models.base import DiscoBase
 
 
-class TCodex(Base):
+class TCodex(DiscoBase):
     """Table of Codex."""
 
-    __tablename__ = 'codex'
+    __tablename__ = "codex"
 
     id: Mapped[int] = mapped_column(
         primary_key=True, nullable=False, autoincrement=True
     )
-    body_codexes_id: Mapped[int] = mapped_column(
-        ForeignKey("body_codexes.id")
-    )
+    body_codexes_id: Mapped[int] = mapped_column(ForeignKey("body_codexes.id"))
     name: Mapped[str] = mapped_column(String)
     name_localised: Mapped[str] = mapped_column(String)
     subcategory: Mapped[str] = mapped_column(String)
@@ -54,10 +52,10 @@ class TCodex(Base):
         )
 
 
-class TBodyCodexes(Base):
+class TBodyCodexes(DiscoBase):
     """Table of Body Codexes."""
 
-    __tablename__ = 'body_codexes'
+    __tablename__ = "body_codexes"
 
     id: Mapped[int] = mapped_column(
         primary_key=True, nullable=False, autoincrement=True
@@ -80,27 +78,27 @@ class TBodyCodexes(Base):
         Analyze dict from journal and import data into the object.
         """
         ret = False
-        if entry['event'] == 'CodexEntry':
+        if entry["event"] == "CodexEntry":
             test = False
             for item in self.codexes:
                 if (
-                    item.name == entry['Name']
-                    and item.name_localised == entry['Name_Localised']
+                    item.name == entry["Name"]
+                    and item.name_localised == entry["Name_Localised"]
                 ):
                     test = True
                     ret = True
             if not test:
                 tmp = TCodex()
-                tmp.name = entry['Name']
-                tmp.name_localised = entry['Name_Localised']
-                tmp.category = entry['Category']
-                tmp.category_localised = entry['Category_Localised']
-                tmp.subcategory = entry['SubCategory']
-                tmp.subcategory_localised = entry['SubCategory_Localised']
-                if 'Latitude' in entry:
-                    tmp.latitude = entry['Latitude']
-                if 'Longitude' in entry:
-                    tmp.longitude = entry['Longitude']
+                tmp.name = entry["Name"]
+                tmp.name_localised = entry["Name_Localised"]
+                tmp.category = entry["Category"]
+                tmp.category_localised = entry["Category_Localised"]
+                tmp.subcategory = entry["SubCategory"]
+                tmp.subcategory_localised = entry["SubCategory_Localised"]
+                if "Latitude" in entry:
+                    tmp.latitude = entry["Latitude"]
+                if "Longitude" in entry:
+                    tmp.longitude = entry["Longitude"]
                 self.codexes.append(tmp)
                 ret = True
 

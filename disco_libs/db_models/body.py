@@ -8,22 +8,22 @@ Created on 30 jan 2023.
 from sqlalchemy import ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from disco_libs.db_models.base import Base
+from disco_libs.db_models.base import DiscoBase
 from disco_libs.db_models.body_features import TBodyFeatures
 from disco_libs.db_models.genuses import TBodyGenuses
 from disco_libs.db_models.signals import TBodySignals
 from disco_libs.db_models.codex import TBodyCodexes
 
 
-class TBody(Base):
+class TBody(DiscoBase):
     """Table of Bodies."""
 
-    __tablename__ = 'bodies'
+    __tablename__ = "bodies"
 
     id: Mapped[int] = mapped_column(
         primary_key=True, nullable=False, autoincrement=True
     )
-    name: Mapped[str] = mapped_column(String, default='')
+    name: Mapped[str] = mapped_column(String, default="")
     bodyid: Mapped[int] = mapped_column(Integer, index=True, nullable=False)
     parentid: Mapped[int] = mapped_column(
         Integer, index=True, nullable=False, default=0
@@ -36,7 +36,7 @@ class TBody(Base):
 
     def __init__(self):
         """Initialize object."""
-        Base.__init__(self)
+        DiscoBase.__init__(self)
         self.features = TBodyFeatures()
         self.signals = TBodySignals()
         self.genuses = TBodyGenuses()
@@ -62,16 +62,16 @@ class TBody(Base):
 
         Analyze dict from journal and import data into the object.
         """
-        if 'Body' in entry and entry['Body'] != self.name:
-            self.name = entry['Body']
-        if 'BodyName' in entry and entry['BodyName'] != self.name:
-            self.name = entry['BodyName']
-        if 'BodyID' in entry and entry['BodyID'] != self.bodyid:
-            self.bodyid = entry['BodyID']
-        if 'Parents' in entry:
-            if entry['Parents']:
-                if self.parentid != list(entry['Parents'][0].values())[0]:
-                    self.parentid = list(entry['Parents'][0].values())[0]
+        if "Body" in entry and entry["Body"] != self.name:
+            self.name = entry["Body"]
+        if "BodyName" in entry and entry["BodyName"] != self.name:
+            self.name = entry["BodyName"]
+        if "BodyID" in entry and entry["BodyID"] != self.bodyid:
+            self.bodyid = entry["BodyID"]
+        if "Parents" in entry:
+            if entry["Parents"]:
+                if self.parentid != list(entry["Parents"][0].values())[0]:
+                    self.parentid = list(entry["Parents"][0].values())[0]
 
 
 # #[EOF]#######################################################################

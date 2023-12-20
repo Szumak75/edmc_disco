@@ -22,12 +22,11 @@ from disco_libs.system import LogClient, LogProcessor
 
 
 class Disco(BLogProcessor, BLogClient):
-    """"""
+    """Main class."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Constructor."""
 
-        """Initialize main class."""
         # data
         self.data = DiscoData()
 

@@ -10,13 +10,13 @@ from typing import List, Dict
 from sqlalchemy import ForeignKey, String, Integer, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from disco_libs.db_models.base import Base
+from disco_libs.db_models.base import DiscoBase
 
 
-class TGenusScan(Base):
+class TGenusScan(DiscoBase):
     """Table of Genus Scan."""
 
-    __tablename__ = 'genus_scan'
+    __tablename__ = "genus_scan"
 
     id: Mapped[int] = mapped_column(
         primary_key=True, nullable=False, autoincrement=True
@@ -24,8 +24,8 @@ class TGenusScan(Base):
     genuses_id: Mapped[int] = mapped_column(ForeignKey("genuses.id"))
     species: Mapped[str] = mapped_column(String)
     species_localised: Mapped[str] = mapped_column(String)
-    variant: Mapped[str] = mapped_column(String, default='')
-    variant_localised: Mapped[str] = mapped_column(String, default='')
+    variant: Mapped[str] = mapped_column(String, default="")
+    variant_localised: Mapped[str] = mapped_column(String, default="")
     count: Mapped[int] = mapped_column(Integer, default=0)
     done: Mapped[bool] = mapped_column(Boolean, default=False)
 
@@ -44,17 +44,15 @@ class TGenusScan(Base):
         )
 
 
-class TGenus(Base):
+class TGenus(DiscoBase):
     """Table of Genuses."""
 
-    __tablename__ = 'genuses'
+    __tablename__ = "genuses"
 
     id: Mapped[int] = mapped_column(
         primary_key=True, nullable=False, autoincrement=True
     )
-    body_genuses_id: Mapped[int] = mapped_column(
-        ForeignKey("body_genuses.id")
-    )
+    body_genuses_id: Mapped[int] = mapped_column(ForeignKey("body_genuses.id"))
     genus: Mapped[str] = mapped_column(String)
     genus_localised: Mapped[str] = mapped_column(String)
     scan: Mapped[List["TGenusScan"]] = relationship("TGenusScan")
@@ -71,10 +69,10 @@ class TGenus(Base):
         )
 
 
-class TBodyGenuses(Base):
+class TBodyGenuses(DiscoBase):
     """Table of Body Genuses."""
 
-    __tablename__ = 'body_genuses'
+    __tablename__ = "body_genuses"
 
     id: Mapped[int] = mapped_column(
         primary_key=True, nullable=False, autoincrement=True
@@ -97,40 +95,36 @@ class TBodyGenuses(Base):
         Analyse dict from journal and import data into the object.
         """
         ret = False
-        if 'Genuses' in entry and entry['Genuses']:
-            for egenuse in entry['Genuses']:
+        if "Genuses" in entry and entry["Genuses"]:
+            for egenuse in entry["Genuses"]:
                 test = False
                 for item in self.genuses:
                     if (
-                        item.genus == egenuse['Genus']
-                        and item.genus_localised
-                        == egenuse['Genus_Localised']
+                        item.genus == egenuse["Genus"]
+                        and item.genus_localised == egenuse["Genus_Localised"]
                     ):
                         test = True
                         ret = True
                 if not test:
                     tmp = TGenus()
-                    tmp.genus = egenuse['Genus']
-                    tmp.genus_localised = egenuse['Genus_Localised']
+                    tmp.genus = egenuse["Genus"]
+                    tmp.genus_localised = egenuse["Genus_Localised"]
                     self.genuses.append(tmp)
                     ret = True
-        elif entry['event'] == 'ScanOrganic':
+        elif entry["event"] == "ScanOrganic":
             for item in self.genuses:
                 genuses: TGenus = item
 
                 if (
-                    genuses.genus == entry['Genus']
-                    and genuses.genus_localised == entry['Genus_Localised']
+                    genuses.genus == entry["Genus"]
+                    and genuses.genus_localised == entry["Genus_Localised"]
                 ):
                     scan = None
-                    if entry.get('Variant', '') != '':
+                    if entry.get("Variant", "") != "":
                         # search for scan with variant
                         for item_scan in genuses.scan:
                             iscan: TGenusScan = item_scan
-                            if (
-                                iscan.variant_localised
-                                == entry['Variant_Localised']
-                            ):
+                            if iscan.variant_localised == entry["Variant_Localised"]:
                                 scan = iscan
                                 break
 
@@ -138,30 +132,25 @@ class TBodyGenuses(Base):
                         # search for scan without variant
                         for item_scan in genuses.scan:
                             iscan: TGenusScan = item_scan
-                            if (
-                                iscan.species_localised
-                                == entry['Species_Localised']
-                            ):
+                            if iscan.species_localised == entry["Species_Localised"]:
                                 scan = iscan
                                 break
                     if not scan:
                         scan = TGenusScan()
-                        scan.species = entry['Species']
-                        scan.species_localised = entry['Species_Localised']
-                        scan.variant = entry.get('Variant', '')
-                        scan.variant_localised = entry.get(
-                            'Variant_Localised', ''
-                        )
+                        scan.species = entry["Species"]
+                        scan.species_localised = entry["Species_Localised"]
+                        scan.variant = entry.get("Variant", "")
+                        scan.variant_localised = entry.get("Variant_Localised", "")
                         genuses.scan.append(scan)
 
                     if scan.done:
                         ret = True
                         break
-                    if entry['ScanType'] == 'Log':
+                    if entry["ScanType"] == "Log":
                         scan.count = 1
-                    elif entry['ScanType'] == 'Sample':
+                    elif entry["ScanType"] == "Sample":
                         scan.count += 1
-                    if entry['ScanType'] == 'Analyse':
+                    if entry["ScanType"] == "Analyse":
                         scan.done = True
 
                     ret = True

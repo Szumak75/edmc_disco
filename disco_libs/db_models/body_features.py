@@ -7,16 +7,16 @@ Created on 30 jan 2023.
 
 from typing import Optional
 
-from disco_libs.db_models.base import Base
+from disco_libs.db_models.base import DiscoBase
 from sqlalchemy import Boolean, Float, ForeignKey, Integer, String
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Mapped, mapped_column
 
 
-class TBodyFeatures(Base):
+class TBodyFeatures(DiscoBase):
     """Table of Body Features."""
 
-    __tablename__ = 'body_features'
+    __tablename__ = "body_features"
 
     id: Mapped[int] = mapped_column(
         primary_key=True, nullable=False, autoincrement=True
@@ -96,101 +96,77 @@ class TBodyFeatures(Base):
         Analyze dict from journal and import data into the object.
         """
         if (
-            'AbsoluteMagnitude' in entry
-            and self.absolutemagnitude != entry['AbsoluteMagnitude']
+            "AbsoluteMagnitude" in entry
+            and self.absolutemagnitude != entry["AbsoluteMagnitude"]
         ):
-            self.absolutemagnitude = entry['AbsoluteMagnitude']
-        if 'Atmosphere' in entry and self.atmosfere != entry['Atmosphere']:
-            self.atmosfere = entry['Atmosphere']
+            self.absolutemagnitude = entry["AbsoluteMagnitude"]
+        if "Atmosphere" in entry and self.atmosfere != entry["Atmosphere"]:
+            self.atmosfere = entry["Atmosphere"]
+        if "AtmosphereType" in entry and self.atmosferetype != entry["AtmosphereType"]:
+            self.atmosferetype = entry["AtmosphereType"]
+        if "AxialTilt" in entry and self.axialtilt != entry["AxialTilt"]:
+            self.axialtilt = entry["AxialTilt"]
+        if "BodyType" in entry and self.body_type != entry["BodyType"]:
+            self.body_type = entry["BodyType"]
+        elif "PlanetClass" in entry:
+            self.body_type = "Planet"
+            self.planet_class = entry["PlanetClass"]
+        elif "Cluster" in entry["BodyName"]:
+            self.body_type = "Cluster"
+        if "WasDiscovered" in entry and not self.discovered:
+            self.discovered = entry["WasDiscovered"]
         if (
-            'AtmosphereType' in entry
-            and self.atmosferetype != entry['AtmosphereType']
+            "DistanceFromArrivalLS" in entry
+            and self.distance != entry["DistanceFromArrivalLS"]
         ):
-            self.atmosferetype = entry['AtmosphereType']
-        if 'AxialTilt' in entry and self.axialtilt != entry['AxialTilt']:
-            self.axialtilt = entry['AxialTilt']
-        if 'BodyType' in entry and self.body_type != entry['BodyType']:
-            self.body_type = entry['BodyType']
-        elif 'PlanetClass' in entry:
-            self.body_type = 'Planet'
-            self.planet_class = entry['PlanetClass']
-        elif 'Cluster' in entry['BodyName']:
-            self.body_type = 'Cluster'
-        if 'WasDiscovered' in entry and not self.discovered:
-            self.discovered = entry['WasDiscovered']
+            self.distance = entry["DistanceFromArrivalLS"]
+        if "Eccentricity" in entry and self.eccentricity != entry["Eccentricity"]:
+            self.eccentricity = entry["Eccentricity"]
+        if "Landable" in entry and self.landable != entry["Landable"]:
+            self.landable = entry["Landable"]
+        if "Luminosity" in entry and self.luminosity != entry["Luminosity"]:
+            self.luminosity = entry["Luminosity"]
+        if "WasMapped" in entry and not self.mapped:
+            self.mapped = entry["WasMapped"]
+        if "MassEM" in entry and self.massem != entry["MassEM"]:
+            self.massem = entry["MassEM"]
         if (
-            'DistanceFromArrivalLS' in entry
-            and self.distance != entry['DistanceFromArrivalLS']
+            "OrbitalInclination" in entry
+            and self.orbitalinclination != entry["OrbitalInclination"]
         ):
-            self.distance = entry['DistanceFromArrivalLS']
+            self.orbitalinclination = entry["OrbitalInclination"]
+        if "OrbitalPeriod" in entry and self.orbitalperiod != entry["OrbitalPeriod"]:
+            self.orbitalperiod = entry["OrbitalPeriod"]
+        if "Periapsis" in entry and self.periapsis != entry["Periapsis"]:
+            self.periapsis = entry["Periapsis"]
+        if "Radius" in entry and self.radius != entry["Radius"]:
+            self.radius = entry["Radius"]
+        if "RotationPeriod" in entry and self.rotationperiod != entry["RotationPeriod"]:
+            self.rotationperiod = entry["RotationPeriod"]
+        if "SemiMajorAxis" in entry and self.semimajoraxis != entry["SemiMajorAxis"]:
+            self.semimajoraxis = entry["SemiMajorAxis"]
+        if "StarType" in entry and self.star_type != entry["StarType"]:
+            self.star_type = entry["StarType"]
+        if "StellarMass" in entry and self.stellarmass != entry["StellarMass"]:
+            self.stellarmass = entry["StellarMass"]
+        if "Subclass" in entry and self.subclass != entry["Subclass"]:
+            self.subclass = entry["Subclass"]
+        if "SurfaceGravity" in entry and self.surfacegravity != entry["SurfaceGravity"]:
+            self.surfacegravity = entry["SurfaceGravity"]
         if (
-            'Eccentricity' in entry
-            and self.eccentricity != entry['Eccentricity']
+            "SurfacePressure" in entry
+            and self.surfacepressure != entry["SurfacePressure"]
         ):
-            self.eccentricity = entry['Eccentricity']
-        if 'Landable' in entry and self.landable != entry['Landable']:
-            self.landable = entry['Landable']
-        if 'Luminosity' in entry and self.luminosity != entry['Luminosity']:
-            self.luminosity = entry['Luminosity']
-        if 'WasMapped' in entry and not self.mapped:
-            self.mapped = entry['WasMapped']
-        if 'MassEM' in entry and self.massem != entry['MassEM']:
-            self.massem = entry['MassEM']
+            self.surfacepressure = entry["SurfacePressure"]
         if (
-            'OrbitalInclination' in entry
-            and self.orbitalinclination != entry['OrbitalInclination']
+            "SurfaceTemperature" in entry
+            and self.surfacetemperature != entry["SurfaceTemperature"]
         ):
-            self.orbitalinclination = entry['OrbitalInclination']
-        if (
-            'OrbitalPeriod' in entry
-            and self.orbitalperiod != entry['OrbitalPeriod']
-        ):
-            self.orbitalperiod = entry['OrbitalPeriod']
-        if 'Periapsis' in entry and self.periapsis != entry['Periapsis']:
-            self.periapsis = entry['Periapsis']
-        if 'Radius' in entry and self.radius != entry['Radius']:
-            self.radius = entry['Radius']
-        if (
-            'RotationPeriod' in entry
-            and self.rotationperiod != entry['RotationPeriod']
-        ):
-            self.rotationperiod = entry['RotationPeriod']
-        if (
-            'SemiMajorAxis' in entry
-            and self.semimajoraxis != entry['SemiMajorAxis']
-        ):
-            self.semimajoraxis = entry['SemiMajorAxis']
-        if 'StarType' in entry and self.star_type != entry['StarType']:
-            self.star_type = entry['StarType']
-        if (
-            'StellarMass' in entry
-            and self.stellarmass != entry['StellarMass']
-        ):
-            self.stellarmass = entry['StellarMass']
-        if 'Subclass' in entry and self.subclass != entry['Subclass']:
-            self.subclass = entry['Subclass']
-        if (
-            'SurfaceGravity' in entry
-            and self.surfacegravity != entry['SurfaceGravity']
-        ):
-            self.surfacegravity = entry['SurfaceGravity']
-        if (
-            'SurfacePressure' in entry
-            and self.surfacepressure != entry['SurfacePressure']
-        ):
-            self.surfacepressure = entry['SurfacePressure']
-        if (
-            'SurfaceTemperature' in entry
-            and self.surfacetemperature != entry['SurfaceTemperature']
-        ):
-            self.surfacetemperature = entry['SurfaceTemperature']
-        if (
-            'TerraformState' in entry
-            and self.terraformstate != entry['TerraformState']
-        ):
-            self.terraformstate = entry['TerraformState']
-        if 'Volcanism' in entry and self.volcanism != entry['Volcanism']:
-            self.volcanism = entry['Volcanism']
+            self.surfacetemperature = entry["SurfaceTemperature"]
+        if "TerraformState" in entry and self.terraformstate != entry["TerraformState"]:
+            self.terraformstate = entry["TerraformState"]
+        if "Volcanism" in entry and self.volcanism != entry["Volcanism"]:
+            self.volcanism = entry["Volcanism"]
 
     @hybrid_property
     def absolutemagnitude(self) -> Optional[Float]:
@@ -199,10 +175,7 @@ class TBodyFeatures(Base):
 
     @absolutemagnitude.setter
     def absolutemagnitude(self, value):
-        if (
-            self._absolutemagnitude is None
-            or self._absolutemagnitude != value
-        ):
+        if self._absolutemagnitude is None or self._absolutemagnitude != value:
             self._absolutemagnitude = value
 
     @hybrid_property
@@ -344,10 +317,7 @@ class TBodyFeatures(Base):
 
     @orbitalinclination.setter
     def orbitalinclination(self, value):
-        if (
-            self._orbitalinclination is None
-            or self._orbitalinclination != value
-        ):
+        if self._orbitalinclination is None or self._orbitalinclination != value:
             self._orbitalinclination = value
 
     @hybrid_property
@@ -457,10 +427,7 @@ class TBodyFeatures(Base):
 
     @surfacetemperature.setter
     def surfacetemperature(self, value):
-        if (
-            self._surfacetemperature is None
-            or self._surfacetemperature != value
-        ):
+        if self._surfacetemperature is None or self._surfacetemperature != value:
             self._surfacetemperature = value
 
     @hybrid_property
