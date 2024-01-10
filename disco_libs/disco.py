@@ -28,8 +28,6 @@ class Disco(BLogProcessor, BLogClient):
         """Constructor."""
 
         # data
-        self.data = DiscoData()
-
         self.data.pluginname = "EDDisco"
         self.data.version = "1.0.0"
 
@@ -37,7 +35,7 @@ class Disco(BLogProcessor, BLogClient):
         self.data.db_processor = DBProcessor(Database(False).session)
 
         # logging subsystem
-        self.qlog = Queue()
+        # self.qlog = Queue()
         self.log_processor = LogProcessor(self.data.pluginname)
         self.logger = LogClient(self.qlog)
 
@@ -45,16 +43,18 @@ class Disco(BLogProcessor, BLogClient):
         self.thlog = Thread(
             target=self.th_logger, name=f"{self.data.pluginname} log worker"
         )
-        self.thlog.daemon = True
-        self.thlog.start()
+
+        if self.thlog is not None:
+            self.thlog.daemon = True
+            self.thlog.start()
 
         self.logger.debug = f"{self.data.pluginname} object creation complete."
 
     @property
-    def data(self) -> Optional[DiscoData]:
+    def data(self) -> DiscoData:
         """Give me data access."""
         if "disco" not in self._data:
-            self._data["disco"] = None
+            self._data["disco"] = DiscoData()
         return self._data["disco"]
 
     @data.setter

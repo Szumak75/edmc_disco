@@ -266,11 +266,11 @@ class DiscoMainDialog(BLogClient, DiscoData, NoDynamicAttributes):
             f"numbers of windows: {len(self._data[DialogKeys.WINDOWS])}",
         )
 
-    def debug(self, currentframe: FrameType, message: str = "") -> None:
+    def debug(self, currentframe: Optional[FrameType], message: str = "") -> None:
         """Build debug message."""
         pname = f"{self.pluginname}"
         cname = f"{self._c_name}"
-        mname = f"{currentframe.f_code.co_name}"
+        mname = f"{currentframe.f_code.co_name}" if currentframe else ""
         if message != "":
             message = f": {message}"
         self.logger.debug = f"{pname}->{cname}.{mname}{message}"

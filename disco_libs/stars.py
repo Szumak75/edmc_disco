@@ -44,7 +44,7 @@ class StarsSystem(BData):
             f"{self._c_name}(name='{self.name}', "
             f"address={self.address}, "
             f"starpos={self.star_pos}, "
-            f"data={self.data})"
+            f"data={self._data})"
         )
 
     def update_from_edsm(self, data: Dict) -> None:
@@ -176,7 +176,9 @@ class StarsSystem(BData):
     @property
     def star_pos(self) -> List[float]:
         """Give me star position list."""
-        return [self.pos_x, self.pos_y, self.pos_z]
+        if self.pos_x is not None and self.pos_y is not None and self.pos_z is not None:
+            return [self.pos_x, self.pos_y, self.pos_z]
+        return []
 
     @star_pos.setter
     def star_pos(self, arg: Optional[List] = None) -> None:

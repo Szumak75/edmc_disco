@@ -9,6 +9,7 @@
 from inspect import currentframe
 from typing import Optional
 from queue import Queue
+from threading import Thread
 
 from jsktoolbox.attribtool import ReadOnlyClass
 from jsktoolbox.raisetool import Raise
@@ -34,25 +35,25 @@ class BLogProcessor(BData):
     """
 
     @property
-    def thlog(self) -> Optional[object]:
+    def thlog(self) -> Optional[Thread]:
         """Give me thread logger handler."""
         if _Keys.THLOGGER not in self._data:
             self._data[_Keys.THLOGGER] = None
         return self._data[_Keys.THLOGGER]
 
     @thlog.setter
-    def thlog(self, value: object):
+    def thlog(self, value: Thread) -> None:
         self._data[_Keys.THLOGGER] = value
 
     @property
-    def qlog(self) -> Optional[Queue]:
+    def qlog(self) -> Queue:
         """Give me access to queue handler."""
         if _Keys.LQUEUE not in self._data:
-            self._data[_Keys.LQUEUE] = None
+            self._data[_Keys.LQUEUE] = Queue()
         return self._data[_Keys.LQUEUE]
 
     @qlog.setter
-    def qlog(self, value: Queue):
+    def qlog(self, value: Queue) -> None:
         """Setter for logging queue."""
         if not isinstance(value, Queue):
             raise Raise.error(
@@ -71,7 +72,7 @@ class BLogProcessor(BData):
         return self._data[_Keys.LPENGINE]
 
     @log_processor.setter
-    def log_processor(self, value: object):
+    def log_processor(self, value: object) -> None:
         """Setter for log processor instance."""
         self._data[_Keys.LPENGINE] = value
 
@@ -90,7 +91,7 @@ class BLogClient(BData):
         return self._data[_Keys.LOGGER]
 
     @logger.setter
-    def logger(self, arg: object):
+    def logger(self, arg: object) -> None:
         """Set logger instance."""
         self._data[_Keys.LOGGER] = arg
 

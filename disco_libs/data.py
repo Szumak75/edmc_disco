@@ -33,7 +33,7 @@ class _Keys(object, metaclass=ReadOnlyClass):
 class SimpleData(BData):
     """SimpleData container."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize dataset."""
         self._data[_Keys.CMDR] = None
         self._data[_Keys.PLUGINNAME] = None
@@ -46,7 +46,7 @@ class SimpleData(BData):
         return self._data[_Keys.PLUGINNAME]
 
     @pluginname.setter
-    def pluginname(self, value: str):
+    def pluginname(self, value: str) -> None:
         if value is not None and isinstance(value, str):
             self._data[_Keys.PLUGINNAME] = value
 
@@ -56,7 +56,7 @@ class SimpleData(BData):
         return self._data[_Keys.VERSION]
 
     @version.setter
-    def version(self, value: str):
+    def version(self, value: str) -> None:
         if value is not None and isinstance(value, str):
             self._data[_Keys.VERSION] = value
 
@@ -66,7 +66,7 @@ class SimpleData(BData):
         return self._data[_Keys.CMDR]
 
     @cmdr.setter
-    def cmdr(self, value: str):
+    def cmdr(self, value: str) -> None:
         if value is not None and value != self.cmdr:
             self._data[_Keys.CMDR] = value
 
@@ -76,7 +76,7 @@ class SimpleData(BData):
         return self._data[_Keys.SHUTDOWN]
 
     @shutting_down.setter
-    def shutting_down(self, value: bool):
+    def shutting_down(self, value: bool) -> None:
         if isinstance(value, bool):
             self._data[_Keys.SHUTDOWN] = value
         else:
@@ -91,7 +91,7 @@ class SimpleData(BData):
 class DiscoData(SimpleData):
     """Data container for Disco dialogs dataset."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize dataset."""
         SimpleData.__init__(self)
         self._data[_Keys.SYSTEM] = None
@@ -104,7 +104,7 @@ class DiscoData(SimpleData):
         return self._data[_Keys.PROCESSOR]
 
     @db_processor.setter
-    def db_processor(self, value: object):
+    def db_processor(self, value: object) -> None:
         self._data[_Keys.PROCESSOR] = value
 
     @property
@@ -113,7 +113,7 @@ class DiscoData(SimpleData):
         return self._data[_Keys.DIALOG]
 
     @dialog.setter
-    def dialog(self, value: object):
+    def dialog(self, value: object) -> None:
         """Set DiscoMainDialog object."""
         self._data[_Keys.DIALOG] = value
 
@@ -123,7 +123,7 @@ class DiscoData(SimpleData):
         return self._data[_Keys.SYSTEM]
 
     @system.setter
-    def system(self, value: TSystem):
+    def system(self, value: TSystem) -> None:
         if value is None:
             return
         if isinstance(value, TSystem):
@@ -140,7 +140,7 @@ class DiscoData(SimpleData):
 class RscanData(SimpleData):
     """Data container for username and current system."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize dataset."""
         SimpleData.__init__(self)
         self._data[_Keys.JUMPRANGE] = None
@@ -162,7 +162,7 @@ class RscanData(SimpleData):
         return self._data[_Keys.STARSSYSTEM]
 
     @starsystem.setter
-    def starsystem(self, value: StarsSystem):
+    def starsystem(self, value: StarsSystem) -> None:
         if value is None:
             self._data[_Keys.STARSSYSTEM] = StarsSystem()
         elif isinstance(value, StarsSystem):
@@ -174,7 +174,7 @@ class RscanData(SimpleData):
         return self._data[_Keys.JUMPRANGE]
 
     @jumprange.setter
-    def jumprange(self, value: Union[str, int, float]):
+    def jumprange(self, value: Union[str, int, float]) -> None:
         if value is not None and isinstance(value, (str, int, float)):
             try:
                 self._data[_Keys.JUMPRANGE] = float(value)

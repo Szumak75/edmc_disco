@@ -19,7 +19,7 @@ import tempfile
 from inspect import currentframe
 from logging.handlers import RotatingFileHandler
 from queue import Queue
-from typing import Optional, Union, List, Callable
+from typing import Optional, Union, List, Callable, Dict
 from jsktoolbox.libs.base_data import BData, BClasses
 from jsktoolbox.raisetool import Raise
 from jsktoolbox.attribtool import ReadOnlyClass
@@ -114,39 +114,39 @@ class Clip(BData):
 
     def __win_get_clipboard(self) -> str:
         """Get windows clipboard data."""
-        ctypes.windll.user32.OpenClipboard(0)
-        pcontents = ctypes.windll.user32.GetClipboardData(1)  # 1 is CF_TEXT
+        ctypes.windll.user32.OpenClipboard(0)  # type: ignore
+        pcontents = ctypes.windll.user32.GetClipboardData(1)  # type: ignore # 1 is CF_TEXT
         data = ctypes.c_char_p(pcontents).value
         # ctypes.windll.kernel32.GlobalUnlock(pcontents)
-        ctypes.windll.user32.CloseClipboard()
-        return data
+        ctypes.windll.user32.CloseClipboard()  # type: ignore
+        return data  # type: ignore
 
     def __win_set_clipboard(self, text: str) -> None:
         """Set windows clipboard data."""
         text = str(text)
         GMEM_DDESHARE = 0x2000
-        ctypes.windll.user32.OpenClipboard(0)
-        ctypes.windll.user32.EmptyClipboard()
+        ctypes.windll.user32.OpenClipboard(0)  # type: ignore
+        ctypes.windll.user32.EmptyClipboard()  # type: ignore
         try:
             # works on Python 2 (bytes() only takes one argument)
-            hCd = ctypes.windll.kernel32.GlobalAlloc(
-                GMEM_DDESHARE, len(bytes(text)) + 1
+            hCd = ctypes.windll.kernel32.GlobalAlloc(  # type: ignore
+                GMEM_DDESHARE, len(bytes(text)) + 1  # type: ignore
             )
         except TypeError:
             # works on Python 3 (bytes() requires an encoding)
-            hCd = ctypes.windll.kernel32.GlobalAlloc(
+            hCd = ctypes.windll.kernel32.GlobalAlloc(  # type: ignore
                 GMEM_DDESHARE, len(bytes(text, "ascii")) + 1
             )
-        pchData = ctypes.windll.kernel32.GlobalLock(hCd)
+        pchData = ctypes.windll.kernel32.GlobalLock(hCd)  # type: ignore
         try:
             # works on Python 2 (bytes() only takes one argument)
             ctypes.cdll.msvcrt.strcpy(ctypes.c_char_p(pchData), bytes(text))
         except TypeError:
             # works on Python 3 (bytes() requires an encoding)
             ctypes.cdll.msvcrt.strcpy(ctypes.c_char_p(pchData), bytes(text, "ascii"))
-        ctypes.windll.kernel32.GlobalUnlock(hCd)
-        ctypes.windll.user32.SetClipboardData(1, hCd)
-        ctypes.windll.user32.CloseClipboard()
+        ctypes.windll.kernel32.GlobalUnlock(hCd)  # type: ignore
+        ctypes.windll.user32.SetClipboardData(1, hCd)  # type: ignore
+        ctypes.windll.user32.CloseClipboard()  # type: ignore
 
     def __mac_set_clipboard(self, text: str) -> None:
         """Set MacOS clipboard data."""
@@ -270,10 +270,12 @@ class Env(BData):
         """Return multiplatform os architecture."""
         os_arch = _Keys.BIT32
         if os.name == _Keys.NT:
-            output = subprocess.check_output(["wmic", "os", "get", "OSArchitecture"])
+            output = subprocess.check_output(
+                ["wmic", "os", "get", "OSArchitecture"]
+            ).decode()
             os_arch = output.split()[1]
         else:
-            output = subprocess.check_output(["uname", "-m"])
+            output = subprocess.check_output(["uname", "-m"]).decode()
             if _Keys.X86_64 in output:
                 os_arch = _Keys.BIT64
             else:
@@ -304,15 +306,15 @@ class Env(BData):
 class Log(BClasses):
     """Create Log container class."""
 
-    __data = None
-    __level = None
+    __data: List = None  # type: ignore
+    __level: int = None  # type: ignore
 
     def __init__(self, level: int) -> None:
         """Constructor."""
         self.__data = []
         ll_test = LogLevels()
         if isinstance(level, int) and ll_test.has_key(level):
-            self.__level = level
+            self.__level: int = level
         else:
             raise Raise.error(
                 f"Expected Int type, received: '{type(level)}'.",
@@ -327,15 +329,14 @@ class Log(BClasses):
         return self.__level
 
     @property
-    def log(self) -> Optional[List[str]]:
+    def log(self) -> List[str]:
         """Get list of logs."""
         return self.__data
 
     @log.setter
-    def log(self, arg: Optional[Union[List, str, int, float]]):
+    def log(self, arg: Optional[Union[List, str, int, float]]) -> None:
         """Set data log."""
         if arg is None or (isinstance(arg, list) and not bool(arg)):
-            self.__data = None
             self.__data = []
         if isinstance(arg, list):
             for msg in arg:
@@ -564,8 +565,8 @@ class LogLevels(BData):
     logging levels defined in the logging module.
     """
 
-    __keys = None
-    __txt = None
+    __keys: Dict[int, bool] = None # type: ignore
+    __txt: Dict[str, int] = None # type: ignore
 
     def __init__(self) -> None:
         """Create Log instance."""
