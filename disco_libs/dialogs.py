@@ -252,7 +252,8 @@ class DiscoMainDialog(BLogClient, DiscoData, NoDynamicAttributes):
 
         # propagate update
         for window in self._data[DialogKeys.WINDOWS]:
-            window.update(system)
+            if not window.is_closed:
+                window.update(system)
 
     def __bt_callback(self) -> None:
         """Run main button callback."""
@@ -468,7 +469,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
                     self.logger.debug = f"[{count}]: name '{body.name}', bodyid={body.bodyid}, parentid={body.parentid}"
                 if not body.name:
                     if self.logger:
-                        self.logger.debug = body
+                        self.logger.debug = f"Error in TBody: {body}"
             else:
                 if self.logger:
                     self.logger.debug = f"[{count}]: None"
@@ -518,7 +519,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
     def __system_summary(self, system: db.TSystem) -> None:
         """Create system info."""
         list_object = [-1, None]
-        dt_object = datetime.fromtimestamp(system.timestamp)
+        dt_object: datetime = datetime.fromtimestamp(system.timestamp)
 
         # frame
         frame = tk.Frame(
@@ -673,7 +674,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
                     CreateToolTip(temp, "Surface temperature")
                     img = tk.PhotoImage(data=ih.get_landable_image())
                     landable = tk.Label(frame, image=img)
-                    # landable.image = img
+                    landable.image = img  # type: ignore
                     landable.pack(side=tk.RIGHT)
                     CreateToolTip(landable, "Planetary Landing")
                 # get humans city on the planet
