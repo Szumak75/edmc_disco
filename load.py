@@ -7,7 +7,7 @@
 """
 
 import tkinter as tk
-
+from tkinter import ttk
 from typing import Dict, Optional, Tuple
 
 
@@ -34,7 +34,7 @@ def plugin_start3(plugin_dir: str) -> str:
     if disco_object.log_processor:
         disco_object.log_processor.loglevel = LogLevels().get(
             config.get_str("loglevel")
-        ) # type: ignore
+        )  # type: ignore
     if disco_object.logger:
         disco_object.logger.debug = (
             f"{disco_object.data.pluginname}->plugin_start3 done."
@@ -64,10 +64,10 @@ def plugin_stop() -> None:
         )
     disco_object.qlog.put(None)
     disco_object.thlog.join()
-    disco_object.thlog = None
+    disco_object.thlog = None  # type: ignore
 
 
-def plugin_app(parent: tk.Frame) -> Tuple[tk.Label]:
+def plugin_app(parent: tk.Frame) -> Tuple[tk.Label, ttk.Button]:
     """Create a pair of TK widgets for the EDMarketConnector main window.
 
     parent:     The root EDMarketConnector window
@@ -94,7 +94,7 @@ def prefs_changed(cmdr: str, is_beta: bool) -> None:
         f"{disco_object.data.pluginname}->prefs_changed: start..."
     )
     # set loglevel after config update
-    disco_object.log_processor.loglevel = LogLevels().get(config.get_str("loglevel"))
+    disco_object.log_processor.loglevel = LogLevels().get(config.get_str("loglevel")) # type: ignore
     disco_object.logger.debug = f"{disco_object.data.pluginname}->prefs_changed: done."
 
 
@@ -118,7 +118,7 @@ def journal_entry(
     test = False
 
     if entry["event"] == "FSDJump":
-        disco_object.data.system = disco_object.data.db_processor.add_system(entry)
+        disco_object.data.system = disco_object.data.db_processor.add_system(entry) # type: ignore
         test = True
         disco_object.logger.debug = f"FSDJump: {disco_object.data.system}"
     elif entry["event"] == "Scan" and entry["ScanType"] in (
@@ -127,41 +127,41 @@ def journal_entry(
         "Basic",
         "NavBeaconDetail",
     ):
-        disco_object.data.system = disco_object.data.db_processor.add_body(entry)
+        disco_object.data.system = disco_object.data.db_processor.add_body(entry) # type: ignore
         test = True
         disco_object.logger.debug = f"Scan: {disco_object.data.system}"
     elif entry["event"] == "FSSDiscoveryScan":
-        disco_object.data.system = disco_object.data.db_processor.update_system(entry)
+        disco_object.data.system = disco_object.data.db_processor.update_system(entry) # type: ignore
         test = True
         disco_object.logger.debug = f"FSSDiscoveryScan: {disco_object.data.system}"
     elif entry["event"] == "FSSBodySignals":
-        disco_object.data.system = disco_object.data.db_processor.add_signal(entry)
+        disco_object.data.system = disco_object.data.db_processor.add_signal(entry) # type: ignore
         test = True
         disco_object.logger.debug = f"FSSBodySignals: {disco_object.data.system}"
     elif entry["event"] == "SAASignalsFound":
         disco_object.data.db_processor.add_signal(entry)
-        disco_object.data.system = disco_object.data.db_processor.add_genus(entry)
+        disco_object.data.system = disco_object.data.db_processor.add_genus(entry) # type: ignore
         test = True
         disco_object.logger.debug = f"SAASignalsFound: {disco_object.data.system}"
     elif entry["event"] == "CodexEntry":
-        disco_object.data.system = disco_object.data.db_processor.add_codex(entry)
+        disco_object.data.system = disco_object.data.db_processor.add_codex(entry) # type: ignore
         test = True
         disco_object.logger.debug = f"CodexEntry: {disco_object.data.system}"
     elif entry["event"] == "ScanOrganic":
-        disco_object.data.system = disco_object.data.db_processor.add_genus(entry)
+        disco_object.data.system = disco_object.data.db_processor.add_genus(entry) # type: ignore
         test = True
         disco_object.logger.debug = f"ScanOrganic: {disco_object.data.system}"
     elif entry["event"] == "SAAScanComplete":
-        disco_object.data.system = disco_object.data.db_processor.mapped_body(entry)
+        disco_object.data.system = disco_object.data.db_processor.mapped_body(entry) # type: ignore
         test = True
     elif entry["event"] == "Location" and "StarSystem" in entry:
         disco_object.data.system = disco_object.data.db_processor.get_system_by_name(
             entry["StarSystem"]
-        )
+        ) # type: ignore
         test = True
     if test:
         dialog: DiscoMainDialog = disco_object.data.dialog
-        dialog.update(disco_object.data.system)
+        dialog.update(disco_object.data.system) # type: ignore
 
 
 # #[EOF]#######################################################################

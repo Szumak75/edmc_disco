@@ -37,7 +37,7 @@ class BLogProcessor(BData):
     """
 
     @property
-    def thlog(self) -> Optional[Thread]:
+    def thlog(self) -> Thread:
         """Give me thread logger handler."""
         if _Keys.THLOGGER not in self._data:
             self._data[_Keys.THLOGGER] = None
@@ -67,7 +67,7 @@ class BLogProcessor(BData):
         self._data[_Keys.LQUEUE] = value
 
     @property
-    def log_processor(self) -> Optional[LogProcessor]:
+    def log_processor(self) -> LogProcessor:
         """Give me handler for log processor."""
         if _Keys.LPENGINE not in self._data:
             self._data[_Keys.LPENGINE] = None
@@ -86,7 +86,7 @@ class BLogClient(BData):
     """
 
     @property
-    def logger(self) -> Optional[LogClient]:
+    def logger(self) -> LogClient:
         """Give me logger handler."""
         if _Keys.LOGGER not in self._data:
             self._data[_Keys.LOGGER] = None

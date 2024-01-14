@@ -44,7 +44,7 @@ class Disco(BLogProcessor, BLogClient):
             target=self.th_logger, name=f"{self.data.pluginname} log worker"
         )
 
-        if self.thlog is not None:
+        if self.thlog:
             self.thlog.daemon = True
             self.thlog.start()
 
