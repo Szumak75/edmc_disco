@@ -29,7 +29,7 @@ class Disco(BLogProcessor, BLogClient):
 
         # data
         self.data.pluginname = "EDDisco"
-        self.data.version = "1.0.0"
+        self.data.version = "1.0.1"
 
         # database
         self.data.db_processor = DBProcessor(Database(False).session)
@@ -48,7 +48,8 @@ class Disco(BLogProcessor, BLogClient):
             self.thlog.daemon = True
             self.thlog.start()
 
-        self.logger.debug = f"{self.data.pluginname} object creation complete."
+        if self.logger:
+            self.logger.debug = f"{self.data.pluginname} object creation complete."
 
     @property
     def data(self) -> DiscoData:
@@ -71,13 +72,15 @@ class Disco(BLogProcessor, BLogClient):
 
     def th_logger(self) -> None:
         """Def th_logger - thread logs processor."""
-        self.logger.info = "Starting logger worker"
+        if self.logger:
+            self.logger.info = "Starting logger worker"
         while not self.data.shutting_down:
             while True:
                 log = self.qlog.get(True)
                 if log is None:
                     break
-                self.log_processor.send(log)
+                if self.log_processor:
+                    self.log_processor.send(log)
 
 
 # #[EOF]#######################################################################

@@ -191,7 +191,7 @@ class DiscoMainDialog(BLogClient, DiscoData, NoDynamicAttributes):
         parent: tk.Frame,
         log_queue: Queue,
         ddata: DiscoData,
-    ):
+    ) -> None:
         """Initialize datasets."""
         DiscoData.__init__(self)
         if isinstance(ddata, DiscoData):
@@ -268,9 +268,9 @@ class DiscoMainDialog(BLogClient, DiscoData, NoDynamicAttributes):
 
     def debug(self, currentframe: Optional[FrameType], message: str = "") -> None:
         """Build debug message."""
-        pname = f"{self.pluginname}"
-        cname = f"{self._c_name}"
-        mname = f"{currentframe.f_code.co_name}" if currentframe else ""
+        pname: str = f"{self.pluginname}"
+        cname: str = f"{self._c_name}"
+        mname: str = f"{currentframe.f_code.co_name}" if currentframe else ""
         if message != "":
             message = f": {message}"
         self.logger.debug = f"{pname}->{cname}.{mname}{message}"
@@ -281,10 +281,10 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
 
     _w = None
     widgetName = None
-    master = None
-    tk = None
+    master = None  # type: ignore
+    tk = None  # type: ignore
     _name = None
-    children = None
+    children = None  # type: ignore
 
     def __init__(self, log_queue: Queue, data: Dict, master=None) -> None:
         """Initialize datasets."""
@@ -304,16 +304,22 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
         #  widgets container
         self._data[DialogKeys.WIDGETS] = {}
         #  widgets declaration (if any):
-        self._data[DialogKeys.WIDGETS][DialogKeys.STATUS]: Optional[tk.StringVar] = None
-        self._data[DialogKeys.WIDGETS][DialogKeys.SYSTEM]: Optional[tk.Entry] = None
-        self._data[DialogKeys.WIDGETS][DialogKeys.SBUTTON]: Optional[tk.Button] = None
-        self._data[DialogKeys.WIDGETS][DialogKeys.FDATA]: Optional[tk.LabelFrame] = None
-        self._data[DialogKeys.WIDGETS][DialogKeys.SCROLLBAR]: Optional[
-            tk.Scrollbar
-        ] = None
-        self._data[DialogKeys.WIDGETS][DialogKeys.SPANEL]: Optional[
-            VerticalScrolledFrame
-        ] = None
+        self._data[DialogKeys.WIDGETS][
+            DialogKeys.STATUS
+        ] = None  #: Optional[tk.StringVar]
+        self._data[DialogKeys.WIDGETS][DialogKeys.SYSTEM] = None  #: Optional[tk.Entry]
+        self._data[DialogKeys.WIDGETS][
+            DialogKeys.SBUTTON
+        ] = None  #: Optional[tk.Button]
+        self._data[DialogKeys.WIDGETS][
+            DialogKeys.FDATA
+        ] = None  #: Optional[tk.LabelFrame]
+        self._data[DialogKeys.WIDGETS][
+            DialogKeys.SCROLLBAR
+        ] = None  #: Optional[tk.Scrollbar]
+        self._data[DialogKeys.WIDGETS][
+            DialogKeys.SPANEL
+        ] = None  #: Optional[VerticalScrolledFrame]
 
         # bodys data
         self._data[DialogKeys.BODIES] = []
@@ -614,7 +620,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
                 signals: db.TBodySignals = body.signals
                 features: db.TBodyFeatures = body.features
                 if not features.star_type:
-                    name = name.replace(self.system.name, "").strip()
+                    name: str = name.replace(self.system.name, "").strip()
                 # get scoopable
                 if features.star_type and features.star_type in (
                     "O",
@@ -627,7 +633,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
                 ):
                     img = tk.PhotoImage(data=ih.get_scoopable_image())
                     scoop = tk.Label(frame, image=img)
-                    scoop.image = img
+                    # scoop["image"] = img
                     scoop.pack(side=tk.RIGHT)
                     CreateToolTip(scoop, "Scoopable")
                 # get distance to arrival
@@ -639,7 +645,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
                         compound=tk.LEFT,
                         image=img,
                     )
-                    distance.image = img
+                    # distance.image = img
                     distance.pack(side=tk.RIGHT)
                     CreateToolTip(distance, "Distance to arrival")
                 # get landable flag
@@ -652,12 +658,12 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
                         compound=tk.LEFT,
                         image=img2,
                     )
-                    temp.image = img2
+                    # temp.image = img2
                     temp.pack(side=tk.RIGHT)
                     CreateToolTip(temp, "Surface temperature")
                     img = tk.PhotoImage(data=ih.get_landable_image())
                     landable = tk.Label(frame, image=img)
-                    landable.image = img
+                    # landable.image = img
                     landable.pack(side=tk.RIGHT)
                     CreateToolTip(landable, "Planetary Landing")
                 # get humans city on the planet
@@ -669,7 +675,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
                         compound=tk.LEFT,
                         image=img,
                     )
-                    humans.image = img
+                    # humans.image = img
                     humans.pack(side=tk.RIGHT)
                     CreateToolTip(humans, "Planetary Base")
                 # get biological signals count
@@ -681,7 +687,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
                         compound=tk.LEFT,
                         image=img,
                     )
-                    cbio.image = img
+                    # cbio.image = img
                     cbio.pack(side=tk.RIGHT)
                     CreateToolTip(cbio, ih.get_bio_descript(body))
                 # get geological signals count
@@ -693,32 +699,32 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
                         compound=tk.LEFT,
                         image=img,
                     )
-                    cgeo.image = img
+                    # cgeo.image = img
                     cgeo.pack(side=tk.RIGHT)
                     CreateToolTip(cgeo, ih.get_geo_descript(body))
                 # first mapped
                 if features.mapped_first:
                     img = tk.PhotoImage(data=ih.get_map_image())
                     mape = tk.Label(frame, image=img)
-                    mape.image = img
+                    # mape.image = img
                     mape.pack(side=tk.RIGHT)
                     CreateToolTip(mape, "First mapped")
                 # first discovered
                 if features.discovered_first:
                     img = tk.PhotoImage(data=ih.get_first_image())
                     first = tk.Label(frame, image=img)
-                    first.image = img
+                    # first.image = img
                     first.pack(side=tk.RIGHT)
                     CreateToolTip(first, "First discovered")
             elif not body.name:
                 features: db.TBodyFeatures = body.features
                 if features.body_type and features.body_type == "Ring":
                     name = "Ring"
-            imgstr = ih.get_body_image(body)
+            imgstr: Optional[str] = ih.get_body_image(body)
             if imgstr:
                 img = tk.PhotoImage(data=imgstr)
                 lname = tk.Label(frame, text=f"{name}", compound=tk.LEFT, image=img)
-                lname.image = img
+                # lname.image = img
             else:
                 lname = tk.Label(frame, text=f"{name}")
             # generate body summaries tooltip
@@ -744,14 +750,15 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
         """Check, if window is closed."""
         return self._data[DialogKeys.CLOSED]
 
-    def debug(self, currentframe: FrameType, message: str = "") -> None:
+    def debug(self, currentframe: Optional[FrameType], message: str = "") -> None:
         """Build debug message."""
-        pname = f"{self.pluginname}"
-        cname = f"{self._c_name}"
-        mname = f"{currentframe.f_code.co_name}"
+        pname: str = f"{self.pluginname}"
+        cname: str = f"{self._c_name}"
+        mname: str = f"{currentframe.f_code.co_name}" if currentframe else ""
         if message != "":
             message = f": {message}"
-        self.logger.debug = f"{pname}->{cname}.{mname}{message}"
+        if self.logger:
+            self.logger.debug = f"{pname}->{cname}.{mname}{message}"
 
     @property
     def status(self) -> object:
@@ -804,7 +811,7 @@ class VerticalScrolledFrame(tk.Frame):
         def _configure_interior(event):
             # Update the scrollbars to match the size of the inner frame.
             canvas.config(
-                scrollregion=f"0 0 {interior.winfo_reqwidth()} {interior.winfo_reqheight()}"
+                scrollregion=f"0 0 {interior.winfo_reqwidth()} {interior.winfo_reqheight()}"  # type: ignore
             )
             if interior.winfo_reqwidth() != canvas.winfo_width():
                 # Update the canvas's width to fit the inner frame.

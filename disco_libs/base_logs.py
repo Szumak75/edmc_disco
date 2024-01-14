@@ -15,6 +15,8 @@ from jsktoolbox.attribtool import ReadOnlyClass
 from jsktoolbox.raisetool import Raise
 from jsktoolbox.libs.base_data import BData
 
+from disco_libs.system import LogClient, LogProcessor
+
 
 class _Keys(object, metaclass=ReadOnlyClass):
     """Keys container class.
@@ -65,14 +67,14 @@ class BLogProcessor(BData):
         self._data[_Keys.LQUEUE] = value
 
     @property
-    def log_processor(self) -> Optional[object]:
+    def log_processor(self) -> Optional[LogProcessor]:
         """Give me handler for log processor."""
         if _Keys.LPENGINE not in self._data:
             self._data[_Keys.LPENGINE] = None
         return self._data[_Keys.LPENGINE]
 
     @log_processor.setter
-    def log_processor(self, value: object) -> None:
+    def log_processor(self, value: LogProcessor) -> None:
         """Setter for log processor instance."""
         self._data[_Keys.LPENGINE] = value
 
@@ -84,14 +86,14 @@ class BLogClient(BData):
     """
 
     @property
-    def logger(self) -> Optional[object]:
+    def logger(self) -> Optional[LogClient]:
         """Give me logger handler."""
         if _Keys.LOGGER not in self._data:
             self._data[_Keys.LOGGER] = None
         return self._data[_Keys.LOGGER]
 
     @logger.setter
-    def logger(self, arg: object) -> None:
+    def logger(self, arg: LogClient) -> None:
         """Set logger instance."""
         self._data[_Keys.LOGGER] = arg
 

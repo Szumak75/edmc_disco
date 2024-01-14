@@ -26,9 +26,10 @@ def plugin_start3(plugin_dir: str) -> str:
     plugin_dir:     plugin directory
     return:         local name of the plugin
     """
-    disco_object.logger.debug = (
-        f"{disco_object.data.pluginname}->plugin_start3 start..."
-    )
+    if disco_object.logger:
+        disco_object.logger.debug = (
+            f"{disco_object.data.pluginname}->plugin_start3 start..."
+        )
     # loglevel set from config
     disco_object.log_processor.loglevel = LogLevels().get(config.get_str("loglevel"))
     disco_object.logger.debug = f"{disco_object.data.pluginname}->plugin_start3 done."

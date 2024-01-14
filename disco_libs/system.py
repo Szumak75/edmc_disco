@@ -28,24 +28,24 @@ from jsktoolbox.attribtool import ReadOnlyClass
 class _Keys(object, metaclass=ReadOnlyClass):
     """Keys container class."""
 
-    BIT32 = "32-bit"
-    BIT64 = "64-bit"
-    COPY = "_copy_"
-    DARWIN = "Darwin"
-    DIR = "__dir__"
-    ENGINE = "__engine__"
-    HOME = "__home__"
-    LINUX = "Linux"
-    LOGLVL = "__lvl__"
-    MAC = "mac"
-    NAME = "__name__"
-    NT = "nt"
-    PASTE = "_paste_"
-    POSIX = "posix"
-    QUEUE = "__quq__"
-    TMP = "__tmp__"
-    WINDOWS = "Windows"
-    X86_64 = "x86_64"
+    BIT32: str = "32-bit"
+    BIT64: str = "64-bit"
+    COPY: str = "_copy_"
+    DARWIN: str = "Darwin"
+    DIR: str = "__dir__"
+    ENGINE: str = "__engine__"
+    HOME: str = "__home__"
+    LINUX: str = "Linux"
+    LOGLVL: str = "__lvl__"
+    MAC: str = "mac"
+    NAME: str = "__name__"
+    NT: str = "nt"
+    PASTE: str = "_paste_"
+    POSIX: str = "posix"
+    QUEUE: str = "__quq__"
+    TMP: str = "__tmp__"
+    WINDOWS: str = "Windows"
+    X86_64: str = "x86_64"
 
 
 class Clip(BData):
@@ -246,14 +246,14 @@ class Env(BData):
 
     def __init__(self) -> None:
         """Initialize Env class."""
-        home = os.getenv("HOME")
+        home: Optional[str] = os.getenv("HOME")
         if home is None:
             home = os.getenv("HOMEPATH")
             if home is not None:
                 home = f"{os.getenv('HOMEDRIVE')}{home}"
         self._data[_Keys.HOME] = home
 
-        tmp = os.getenv("TMP")
+        tmp: Optional[str] = os.getenv("TMP")
         if tmp is None:
             tmp = os.getenv("TEMP")
             if tmp is None:
@@ -270,10 +270,10 @@ class Env(BData):
         """Return multiplatform os architecture."""
         os_arch = _Keys.BIT32
         if os.name == _Keys.NT:
-            output = subprocess.check_output(
+            output: str = subprocess.check_output(
                 ["wmic", "os", "get", "OSArchitecture"]
             ).decode()
-            os_arch = output.split()[1]
+            os_arch: str = output.split()[1]
         else:
             output = subprocess.check_output(["uname", "-m"]).decode()
             if _Keys.X86_64 in output:
@@ -306,7 +306,7 @@ class Env(BData):
 class Log(BClasses):
     """Create Log container class."""
 
-    __data: List = None  # type: ignore
+    __data: List[str] = None  # type: ignore
     __level: int = None  # type: ignore
 
     def __init__(self, level: int) -> None:
@@ -495,7 +495,9 @@ class LogClient(BData):
         """
         log = Log(LogLevels().debug)
         log.log = message
-        self._data[_Keys.QUEUE].put(log)
+        queue: Queue = self._data[_Keys.QUEUE]
+        if queue:
+            queue.put(log)
 
     @property
     def error(self) -> str:
@@ -558,15 +560,15 @@ class LogClient(BData):
         self._data[_Keys.QUEUE].put(log)
 
 
-class LogLevels(BData):
+class LogLevels(BClasses):
     """Log levels keys.
 
     This is a container class with properties that return the proper
     logging levels defined in the logging module.
     """
 
-    __keys: Dict[int, bool] = None # type: ignore
-    __txt: Dict[str, int] = None # type: ignore
+    __keys: Dict[int, bool] = None  # type: ignore
+    __txt: Dict[str, int] = None  # type: ignore
 
     def __init__(self) -> None:
         """Create Log instance."""
@@ -588,13 +590,15 @@ class LogLevels(BData):
             "NOTSET": self.notset,
         }
 
-    def get(self, level: str) -> Optional[int]:
+    def get(self, level: Union[str, int]) -> Optional[int]:
         """Get int log level."""
-        if level in self.__txt:
+        if isinstance(level, str) and level in self.__txt:
             return self.__txt[level]
+        if isinstance(level, int) and level in self.__keys:
+            return level
         return None
 
-    def has_key(self, level: int) -> bool:
+    def has_key(self, level: Union[int, str]) -> bool:
         """Check, if level is in proper keys."""
         if level in self.__keys or level in self.__txt:
             return True
