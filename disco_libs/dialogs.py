@@ -607,8 +607,8 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
         ih = ImageHelper()
 
         color = 0xD9D9D9
-        color1 = hex(color - 10).replace("0x", "#")
-        color2 = hex(color + 10).replace("0x", "#")
+        color1: str = hex(color - 20).replace("0x", "#")
+        color2: str = hex(color + 20).replace("0x", "#")
 
         # [0] count
         list_object.append(count)
