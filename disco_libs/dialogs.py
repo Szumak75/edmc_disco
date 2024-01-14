@@ -606,6 +606,10 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
         list_object = []
         ih = ImageHelper()
 
+        color = 0xD9D9D9
+        color1 = hex(color - 10).replace("0x", "#")
+        color2 = hex(color + 10).replace("0x", "#")
+
         # [0] count
         list_object.append(count)
 
@@ -615,10 +619,11 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
         # [2] frame
         frame = tk.Frame(
             self._data[DialogKeys.WIDGETS][DialogKeys.SPANEL].interior,
-            # background="#ffffff",
+            background=color1 if count % 2 else color2,
             # relief='solid',
             # borderwidth=1,
         )
+
         frame.pack(fill=tk.X)
         list_object.append(frame)
 
