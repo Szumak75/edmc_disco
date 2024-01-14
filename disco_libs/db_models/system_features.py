@@ -16,7 +16,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 class TSystemFeatures(DiscoBase):
     """Table of System Features."""
 
-    __tablename__ = "system_features"
+    __tablename__: str = "system_features"
 
     id: Mapped[int] = mapped_column(
         Integer, primary_key=True, nullable=False, autoincrement=True
@@ -57,9 +57,14 @@ class TSystemFeatures(DiscoBase):
         """Get allegiance feature."""
         return self._allegiance
 
-    @allegiance.setter
-    def allegiance(self, value: Optional[str]):
-        if self._allegiance is None or self._allegiance != value:
+    @allegiance.inplace.setter
+    def _allegiance_setter(self, value: Optional[str]) -> None:
+        if not value:
+            value = ""
+        if not self._allegiance:
+            if value:
+                self._allegiance = value
+        elif self._allegiance != value:
             self._allegiance = value
 
     @hybrid_property
@@ -67,8 +72,10 @@ class TSystemFeatures(DiscoBase):
         """Get security feature."""
         return self._population
 
-    @population.setter
-    def population(self, value):
+    @population.inplace.setter
+    def _population_setter(self, value: int) -> None:
+        if not value:
+            value = 0
         if self._population != value:
             self._population = value
 
@@ -77,9 +84,14 @@ class TSystemFeatures(DiscoBase):
         """Get security feature."""
         return self._security
 
-    @security.setter
-    def security(self, value: Optional[str]):
-        if self._security is None or self._security != value:
+    @security.inplace.setter
+    def _security_setter(self, value: Optional[str]) -> None:
+        if not value:
+            value = ""
+        if not self._security:
+            if value:
+                self._security = value
+        elif self._security != value:
             self._security = value
 
 

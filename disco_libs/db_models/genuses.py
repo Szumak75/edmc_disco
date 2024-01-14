@@ -5,7 +5,7 @@ Created on 30 jan 2023.
 @author: szumak@virthost.pl
 """
 
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 from sqlalchemy import ForeignKey, String, Integer, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -16,7 +16,7 @@ from disco_libs.db_models.base import DiscoBase
 class TGenusScan(DiscoBase):
     """Table of Genus Scan."""
 
-    __tablename__ = "genus_scan"
+    __tablename__: str = "genus_scan"
 
     id: Mapped[int] = mapped_column(
         primary_key=True, nullable=False, autoincrement=True
@@ -47,7 +47,7 @@ class TGenusScan(DiscoBase):
 class TGenus(DiscoBase):
     """Table of Genuses."""
 
-    __tablename__ = "genuses"
+    __tablename__: str = "genuses"
 
     id: Mapped[int] = mapped_column(
         primary_key=True, nullable=False, autoincrement=True
@@ -72,7 +72,7 @@ class TGenus(DiscoBase):
 class TBodyGenuses(DiscoBase):
     """Table of Body Genuses."""
 
-    __tablename__ = "body_genuses"
+    __tablename__: str = "body_genuses"
 
     id: Mapped[int] = mapped_column(
         primary_key=True, nullable=False, autoincrement=True
@@ -119,21 +119,25 @@ class TBodyGenuses(DiscoBase):
                     genuses.genus == entry["Genus"]
                     and genuses.genus_localised == entry["Genus_Localised"]
                 ):
-                    scan = None
+                    scan: Optional[TGenusScan] = None
                     if entry.get("Variant", "") != "":
                         # search for scan with variant
                         for item_scan in genuses.scan:
-                            iscan: TGenusScan = item_scan
-                            if iscan.variant_localised == entry["Variant_Localised"]:
-                                scan = iscan
+                            if (
+                                item_scan.variant_localised
+                                == entry["Variant_Localised"]
+                            ):
+                                scan = item_scan
                                 break
 
                     else:
                         # search for scan without variant
                         for item_scan in genuses.scan:
-                            iscan: TGenusScan = item_scan
-                            if iscan.species_localised == entry["Species_Localised"]:
-                                scan = iscan
+                            if (
+                                item_scan.species_localised
+                                == entry["Species_Localised"]
+                            ):
+                                scan = item_scan
                                 break
                     if not scan:
                         scan = TGenusScan()

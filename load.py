@@ -31,26 +31,37 @@ def plugin_start3(plugin_dir: str) -> str:
             f"{disco_object.data.pluginname}->plugin_start3 start..."
         )
     # loglevel set from config
-    disco_object.log_processor.loglevel = LogLevels().get(config.get_str("loglevel"))
-    disco_object.logger.debug = f"{disco_object.data.pluginname}->plugin_start3 done."
+    if disco_object.log_processor:
+        disco_object.log_processor.loglevel = LogLevels().get(
+            config.get_str("loglevel")
+        ) # type: ignore
+    if disco_object.logger:
+        disco_object.logger.debug = (
+            f"{disco_object.data.pluginname}->plugin_start3 done."
+        )
     return f"{disco_object.data.pluginname}"
 
 
 def plugin_stop() -> None:
     """Stop plugin if EDMC is closing."""
-    disco_object.logger.debug = f"{disco_object.data.pluginname}->plugin_stop: start..."
+    if disco_object.logger:
+        disco_object.logger.debug = (
+            f"{disco_object.data.pluginname}->plugin_stop: start..."
+        )
     disco_object.data.shutting_down = True
-    disco_object.logger.debug = (
-        f"{disco_object.data.pluginname}->plugin_stop: shut down flag is set"
-    )
+    if disco_object.logger:
+        disco_object.logger.debug = (
+            f"{disco_object.data.pluginname}->plugin_stop: shut down flag is set"
+        )
     # something to do
 
     disco_object.data.db_processor.close()
 
     # shut down logger at last
-    disco_object.logger.debug = (
-        f"{disco_object.data.pluginname}->plugin_stop: terminating the logger"
-    )
+    if disco_object.logger:
+        disco_object.logger.debug = (
+            f"{disco_object.data.pluginname}->plugin_stop: terminating the logger"
+        )
     disco_object.qlog.put(None)
     disco_object.thlog.join()
     disco_object.thlog = None

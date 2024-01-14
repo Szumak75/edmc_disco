@@ -16,7 +16,7 @@ from disco_libs.db_models.base import DiscoBase
 class TCodex(DiscoBase):
     """Table of Codex."""
 
-    __tablename__ = "codex"
+    __tablename__:str = "codex"
 
     id: Mapped[int] = mapped_column(
         primary_key=True, nullable=False, autoincrement=True
@@ -55,7 +55,7 @@ class TCodex(DiscoBase):
 class TBodyCodexes(DiscoBase):
     """Table of Body Codexes."""
 
-    __tablename__ = "body_codexes"
+    __tablename__:str = "body_codexes"
 
     id: Mapped[int] = mapped_column(
         primary_key=True, nullable=False, autoincrement=True

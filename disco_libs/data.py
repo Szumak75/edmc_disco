@@ -11,6 +11,7 @@ from typing import Optional, Union
 from jsktoolbox.attribtool import ReadOnlyClass
 from jsktoolbox.libs.base_data import BData
 from jsktoolbox.raisetool import Raise
+from disco_libs.database import DBProcessor
 
 from disco_libs.stars import StarsSystem
 from disco_libs.db_models.system import TSystem
@@ -99,12 +100,12 @@ class DiscoData(SimpleData):
         self._data[_Keys.DIALOG] = None
 
     @property
-    def db_processor(self) -> object:
+    def db_processor(self) -> DBProcessor:
         """Database processor."""
         return self._data[_Keys.PROCESSOR]
 
     @db_processor.setter
-    def db_processor(self, value: object) -> None:
+    def db_processor(self, value: DBProcessor) -> None:
         self._data[_Keys.PROCESSOR] = value
 
     @property

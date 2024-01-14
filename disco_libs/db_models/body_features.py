@@ -23,35 +23,59 @@ class TBodyFeatures(DiscoBase):
     )
     body_id: Mapped[int] = mapped_column(ForeignKey("bodies.id"))
 
-    _absolutemagnitude = mapped_column(Float(precision=6), default=None)
-    _atmosfere = mapped_column(String, default=None)
-    _atmosferetype = mapped_column(String, default=None)
-    _axialtilt = mapped_column(Float(precision=6), default=None)
-    _body_type = mapped_column(String, default=None)
-    _discovered = mapped_column(Boolean, default=None)
-    _discovered_first = mapped_column(Boolean, default=False)
-    _distance = mapped_column(Float(precision=6), default=None)
-    _eccentricity = mapped_column(Float(precision=6), default=None)
-    _landable = mapped_column(Boolean, default=None)
-    _luminosity = mapped_column(String, default=None)
-    _mapped = mapped_column(Boolean, default=None)
-    _mapped_first = mapped_column(Boolean, default=False)
-    _massem = mapped_column(Float(precision=6), default=None)
-    _orbitalinclination = mapped_column(Float(precision=6), default=None)
-    _orbitalperiod = mapped_column(Float(precision=6), default=None)
-    _periapsis = mapped_column(Float(precision=6), default=None)
-    _planet_class = mapped_column(String, default=None)
-    _radius = mapped_column(Float(precision=6), default=None)
-    _rotationperiod = mapped_column(Float(precision=6), default=None)
-    _semimajoraxis = mapped_column(Float(precision=6), default=None)
-    _star_type = mapped_column(String, default=None)
-    _stellarmass = mapped_column(Float(precision=6), default=None)
-    _subclass = mapped_column(Integer, default=None)
-    _surfacegravity = mapped_column(Float(precision=6), default=None)
-    _surfacepressure = mapped_column(Float(precision=6), default=None)
-    _surfacetemperature = mapped_column(Float(precision=6), default=None)
-    _terraformstate = mapped_column(String, default=None)
-    _volcanism = mapped_column(String, default=None)
+    _absolutemagnitude: Mapped[Optional[float]] = mapped_column(
+        Float(precision=6), default=None
+    )
+    _atmosfere: Mapped[Optional[str]] = mapped_column(String, default=None)
+    _atmosferetype: Mapped[Optional[str]] = mapped_column(String, default=None)
+    _axialtilt: Mapped[Optional[float]] = mapped_column(
+        Float(precision=6), default=None
+    )
+    _body_type: Mapped[Optional[str]] = mapped_column(String, default=None)
+    _discovered: Mapped[Optional[bool]] = mapped_column(Boolean, default=None)
+    _discovered_first: Mapped[bool] = mapped_column(Boolean, default=False)
+    _distance: Mapped[Optional[float]] = mapped_column(Float(precision=6), default=None)
+    _eccentricity: Mapped[Optional[float]] = mapped_column(
+        Float(precision=6), default=None
+    )
+    _landable: Mapped[Optional[bool]] = mapped_column(Boolean, default=None)
+    _luminosity: Mapped[Optional[str]] = mapped_column(String, default=None)
+    _mapped: Mapped[Optional[bool]] = mapped_column(Boolean, default=None)
+    _mapped_first: Mapped[bool] = mapped_column(Boolean, default=False)
+    _massem: Mapped[Optional[float]] = mapped_column(Float(precision=6), default=None)
+    _orbitalinclination: Mapped[Optional[float]] = mapped_column(
+        Float(precision=6), default=None
+    )
+    _orbitalperiod: Mapped[Optional[float]] = mapped_column(
+        Float(precision=6), default=None
+    )
+    _periapsis: Mapped[Optional[float]] = mapped_column(
+        Float(precision=6), default=None
+    )
+    _planet_class: Mapped[Optional[str]] = mapped_column(String, default=None)
+    _radius: Mapped[Optional[float]] = mapped_column(Float(precision=6), default=None)
+    _rotationperiod: Mapped[Optional[float]] = mapped_column(
+        Float(precision=6), default=None
+    )
+    _semimajoraxis: Mapped[Optional[float]] = mapped_column(
+        Float(precision=6), default=None
+    )
+    _star_type: Mapped[Optional[str]] = mapped_column(String, default=None)
+    _stellarmass: Mapped[Optional[float]] = mapped_column(
+        Float(precision=6), default=None
+    )
+    _subclass: Mapped[Optional[int]] = mapped_column(Integer, default=None)
+    _surfacegravity: Mapped[Optional[float]] = mapped_column(
+        Float(precision=6), default=None
+    )
+    _surfacepressure: Mapped[Optional[float]] = mapped_column(
+        Float(precision=6), default=None
+    )
+    _surfacetemperature: Mapped[Optional[float]] = mapped_column(
+        Float(precision=6), default=None
+    )
+    _terraformstate: Mapped[Optional[str]] = mapped_column(String, default=None)
+    _volcanism: Mapped[Optional[str]] = mapped_column(String, default=None)
 
     def __repr__(self) -> str:
         """Return string object."""
@@ -169,13 +193,13 @@ class TBodyFeatures(DiscoBase):
             self.volcanism = entry["Volcanism"]
 
     @hybrid_property
-    def absolutemagnitude(self) -> Optional[Float]:
+    def absolutemagnitude(self) -> Optional[float]:
         """Get absolutemagnitude feature."""
         return self._absolutemagnitude
 
-    @absolutemagnitude.setter
-    def absolutemagnitude(self, value):
-        if self._absolutemagnitude is None or self._absolutemagnitude != value:
+    @absolutemagnitude.inplace.setter
+    def _absolutemagnitude_setter(self, value: Optional[float]) -> None:
+        if self._absolutemagnitude != value:
             self._absolutemagnitude = value
 
     @hybrid_property
@@ -183,9 +207,9 @@ class TBodyFeatures(DiscoBase):
         """Get atmosfere feature."""
         return self._atmosfere
 
-    @atmosfere.setter
-    def atmosfere(self, value):
-        if self._atmosfere is None or self._atmosfere != value:
+    @atmosfere.inplace.setter
+    def _atmosfere_setter(self, value: Optional[str]) -> None:
+        if self._atmosfere != value:
             self._atmosfere = value
 
     @hybrid_property
@@ -193,19 +217,19 @@ class TBodyFeatures(DiscoBase):
         """Get atmosferetype feature."""
         return self._atmosferetype
 
-    @atmosferetype.setter
-    def atmosferetype(self, value):
-        if self._atmosferetype is None or self._atmosferetype != value:
+    @atmosferetype.inplace.setter
+    def _atmosferetype_setter(self, value: Optional[str]) -> None:
+        if self._atmosferetype != value:
             self._atmosferetype = value
 
     @hybrid_property
-    def axialtilt(self) -> Optional[Float]:
+    def axialtilt(self) -> Optional[float]:
         """Get axialtilt feature."""
         return self._axialtilt
 
-    @axialtilt.setter
-    def axialtilt(self, value):
-        if self._axialtilt is None or self._axialtilt != value:
+    @axialtilt.inplace.setter
+    def _axialtilt_setter(self, value: Optional[float]) -> None:
+        if self._axialtilt != value:
             self._axialtilt = value
 
     @hybrid_property
@@ -213,9 +237,9 @@ class TBodyFeatures(DiscoBase):
         """Get bodytype feature."""
         return self._body_type
 
-    @body_type.setter
-    def body_type(self, value):
-        if self._body_type is None or self._body_type != value:
+    @body_type.inplace.setter
+    def _body_type_setter(self, value: Optional[str]) -> None:
+        if self._body_type != value:
             self._body_type = value
 
     @hybrid_property
@@ -223,8 +247,9 @@ class TBodyFeatures(DiscoBase):
         """Get discovered feature."""
         return self._discovered
 
-    @discovered.setter
-    def discovered(self, value):
+    @discovered.inplace.setter
+    def _discovered_setter(self, value: Optional[bool]) -> None:
+        # TODO: check, first time set only
         if not self._discovered:
             self._discovered = value
 
@@ -233,29 +258,30 @@ class TBodyFeatures(DiscoBase):
         """Get discovered_first feature."""
         return self._discovered_first
 
-    @discovered_first.setter
-    def discovered_first(self, value):
+    @discovered_first.inplace.setter
+    def _discovered_first_setter(self, value: bool) -> None:
+        # first time set only
         if not self.discovered:
             self._discovered_first = value
 
     @hybrid_property
-    def distance(self) -> Optional[Float]:
+    def distance(self) -> Optional[float]:
         """Get distance feature."""
         return self._distance
 
-    @distance.setter
-    def distance(self, value):
-        if self._distance is None or self._distance != value:
+    @distance.inplace.setter
+    def _distance_setter(self, value: Optional[float]) -> None:
+        if self._distance != value:
             self._distance = value
 
     @hybrid_property
-    def eccentricity(self) -> Optional[Float]:
+    def eccentricity(self) -> Optional[float]:
         """Get eccentricity feature."""
         return self._eccentricity
 
-    @eccentricity.setter
-    def eccentricity(self, value):
-        if self._eccentricity is None or self._eccentricity != value:
+    @eccentricity.inplace.setter
+    def _eccentricity_setter(self, value: Optional[float]) -> None:
+        if self._eccentricity != value:
             self._eccentricity = value
 
     @hybrid_property
@@ -263,9 +289,9 @@ class TBodyFeatures(DiscoBase):
         """Get landable feature."""
         return self._landable
 
-    @landable.setter
-    def landable(self, value):
-        if self._landable is None or self._landable != value:
+    @landable.inplace.setter
+    def _landable_setter(self, value: Optional[bool]) -> None:
+        if self._landable != value:
             self._landable = value
 
     @hybrid_property
@@ -273,9 +299,9 @@ class TBodyFeatures(DiscoBase):
         """Get luminosity feature."""
         return self._luminosity
 
-    @luminosity.setter
-    def luminosity(self, value):
-        if self._luminosity is None or self._luminosity != value:
+    @luminosity.inplace.setter
+    def _luminosity_setter(self, value: Optional[str]) -> None:
+        if self._luminosity != value:
             self._luminosity = value
 
     @hybrid_property
@@ -283,8 +309,8 @@ class TBodyFeatures(DiscoBase):
         """Get mapped feature."""
         return self._mapped
 
-    @mapped.setter
-    def mapped(self, value):
+    @mapped.inplace.setter
+    def _mapped_setter(self, value: Optional[bool]) -> None:
         if not self._mapped:
             self._mapped = value
             if not self.discovered and value:
@@ -295,48 +321,48 @@ class TBodyFeatures(DiscoBase):
         """Get mapped_first feature."""
         return self._mapped_first
 
-    @mapped_first.setter
-    def mapped_first(self, value):
+    @mapped_first.inplace.setter
+    def _mapped_first_setter(self, value: bool) -> None:
         if not self.mapped:
             self._mapped_first = value
 
     @hybrid_property
-    def massem(self) -> Optional[Float]:
+    def massem(self) -> Optional[float]:
         """Get massem feature."""
         return self._massem
 
-    @massem.setter
-    def massem(self, value):
-        if self._massem is None or self._massem != value:
+    @massem.inplace.setter
+    def _massem_setter(self, value: Optional[float]) -> None:
+        if self._massem != value:
             self._massem = value
 
     @hybrid_property
-    def orbitalinclination(self) -> Optional[Float]:
+    def orbitalinclination(self) -> Optional[float]:
         """Get orbitalinclination feature."""
         return self._orbitalinclination
 
-    @orbitalinclination.setter
-    def orbitalinclination(self, value):
-        if self._orbitalinclination is None or self._orbitalinclination != value:
+    @orbitalinclination.inplace.setter
+    def _orbitalinclination_setter(self, value: Optional[float]) -> None:
+        if self._orbitalinclination != value:
             self._orbitalinclination = value
 
     @hybrid_property
-    def orbitalperiod(self) -> Optional[Float]:
+    def orbitalperiod(self) -> Optional[float]:
         """Get orbitalperiod feature."""
         return self._orbitalperiod
 
-    @orbitalperiod.setter
-    def orbitalperiod(self, value):
-        if self._orbitalperiod is None or self._orbitalperiod != value:
+    @orbitalperiod.inplace.setter
+    def _orbitalperiod_setter(self, value: Optional[float]) -> None:
+        if self._orbitalperiod != value:
             self._orbitalperiod = value
 
     @hybrid_property
-    def periapsis(self) -> Optional[Float]:
+    def periapsis(self) -> Optional[float]:
         """Get periapsis feature."""
         return self._periapsis
 
-    @periapsis.setter
-    def periapsis(self, value):
+    @periapsis.inplace.setter
+    def _periapsis_setter(self, value: Optional[float]) -> None:
         if self._periapsis is None or self._periapsis != value:
             self._periapsis = value
 
@@ -345,49 +371,49 @@ class TBodyFeatures(DiscoBase):
         """Get periapsis feature."""
         return self._planet_class
 
-    @planet_class.setter
-    def planet_class(self, value):
-        if self._planet_class is None or self._planet_class != value:
+    @planet_class.inplace.setter
+    def _planet_class_setter(self, value: Optional[str]) -> None:
+        if self._planet_class != value:
             self._planet_class = value
 
     @hybrid_property
-    def radius(self) -> Optional[Float]:
+    def radius(self) -> Optional[float]:
         """Get radius feature."""
         return self._radius
 
-    @radius.setter
-    def radius(self, value):
-        if self._radius is None or self._radius != value:
+    @radius.inplace.setter
+    def _radius_setter(self, value: Optional[float]) -> None:
+        if self._radius != value:
             self._radius = value
 
     @hybrid_property
-    def rotationperiod(self) -> Optional[Float]:
+    def rotationperiod(self) -> Optional[float]:
         """Get rotationperiod feature."""
         return self._rotationperiod
 
-    @rotationperiod.setter
-    def rotationperiod(self, value):
-        if self._rotationperiod is None or self._rotationperiod != value:
+    @rotationperiod.inplace.setter
+    def _rotationperiod_setter(self, value: Optional[float]) -> None:
+        if self._rotationperiod != value:
             self._rotationperiod = value
 
     @hybrid_property
-    def semimajoraxis(self) -> Optional[Float]:
+    def semimajoraxis(self) -> Optional[float]:
         """Get semimajoraxis feature."""
         return self._semimajoraxis
 
-    @semimajoraxis.setter
-    def semimajoraxis(self, value):
-        if self._semimajoraxis is None or self._semimajoraxis != value:
+    @semimajoraxis.inplace.setter
+    def _semimajoraxis_setter(self, value: Optional[float]) -> None:
+        if self._semimajoraxis != value:
             self._semimajoraxis = value
 
     @hybrid_property
-    def stellarmass(self) -> Optional[Float]:
+    def stellarmass(self) -> Optional[float]:
         """Get stellarmass feature."""
         return self._stellarmass
 
-    @stellarmass.setter
-    def stellarmass(self, value):
-        if self._stellarmass is None or self._stellarmass != value:
+    @stellarmass.inplace.setter
+    def _stellarmass_setter(self, value: Optional[float]) -> None:
+        if self._stellarmass != value:
             self._stellarmass = value
 
     @hybrid_property
@@ -395,39 +421,39 @@ class TBodyFeatures(DiscoBase):
         """Get subclass feature."""
         return self._subclass
 
-    @subclass.setter
-    def subclass(self, value):
-        if self._subclass is None or self._subclass != value:
+    @subclass.inplace.setter
+    def _subclass_setter(self, value: Optional[int]) -> None:
+        if self._subclass != value:
             self._subclass = value
 
     @hybrid_property
-    def surfacegravity(self) -> Optional[Float]:
+    def surfacegravity(self) -> Optional[float]:
         """Get surfacegravity feature."""
         return self._surfacegravity
 
-    @surfacegravity.setter
-    def surfacegravity(self, value):
-        if self._surfacegravity is None or self._surfacegravity != value:
+    @surfacegravity.inplace.setter
+    def _surfacegravity_setter(self, value: Optional[float]) -> None:
+        if self._surfacegravity != value:
             self._surfacegravity = value
 
     @hybrid_property
-    def surfacepressure(self) -> Optional[Float]:
+    def surfacepressure(self) -> Optional[float]:
         """Get surfacepressure feature."""
         return self._surfacepressure
 
-    @surfacepressure.setter
-    def surfacepressure(self, value):
-        if self._surfacepressure is None or self._surfacepressure != value:
+    @surfacepressure.inplace.setter
+    def _surfacepressure_setter(self, value: Optional[float]) -> None:
+        if self._surfacepressure != value:
             self._surfacepressure = value
 
     @hybrid_property
-    def surfacetemperature(self) -> Optional[Float]:
+    def surfacetemperature(self) -> Optional[float]:
         """Get surfacetemperature feature."""
         return self._surfacetemperature
 
-    @surfacetemperature.setter
-    def surfacetemperature(self, value):
-        if self._surfacetemperature is None or self._surfacetemperature != value:
+    @surfacetemperature.inplace.setter
+    def _surfacetemperature_setter(self, value: Optional[float]) -> None:
+        if self._surfacetemperature != value:
             self._surfacetemperature = value
 
     @hybrid_property
@@ -435,9 +461,9 @@ class TBodyFeatures(DiscoBase):
         """Get startype feature."""
         return self._star_type
 
-    @star_type.setter
-    def star_type(self, value):
-        if self._star_type is None or self._star_type != value:
+    @star_type.inplace.setter
+    def _star_type_setter(self, value: Optional[str]) -> None:
+        if self._star_type != value:
             self._star_type = value
 
     @hybrid_property
@@ -445,9 +471,9 @@ class TBodyFeatures(DiscoBase):
         """Get terraformstate feature."""
         return self._terraformstate
 
-    @terraformstate.setter
-    def terraformstate(self, value):
-        if self._terraformstate is None or self._terraformstate != value:
+    @terraformstate.inplace.setter
+    def _terraformstate_setter(self, value: Optional[str]) -> None:
+        if self._terraformstate != value:
             self._terraformstate = value
 
     @hybrid_property
@@ -457,9 +483,9 @@ class TBodyFeatures(DiscoBase):
         #     return 'XXX'
         return self._volcanism
 
-    @volcanism.setter
-    def volcanism(self, value):
-        if self._volcanism is None or self._volcanism != value:
+    @volcanism.inplace.setter
+    def _volcanism_setter(self, value: Optional[str]) -> None:
+        if self._volcanism != value:
             self._volcanism = value
 
 

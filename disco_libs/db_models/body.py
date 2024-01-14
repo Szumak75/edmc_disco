@@ -18,7 +18,7 @@ from disco_libs.db_models.codex import TBodyCodexes
 class TBody(DiscoBase):
     """Table of Bodies."""
 
-    __tablename__ = "bodies"
+    __tablename__:str = "bodies"
 
     id: Mapped[int] = mapped_column(
         primary_key=True, nullable=False, autoincrement=True
@@ -34,7 +34,7 @@ class TBody(DiscoBase):
     genuses: Mapped["TBodyGenuses"] = relationship("TBodyGenuses")
     codexes: Mapped["TBodyCodexes"] = relationship("TBodyCodexes")
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize object."""
         DiscoBase.__init__(self)
         self.features = TBodyFeatures()

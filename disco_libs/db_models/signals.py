@@ -15,7 +15,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 class TSignal(DiscoBase):
     """Table of Signals."""
 
-    __tablename__ = "signals"
+    __tablename__: str = "signals"
 
     id: Mapped[int] = mapped_column(
         primary_key=True, nullable=False, autoincrement=True
@@ -25,7 +25,7 @@ class TSignal(DiscoBase):
     type_localised: Mapped[str] = mapped_column(String, nullable=True, default=None)
     count: Mapped[int] = mapped_column(Integer, default=0)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return string object."""
         return (
             f"TSignal(id='{self.id}', "
@@ -40,7 +40,7 @@ class TSignal(DiscoBase):
 class TBodySignals(DiscoBase):
     """Table of Body Signals."""
 
-    __tablename__ = "body_signals"
+    __tablename__: str = "body_signals"
 
     id: Mapped[int] = mapped_column(
         primary_key=True, nullable=False, autoincrement=True
@@ -84,9 +84,8 @@ class TBodySignals(DiscoBase):
 
     def __count_type_signals(self, signal_type: str) -> int:
         """Return number of type signals."""
-        count = 0
-        for item in self.signals:
-            signal: TSignal = item
+        count: int = 0
+        for signal in self.signals:
             if signal.type_localised == signal_type:
                 count = signal.count
                 break

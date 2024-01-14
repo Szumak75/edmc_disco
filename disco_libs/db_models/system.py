@@ -21,7 +21,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 class TSystem(DiscoBase):
     """Table of Systems."""
 
-    __tablename__ = "systems"
+    __tablename__: str = "systems"
 
     id: Mapped[int] = mapped_column(
         primary_key=True, nullable=False, autoincrement=True
@@ -37,7 +37,7 @@ class TSystem(DiscoBase):
     bodies: Mapped[List["TBody"]] = relationship("TBody")
     _timestamp: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize object."""
         DiscoBase.__init__(self)
         self.features = TSystemFeatures()
@@ -81,7 +81,7 @@ class TSystem(DiscoBase):
         """Return a TBody object with the specified BodyID or None."""
         if not self.bodies:
             return None
-        body = None
+        body: Optional[TBody] = None
         for item in self.bodies:
             if item.bodyid == body_id:
                 body = item
@@ -89,32 +89,32 @@ class TSystem(DiscoBase):
         return body
 
     @hybrid_property
-    def star_pos(self) -> List:
+    def star_pos(self) -> List[float]:
         """Get 'StarPos' list."""
         return [self.pos_x, self.pos_y, self.pos_z]
 
-    @star_pos.setter
-    def star_pos(self, data: List):
+    @star_pos.inplace.setter
+    def _star_pos_setter(self, value: List[float]) -> None:
         """Set 'StarPos' from list."""
-        if isinstance(data, List) and len(data) == 3:
-            self.pos_x = data[0]
-            self.pos_y = data[1]
-            self.pos_z = data[2]
+        if isinstance(value, List) and len(value) == 3:
+            self.pos_x = value[0]
+            self.pos_y = value[1]
+            self.pos_z = value[2]
         else:
-            print(f"Something is wrong with StarPos: {data} for {self.name}")
+            print(f"Something is wrong with StarPos: {value} for {self.name}")
 
     @hybrid_property
     def timestamp(self) -> int:
         """Get latest data timestamp."""
         return self._timestamp
 
-    @timestamp.setter
-    def timestamp(self, value: Union[int, str]):
+    @timestamp.inplace.setter
+    def _timestamp_setter(self, value: Union[int, str]) -> None:
         if isinstance(value, int):
             self._timestamp = value
         else:
             # create struct_time
-            str_time = time.strptime(value, "%Y-%m-%dT%H:%M:%SZ")
+            str_time: time.struct_time = time.strptime(value, "%Y-%m-%dT%H:%M:%SZ")
 
             # create datetime object
             dt_obj = datetime.datetime(*str_time[:6])
