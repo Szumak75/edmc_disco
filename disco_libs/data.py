@@ -12,7 +12,7 @@ from jsktoolbox.attribtool import ReadOnlyClass
 from jsktoolbox.libs.base_data import BData
 from jsktoolbox.raisetool import Raise
 from disco_libs.database import DBProcessor
-from disco_libs.dialogs import DiscoMainDialog
+
 
 from disco_libs.stars import StarsSystem
 from disco_libs.db_models.system import TSystem
@@ -110,12 +110,12 @@ class DiscoData(SimpleData):
         self._data[_Keys.PROCESSOR] = value
 
     @property
-    def dialog(self) -> DiscoMainDialog:
+    def dialog(self) -> object:
         """Return optional DiscoMainDialog object."""
         return self._data[_Keys.DIALOG]
 
     @dialog.setter
-    def dialog(self, value: DiscoMainDialog) -> None:
+    def dialog(self, value: object) -> None:
         """Set DiscoMainDialog object."""
         self._data[_Keys.DIALOG] = value
 
