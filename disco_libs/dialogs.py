@@ -633,7 +633,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
                 ):
                     img = tk.PhotoImage(data=ih.get_scoopable_image())
                     scoop = tk.Label(frame, image=img)
-                    # scoop["image"] = img
+                    scoop["image"] = img
                     scoop.pack(side=tk.RIGHT)
                     CreateToolTip(scoop, "Scoopable")
                 # get distance to arrival
@@ -645,7 +645,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
                         compound=tk.LEFT,
                         image=img,
                     )
-                    # distance.image = img
+                    distance["image"] = img
                     distance.pack(side=tk.RIGHT)
                     CreateToolTip(distance, "Distance to arrival")
                 # get landable flag
@@ -658,7 +658,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
                         compound=tk.LEFT,
                         image=img2,
                     )
-                    # temp.image = img2
+                    temp.image = img2
                     temp.pack(side=tk.RIGHT)
                     CreateToolTip(temp, "Surface temperature")
                     img = tk.PhotoImage(data=ih.get_landable_image())
@@ -675,7 +675,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
                         compound=tk.LEFT,
                         image=img,
                     )
-                    # humans.image = img
+                    humans.image = img
                     humans.pack(side=tk.RIGHT)
                     CreateToolTip(humans, "Planetary Base")
                 # get biological signals count
@@ -687,7 +687,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
                         compound=tk.LEFT,
                         image=img,
                     )
-                    # cbio.image = img
+                    cbio.image = img
                     cbio.pack(side=tk.RIGHT)
                     CreateToolTip(cbio, ih.get_bio_descript(body))
                 # get geological signals count
@@ -699,21 +699,21 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
                         compound=tk.LEFT,
                         image=img,
                     )
-                    # cgeo.image = img
+                    cgeo.image = img
                     cgeo.pack(side=tk.RIGHT)
                     CreateToolTip(cgeo, ih.get_geo_descript(body))
                 # first mapped
                 if features.mapped_first:
                     img = tk.PhotoImage(data=ih.get_map_image())
                     mape = tk.Label(frame, image=img)
-                    # mape.image = img
+                    mape.image = img
                     mape.pack(side=tk.RIGHT)
                     CreateToolTip(mape, "First mapped")
                 # first discovered
                 if features.discovered_first:
                     img = tk.PhotoImage(data=ih.get_first_image())
                     first = tk.Label(frame, image=img)
-                    # first.image = img
+                    first.image = img
                     first.pack(side=tk.RIGHT)
                     CreateToolTip(first, "First discovered")
             elif not body.name:
@@ -724,11 +724,11 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
             if imgstr:
                 img = tk.PhotoImage(data=imgstr)
                 lname = tk.Label(frame, text=f"{name}", compound=tk.LEFT, image=img)
-                # lname.image = img
+                lname.image = img
             else:
                 lname = tk.Label(frame, text=f"{name}")
             # generate body summaries tooltip
-            desc = self.__body_summary(body)
+            desc: List[str] = self.__body_summary(body)
             if desc:
                 CreateToolTip(lname, desc)
         else:
