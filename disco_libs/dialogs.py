@@ -620,8 +620,8 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
         frame = tk.Frame(
             self._data[DialogKeys.WIDGETS][DialogKeys.SPANEL].interior,
             background=color1 if count % 2 else color2,
-            # relief='solid',
-            # borderwidth=1,
+            relief=tk.GROOVE,
+            borderwidth=1,
         )
 
         frame.pack(fill=tk.X)
