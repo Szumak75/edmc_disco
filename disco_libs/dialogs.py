@@ -360,7 +360,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
         self.geometry("700x600")
         # grid configuration
         self.columnconfigure(0, weight=100)
-        self.columnconfigure(1, weight=1)
+        self.columnconfigure(1, weight=10)
         # label row
         r_label_idx = 0
         self.rowconfigure(r_label_idx, weight=1)
@@ -434,7 +434,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
 
         # size grip
         sizegrip = ttk.Sizegrip(status_frame)
-        sizegrip.grid(row=r_status_idx, column=1, padx=1, pady=1, sticky=tk.SE)
+        sizegrip.grid(row=r_status_idx, column=1, padx=1, pady=1, anchor=tk.SE)
         # closing event
         self.protocol("WM_DELETE_WINDOW", self.__on_closing)
 
