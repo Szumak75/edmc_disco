@@ -424,7 +424,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
 
         # size grip
         sizegrip = ttk.Sizegrip(status_frame)
-        sizegrip.pack(side=tk.RIGHT)
+        sizegrip.pack(anchor=tk.SE)
 
         # closing event
         self.protocol("WM_DELETE_WINDOW", self.__on_closing)
