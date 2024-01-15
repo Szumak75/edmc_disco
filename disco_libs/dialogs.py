@@ -433,7 +433,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
         self._data[DialogKeys.WIDGETS][DialogKeys.STATUS] = status_string
 
         # size grip
-        sizegrip = ttk.Sizegrip(status_frame)
+        sizegrip = ttk.Sizegrip(self)
         sizegrip.grid(row=r_status_idx, column=1, padx=1, pady=1, anchor=tk.SE)
         # closing event
         self.protocol("WM_DELETE_WINDOW", self.__on_closing)
