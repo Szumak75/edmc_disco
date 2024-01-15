@@ -380,7 +380,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
         # create command panel
         command_frame = tk.LabelFrame(self, text=" Search System ")
         command_frame.grid(
-            row=r_command_idx, padx=5, pady=5, ipadx=15, ipady=2, sticky=tk.EW
+            row=r_command_idx, padx=5, pady=5, ipadx=2, ipady=5, sticky=tk.EW
         )
         command_frame.columnconfigure(0, weight=1)
         command_frame.columnconfigure(1, weight=100)
