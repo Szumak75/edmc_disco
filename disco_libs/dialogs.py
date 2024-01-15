@@ -376,14 +376,14 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
 
         # create label
         label = tk.Label(self, text="Discoveries Explorer")
-        label.grid(row=r_label_idx, column=0, columnspan=1)
+        label.grid(row=r_label_idx, column=0, columnspan=2)
 
         # create command panel
         command_frame = tk.LabelFrame(self, text=" Search System ")
         command_frame.grid(
             row=r_command_idx,
             column=0,
-            columnspan=1,
+            columnspan=2,
             padx=5,
             pady=5,
             ipadx=5,
@@ -412,7 +412,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
         # create data panel
         data_frame = tk.LabelFrame(self, text=" System ")
         data_frame.grid(
-            row=r_data_idx, column=0, columnspan=1, padx=5, pady=5, sticky=tk.NSEW
+            row=r_data_idx, column=0, columnspan=2, padx=5, pady=5, sticky=tk.NSEW
         )
         self._data[DialogKeys.WIDGETS][DialogKeys.FDATA] = data_frame
 
