@@ -16,12 +16,12 @@ from types import FrameType
 from typing import Dict, List, Optional, Union, Any
 from jsktoolbox.raisetool import Raise
 from jsktoolbox.attribtool import NoDynamicAttributes
+from jsktoolbox.tktool.widgets import CreateToolTip, VerticalScrolledTkFrame
+
+
 from disco_libs.database import DBProcessor
-
-
 import disco_libs.db_models as db
 from disco_libs.data import DiscoData
-from disco_libs.dialogs_tools import CreateToolTip
 from disco_libs.base_logs import BLogClient
 from disco_libs.pics import Pics
 from disco_libs.system import LogClient
@@ -407,7 +407,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
         self._data[DialogKeys.WIDGETS][DialogKeys.FDATA] = data_frame
 
         # create scrolled panel
-        spanel = VerticalScrolledFrame(data_frame)
+        spanel = VerticalScrolledTkFrame(data_frame)
         spanel.pack(ipadx=1, ipady=1, fill=tk.BOTH, expand=tk.TRUE)
         self._data[DialogKeys.WIDGETS][DialogKeys.SPANEL] = spanel
 
@@ -791,56 +791,6 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
                 self._data[DialogKeys.WIDGETS][DialogKeys.STATUS].set(f"{message}")
             else:
                 self._data[DialogKeys.WIDGETS][DialogKeys.STATUS].set("")
-
-
-class VerticalScrolledFrame(tk.Frame):
-    """A pure Tkinter scrollable frame that actually works!
-    * Use the 'interior' attribute to place widgets inside the scrollable frame.
-    * Construct and pack/place/grid normally.
-    * This frame only allows vertical scrolling.
-    """
-
-    def __init__(self, parent, *args, **kw) -> None:
-        tk.Frame.__init__(self, parent, *args, **kw)
-
-        # Create a canvas object and a vertical scrollbar for scrolling it.
-        # vscrollbar = ttk.Scrollbar(self, orient=tk.VERTICAL)
-        vscrollbar = tk.Scrollbar(self, orient=tk.VERTICAL)
-        vscrollbar.pack(fill=tk.Y, side=tk.RIGHT, expand=tk.FALSE)
-        canvas = tk.Canvas(
-            self, bd=0, highlightthickness=0, yscrollcommand=vscrollbar.set
-        )
-        canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=tk.TRUE)
-        vscrollbar.config(command=canvas.yview)
-
-        # Reset the view
-        canvas.xview_moveto(0)
-        canvas.yview_moveto(0)
-
-        # Create a frame inside the canvas which will be scrolled with it.
-        # self.interior = interior = ttk.Frame(canvas)
-        self.interior = interior = tk.Frame(canvas)
-        interior_id: int = canvas.create_window(0, 0, window=interior, anchor=tk.NW)
-
-        # Track changes to the canvas and frame width and sync them,
-        # also updating the scrollbar.
-        def _configure_interior(event) -> None:
-            # Update the scrollbars to match the size of the inner frame.
-            canvas.config(
-                scrollregion=f"0 0 {interior.winfo_reqwidth()} {interior.winfo_reqheight()}"  # type: ignore
-            )
-            if interior.winfo_reqwidth() != canvas.winfo_width():
-                # Update the canvas's width to fit the inner frame.
-                canvas.config(width=interior.winfo_reqwidth())
-
-        interior.bind("<Configure>", _configure_interior)
-
-        def _configure_canvas(event) -> None:
-            if interior.winfo_reqwidth() != canvas.winfo_width():
-                # Update the inner frame's width to fill the canvas.
-                canvas.itemconfigure(interior_id, width=canvas.winfo_width())
-
-        canvas.bind("<Configure>", _configure_canvas)
 
 
 # #[EOF]#######################################################################
