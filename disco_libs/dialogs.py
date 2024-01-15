@@ -380,7 +380,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
         # create command panel
         command_frame = tk.LabelFrame(self, text=" Search System ")
         command_frame.grid(
-            row=r_command_idx, padx=5, pady=5, ipadx=2, ipady=5, sticky=tk.EW
+            row=r_command_idx, padx=5, pady=5, ipadx=5, ipady=5, sticky=tk.EW
         )
         command_frame.columnconfigure(0, weight=1)
         command_frame.columnconfigure(1, weight=100)
@@ -397,7 +397,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
         self._data[DialogKeys.WIDGETS][DialogKeys.SYSTEM] = system_name
 
         bsearch = tk.Button(command_frame, text="Search", command=self.__search_cb)
-        bsearch.grid(row=0, column=2, sticky=tk.E)
+        bsearch.grid(row=0, column=2, sticky=tk.E, padx=5)
         CreateToolTip(bsearch, "Find system.")
         self._data[DialogKeys.WIDGETS][DialogKeys.SBUTTON] = bsearch
 
