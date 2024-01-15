@@ -360,7 +360,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
         self.geometry("700x600")
         # grid configuration
         self.columnconfigure(0, weight=100)
-        self.columnconfigure(1, weight=10)
+        self.columnconfigure(1, weight=1)
         # label row
         r_label_idx = 0
         self.rowconfigure(r_label_idx, weight=1)
