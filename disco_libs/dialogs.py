@@ -372,6 +372,9 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
         # status row
         r_status_idx = r_data_idx + 1
         self.rowconfigure(r_status_idx, weight=1)
+        # size grip
+        r_sizegrip_idx = r_status_idx + 1
+        self.rowconfigure(r_sizegrip_idx, weight=1)
 
         # create label
         label = tk.Label(self, text="Discoveries Explorer")
@@ -417,9 +420,13 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
         status_string = tk.StringVar()
         status = tk.Label(status_frame, textvariable=status_string)
         status.pack(side=tk.LEFT)
-        sizegrip = ttk.Sizegrip(status_frame)
-        sizegrip.pack(side=tk.RIGHT)
         self._data[DialogKeys.WIDGETS][DialogKeys.STATUS] = status_string
+
+        # size grip
+        sizegrip = ttk.Sizegrip(self)
+        sizegrip.grid(
+            row=r_sizegrip_idx, sticky=tk.SE, padx=1, pady=1, ipadx=0, ipady=0
+        )
 
         # closing event
         self.protocol("WM_DELETE_WINDOW", self.__on_closing)
