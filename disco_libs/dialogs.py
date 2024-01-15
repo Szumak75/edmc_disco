@@ -372,9 +372,6 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
         # status row
         r_status_idx = r_data_idx + 1
         self.rowconfigure(r_status_idx, weight=1)
-        # size grip
-        r_sizegrip_idx = r_status_idx + 1
-        self.rowconfigure(r_sizegrip_idx, weight=1)
 
         # create label
         label = tk.Label(self, text="Discoveries Explorer")
@@ -415,18 +412,19 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
         self._data[DialogKeys.WIDGETS][DialogKeys.SPANEL] = spanel
 
         # create status panel
-        status_frame = tk.LabelFrame(self, text="")
-        status_frame.grid(row=r_status_idx, padx=5, pady=5, sticky=tk.EW)
+        status_frame = tk.Frame(self)
+        status_frame.grid(row=r_status_idx, padx=0, pady=0, sticky=tk.EW)
+
+        status_lframe = tk.LabelFrame(status_frame, text="")
+        status_lframe.pack(side=tk.LEFT, fill=tk.X, expand=tk.TRUE, padx=5, pady=5)
         status_string = tk.StringVar()
-        status = tk.Label(status_frame, textvariable=status_string)
+        status = tk.Label(status_lframe, textvariable=status_string)
         status.pack(side=tk.LEFT)
         self._data[DialogKeys.WIDGETS][DialogKeys.STATUS] = status_string
 
         # size grip
-        sizegrip = ttk.Sizegrip(self)
-        sizegrip.grid(
-            row=r_sizegrip_idx, sticky=tk.SE, padx=1, pady=1, ipadx=0, ipady=0
-        )
+        sizegrip = ttk.Sizegrip(status_frame)
+        sizegrip.pack(side=tk.RIGHT)
 
         # closing event
         self.protocol("WM_DELETE_WINDOW", self.__on_closing)
