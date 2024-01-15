@@ -417,6 +417,8 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
         status_string = tk.StringVar()
         status = tk.Label(status_frame, textvariable=status_string)
         status.pack(side=tk.LEFT)
+        sizegrip = ttk.Sizegrip(status_frame)
+        sizegrip.pack(side=tk.RIGHT)
         self._data[DialogKeys.WIDGETS][DialogKeys.STATUS] = status_string
 
         # closing event
