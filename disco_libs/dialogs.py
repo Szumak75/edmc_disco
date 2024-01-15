@@ -359,7 +359,8 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
         self.title(self.pluginname)
         self.geometry("700x600")
         # grid configuration
-        self.columnconfigure(0, weight=1)
+        self.columnconfigure(0, weight=100)
+        self.columnconfigure(1, weight=1)
         # label row
         r_label_idx = 0
         self.rowconfigure(r_label_idx, weight=1)
@@ -375,12 +376,19 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
 
         # create label
         label = tk.Label(self, text="Discoveries Explorer")
-        label.grid(row=r_label_idx)
+        label.grid(row=r_label_idx, column=0, columnspan=1)
 
         # create command panel
         command_frame = tk.LabelFrame(self, text=" Search System ")
         command_frame.grid(
-            row=r_command_idx, padx=5, pady=5, ipadx=5, ipady=5, sticky=tk.EW
+            row=r_command_idx,
+            column=0,
+            columnspan=1,
+            padx=5,
+            pady=5,
+            ipadx=5,
+            ipady=5,
+            sticky=tk.EW,
         )
         command_frame.columnconfigure(0, weight=1)
         command_frame.columnconfigure(1, weight=100)
@@ -403,7 +411,9 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
 
         # create data panel
         data_frame = tk.LabelFrame(self, text=" System ")
-        data_frame.grid(row=r_data_idx, padx=5, pady=5, sticky=tk.NSEW)
+        data_frame.grid(
+            row=r_data_idx, column=0, columnspan=1, padx=5, pady=5, sticky=tk.NSEW
+        )
         self._data[DialogKeys.WIDGETS][DialogKeys.FDATA] = data_frame
 
         # create scrolled panel
@@ -413,7 +423,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
 
         # create status panel
         status_frame = tk.Frame(self)
-        status_frame.grid(row=r_status_idx, padx=0, pady=0, sticky=tk.EW)
+        status_frame.grid(row=r_status_idx, column=0, sticky=tk.EW)
 
         status_lframe = tk.LabelFrame(status_frame, text="")
         status_lframe.pack(side=tk.LEFT, fill=tk.X, expand=tk.TRUE, padx=5, pady=5)
@@ -424,8 +434,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
 
         # size grip
         sizegrip = ttk.Sizegrip(status_frame)
-        sizegrip.pack(anchor=tk.SE)
-
+        sizegrip.grid(row=r_status_idx, column=1, sticky=tk.SE)
         # closing event
         self.protocol("WM_DELETE_WINDOW", self.__on_closing)
 
