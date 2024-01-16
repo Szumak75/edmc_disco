@@ -245,7 +245,7 @@ class DiscoMainDialog(BLogClient, DiscoData, NoDynamicAttributes):
         """Update dialog."""
         self.system = system
         button: ttk.Button = self._data[DialogKeys.BUTTON]
-        if self.system:
+        if self.system and self.system.name != "":
             button[DialogKeys.TEXT] = f"{self.system.name} [{self.system.progress}]"
         if self.logger:
             self.logger.debug = f"UPDATE: {self._data}"

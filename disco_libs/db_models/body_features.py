@@ -16,7 +16,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 class TBodyFeatures(DiscoBase):
     """Table of Body Features."""
 
-    __tablename__ = "body_features"
+    __tablename__:str = "body_features"
 
     id: Mapped[int] = mapped_column(
         primary_key=True, nullable=False, autoincrement=True

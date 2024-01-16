@@ -120,9 +120,12 @@ class DiscoData(SimpleData):
         self._data[_Keys.DIALOG] = value
 
     @property
-    def system(self) -> Optional[TSystem]:
+    def system(self) -> TSystem:
         """TSystem dataset."""
-        return self._data[_Keys.SYSTEM]
+        if self._data[_Keys.SYSTEM] is None:
+            self._data[_Keys.SYSTEM] = TSystem()
+        out: TSystem = self._data[_Keys.SYSTEM]
+        return out
 
     @system.setter
     def system(self, value: TSystem) -> None:
