@@ -34,7 +34,7 @@ class ImageHelper(NoDynamicAttributes):
     It analyzes the data and returns the appropriate image and description.
     """
 
-    def get_geo_image(self, body: db.TBody) -> str:
+    def get_geo_image(self, body: db.TBody) -> bytes:
         """Return base64 encoded image string."""
         signals: db.TBodySignals = body.signals
         gcount: int = signals.count_geo_signals
@@ -48,7 +48,7 @@ class ImageHelper(NoDynamicAttributes):
             return Pics.geologic_16
         return Pics.scan_geologic_16
 
-    def get_bio_image(self, body: db.TBody) -> str:
+    def get_bio_image(self, body: db.TBody) -> bytes:
         """Return base64 encoded image string."""
         signals: db.TBodySignals = body.signals
         bcount: int = signals.count_bio_signals
@@ -117,35 +117,35 @@ class ImageHelper(NoDynamicAttributes):
             tmp.append("Detailed surface scanning needed.")
         return tmp
 
-    def get_humans_image(self) -> str:
+    def get_humans_image(self) -> bytes:
         """Return base64 encoded image string."""
         return Pics.humans_16
 
-    def get_scoopable_image(self) -> str:
+    def get_scoopable_image(self) -> bytes:
         """Return base64 encoded image string."""
         return Pics.scoopable_16
 
-    def get_landable_image(self) -> str:
+    def get_landable_image(self) -> bytes:
         """Return base64 encoded image string."""
         return Pics.landable_16
 
-    def get_distance_image(self) -> str:
+    def get_distance_image(self) -> bytes:
         """Return base64 encoded image string."""
         return Pics.distance_16
 
-    def get_thermometer_image(self) -> str:
+    def get_thermometer_image(self) -> bytes:
         """Return base64 encoded image string."""
         return Pics.temp_16
 
-    def get_first_image(self) -> str:
+    def get_first_image(self) -> bytes:
         """Return base64 encoded image string."""
         return Pics.first_16
 
-    def get_map_image(self) -> str:
+    def get_map_image(self) -> bytes:
         """Return base64 encoded image string."""
         return Pics.map_16
 
-    def get_body_image(self, body: db.TBody) -> Optional[str]:
+    def get_body_image(self, body: db.TBody) -> Optional[bytes]:
         """Return base64 encoded image string."""
         features: db.TBodyFeatures = body.features
         if features is None:
@@ -404,7 +404,9 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
         system_name.focus_set()
         self._data[DialogKeys.WIDGETS][DialogKeys.SYSTEM] = system_name
 
-        bsearch = tk.Button(command_frame, text="Search", command=self.__search_cb)
+        bsearch_img = tk.PhotoImage(data=Pics.SEARCH_16)
+        bsearch = tk.Button(command_frame, image=bsearch_img, command=self.__search_cb)
+        bsearch.image = bsearch_img  # type: ignore
         bsearch.grid(row=0, column=2, sticky=tk.E, padx=5)
         CreateToolTip(bsearch, "Find system.")
         self._data[DialogKeys.WIDGETS][DialogKeys.SBUTTON] = bsearch
@@ -752,9 +754,9 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
                 features: db.TBodyFeatures = body.features
                 if features.body_type and features.body_type == "Ring":
                     name = "Ring"
-            imgstr: Optional[str] = ih.get_body_image(body)
-            if imgstr:
-                img = tk.PhotoImage(data=imgstr)
+            img_byte: Optional[bytes] = ih.get_body_image(body)
+            if img_byte:
+                img = tk.PhotoImage(data=img_byte)
                 lname = tk.Label(frame, text=f"{name}", compound=tk.LEFT, image=img)
                 lname.image = img  # type: ignore
             else:
