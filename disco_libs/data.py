@@ -123,7 +123,7 @@ class DiscoData(SimpleData):
     def system(self) -> TSystem:
         """TSystem dataset."""
         if self._data[_Keys.SYSTEM] is None:
-            self._data[_Keys.SYSTEM] = TSystem()
+            return None  # type: ignore
         out: TSystem = self._data[_Keys.SYSTEM]
         return out
 
