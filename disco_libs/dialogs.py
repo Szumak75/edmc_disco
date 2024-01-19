@@ -34,7 +34,7 @@ class ImageHelper(NoDynamicAttributes):
     It analyzes the data and returns the appropriate image and description.
     """
 
-    def get_geo_image(self, body: db.TBody) -> bytes:
+    def get_geo_image(self, body: db.TBody) -> str:
         """Return base64 encoded image string."""
         signals: db.TBodySignals = body.signals
         gcount: int = signals.count_geo_signals
@@ -48,7 +48,7 @@ class ImageHelper(NoDynamicAttributes):
             return Pics.geologic_16
         return Pics.scan_geologic_16
 
-    def get_bio_image(self, body: db.TBody) -> bytes:
+    def get_bio_image(self, body: db.TBody) -> str:
         """Return base64 encoded image string."""
         signals: db.TBodySignals = body.signals
         bcount: int = signals.count_bio_signals
@@ -117,35 +117,35 @@ class ImageHelper(NoDynamicAttributes):
             tmp.append("Detailed surface scanning needed.")
         return tmp
 
-    def get_humans_image(self) -> bytes:
+    def get_humans_image(self) -> str:
         """Return base64 encoded image string."""
         return Pics.humans_16
 
-    def get_scoopable_image(self) -> bytes:
+    def get_scoopable_image(self) -> str:
         """Return base64 encoded image string."""
         return Pics.scoopable_16
 
-    def get_landable_image(self) -> bytes:
+    def get_landable_image(self) -> str:
         """Return base64 encoded image string."""
         return Pics.landable_16
 
-    def get_distance_image(self) -> bytes:
+    def get_distance_image(self) -> str:
         """Return base64 encoded image string."""
         return Pics.distance_16
 
-    def get_thermometer_image(self) -> bytes:
+    def get_thermometer_image(self) -> str:
         """Return base64 encoded image string."""
         return Pics.temp_16
 
-    def get_first_image(self) -> bytes:
+    def get_first_image(self) -> str:
         """Return base64 encoded image string."""
         return Pics.first_16
 
-    def get_map_image(self) -> bytes:
+    def get_map_image(self) -> str:
         """Return base64 encoded image string."""
         return Pics.map_16
 
-    def get_body_image(self, body: db.TBody) -> Optional[bytes]:
+    def get_body_image(self, body: db.TBody) -> Optional[str]:
         """Return base64 encoded image string."""
         features: db.TBodyFeatures = body.features
         if features is None:
