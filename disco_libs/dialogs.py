@@ -358,6 +358,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
         self.debug(currentframe(), f"Data: {self._data}")
         self.title(self.pluginname)
         self.geometry("700x600")
+        self.minsize(height=500, width=400)
         # grid configuration
         self.columnconfigure(0, weight=100)
         self.columnconfigure(1, weight=1)
