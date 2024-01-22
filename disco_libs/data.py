@@ -21,15 +21,15 @@ from disco_libs.db_models.system import TSystem
 class _Keys(object, metaclass=ReadOnlyClass):
     """Keys container class."""
 
-    CMDR = "cmdr"
-    DIALOG = "dialog"
-    JUMPRANGE = "jump_range"
-    PLUGINNAME = "pluginname"
-    PROCESSOR = "processor"
-    SHUTDOWN = "shutdown"
-    STARSSYSTEM = "stars_system"
-    SYSTEM = "system"
-    VERSION = "version"
+    CMDR: str = "cmdr"
+    DIALOG: str = "dialog"
+    JUMPRANGE: str = "jump_range"
+    PLUGINNAME: str = "pluginname"
+    PROCESSOR: str = "processor"
+    SHUTDOWN: str = "shutdown"
+    STARSSYSTEM: str = "stars_system"
+    SYSTEM: str = "system"
+    VERSION: str = "version"
 
 
 class SimpleData(BData):

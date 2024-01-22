@@ -17,11 +17,11 @@ from jsktoolbox.libs.base_data import BData
 class _Keys(object, metaclass=ReadOnlyClass):
     """Keys container class."""
 
-    ADDRESS = "__address__"
-    NAME = "__name__"
-    POS_X = "__x__"
-    POS_Y = "__y__"
-    POS_Z = "__z__"
+    ADDRESS: str = "__address__"
+    NAME: str = "__name__"
+    POS_X: str = "__x__"
+    POS_Y: str = "__y__"
+    POS_Z: str = "__z__"
 
 
 class StarsSystem(BData):
@@ -176,7 +176,11 @@ class StarsSystem(BData):
     @property
     def star_pos(self) -> List[float]:
         """Give me star position list."""
-        if self.pos_x is not None and self.pos_y is not None and self.pos_z is not None:
+        if (
+            self.pos_x is not None
+            and self.pos_y is not None
+            and self.pos_z is not None
+        ):
             return [self.pos_x, self.pos_y, self.pos_z]
         return []
 

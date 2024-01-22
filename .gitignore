@@ -160,7 +160,7 @@ cython_debug/
 #.idea/
 
 # Wing IDE project cache file
-*.wpu
+#*.wpu
 
 # edmc plugins
 data/*.db

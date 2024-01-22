@@ -27,12 +27,12 @@ from disco_libs.system import Env
 class _Keys(object, metaclass=ReadOnlyClass):
     """Keys container class."""
 
-    BODY_COUNT = "body_count"
-    BODY_SCAN = "body_scan"
-    DB = "__db__"
-    DEBUG = "__debug__"
-    ENGINE = "__engine__"
-    SESSION = "__session__"
+    BODY_COUNT: str = "body_count"
+    BODY_SCAN: str = "body_scan"
+    DB: str = "__db__"
+    DEBUG: str = "__debug__"
+    ENGINE: str = "__engine__"
+    SESSION: str = "__session__"
 
 
 class DataAnalyzer(BData):
@@ -78,16 +78,23 @@ class Database(BData):
             db.DiscoBase.metadata.create_all(self._data[_Keys.ENGINE])
         else:
             raise Raise.error(
-                "Database creation error.", OSError, self._c_name, currentframe()
+                "Database creation error.",
+                OSError,
+                self._c_name,
+                currentframe(),
             )
 
     def __create_engine(self) -> Engine:
         engine: Engine = create_engine(
-            f"sqlite+pysqlite:///{self.db_path}", echo=self._data[_Keys.DEBUG]
+            f"sqlite+pysqlite:///{self.db_path}",
+            echo=self._data[_Keys.DEBUG],
         )
         if engine is None:
             raise Raise.error(
-                "Database engine creation error.", OSError, self._c_name, currentframe()
+                "Database engine creation error.",
+                OSError,
+                self._c_name,
+                currentframe(),
             )
         return engine
 
@@ -114,7 +121,10 @@ class DBProcessor(BData):
         """Create instance of class."""
         if session is None or not isinstance(session, Session):
             raise Raise.error(
-                "Expected Session type.", TypeError, self._c_name, currentframe()
+                "Expected Session type.",
+                TypeError,
+                self._c_name,
+                currentframe(),
             )
         self._data[_Keys.SESSION] = session
 
@@ -143,7 +153,9 @@ class DBProcessor(BData):
         if "SystemAddress" not in entry:
             return None
         session: Session = self._data[_Keys.SESSION]
-        system: Optional[TSystem] = self.__get__system(entry["SystemAddress"])
+        system: Optional[TSystem] = self.__get__system(
+            entry["SystemAddress"]
+        )
         if not system:
             system = db.TSystem()
             system.event_parser(entry)
@@ -170,7 +182,9 @@ class DBProcessor(BData):
         if "SystemAddress" not in entry:
             return None
         session: Session = self._data[_Keys.SESSION]
-        system: Optional[TSystem] = self.__get__system(entry["SystemAddress"])
+        system: Optional[TSystem] = self.__get__system(
+            entry["SystemAddress"]
+        )
         if not system:
             return None
         else:
@@ -189,7 +203,9 @@ class DBProcessor(BData):
         if "BodyID" not in entry:
             return None
         session: Session = self._data[_Keys.SESSION]
-        system: Optional[TSystem] = self.__get__system(entry["SystemAddress"])
+        system: Optional[TSystem] = self.__get__system(
+            entry["SystemAddress"]
+        )
         if system and system.timestamp <= self.strtime(entry["timestamp"]):
             body: Optional[db.TBody] = system.get_body(entry["BodyID"])
             if not body:
@@ -215,7 +231,9 @@ class DBProcessor(BData):
         if "BodyID" not in entry:
             return None
         session: Session = self._data[_Keys.SESSION]
-        system: Optional[TSystem] = self.__get__system(entry["SystemAddress"])
+        system: Optional[TSystem] = self.__get__system(
+            entry["SystemAddress"]
+        )
         if entry["event"] != "SAAScanComplete":
             return system
         if system and system.timestamp <= self.strtime(entry["timestamp"]):
@@ -232,7 +250,9 @@ class DBProcessor(BData):
         if "BodyID" not in entry:
             return None
         session: Session = self._data[_Keys.SESSION]
-        system: Optional[TSystem] = self.__get__system(entry["SystemAddress"])
+        system: Optional[TSystem] = self.__get__system(
+            entry["SystemAddress"]
+        )
         if system and system.timestamp <= self.strtime(entry["timestamp"]):
             body: Optional[db.TBody] = system.get_body(entry["BodyID"])
             if not body:
@@ -252,7 +272,9 @@ class DBProcessor(BData):
         if "BodyID" not in entry and "Body" not in entry:
             return None
         session: Session = self._data[_Keys.SESSION]
-        system: Optional[TSystem] = self.__get__system(entry["SystemAddress"])
+        system: Optional[TSystem] = self.__get__system(
+            entry["SystemAddress"]
+        )
         # print(system)
         if system and system.timestamp <= self.strtime(entry["timestamp"]):
             body_id = -1
@@ -275,7 +297,9 @@ class DBProcessor(BData):
         if "BodyID" not in entry:
             return None
         session: Session = self._data[_Keys.SESSION]
-        system: Optional[TSystem] = self.__get__system(entry["SystemAddress"])
+        system: Optional[TSystem] = self.__get__system(
+            entry["SystemAddress"]
+        )
         if system and system.timestamp <= self.strtime(entry["timestamp"]):
             body: Optional[db.TBody] = system.get_body(entry["BodyID"])
             if not body:
@@ -285,7 +309,9 @@ class DBProcessor(BData):
                 session.commit()
         return system
 
-    def __add_null_parents(self, system: Optional[db.TSystem], entry: Dict) -> None:
+    def __add_null_parents(
+        self, system: Optional[db.TSystem], entry: Dict
+    ) -> None:
         if system is None:
             return None
         if "Parents" in entry:

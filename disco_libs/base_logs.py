@@ -24,10 +24,10 @@ class _Keys(object, metaclass=ReadOnlyClass):
     For internal use only.
     """
 
-    LOGGER = "__logger_client__"
-    LPENGINE = "__engine__"
-    LQUEUE = "__logger_queue__"
-    THLOGGER = "__th_logger__"
+    LOGGER: str = "__logger_client__"
+    LPENGINE: str = "__engine__"
+    LQUEUE: str = "__logger_queue__"
+    THLOGGER: str = "__th_logger__"
 
 
 class BLogProcessor(BData):

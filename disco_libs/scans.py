@@ -28,7 +28,7 @@ from disco_libs.db_models import (
 class _Keys(object, metaclass=ReadOnlyClass):
     """Keyc container class."""
 
-    BODY = "body"
+    BODY: str = "body"
 
 
 class ScansAnalysis(BData):
