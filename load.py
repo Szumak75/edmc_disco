@@ -81,7 +81,7 @@ def plugin_app(parent: tk.Frame) -> ttk.Button:
     CreateToolTip(
         button,
         [
-            f"{disco_object.data.pluginname} v{disco_object.data.version}:",
+            f"{disco_object.data.pluginname} v{disco_object.data.version}",
             "",
             "Show or search for discovered system data.",
         ],
