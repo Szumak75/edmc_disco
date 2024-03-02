@@ -153,7 +153,19 @@ class ImageHelper(NoDynamicAttributes):
         # star
         if features.star_type is not None:
             # neutron star
-            if features.star_type == "N":
+            if features.star_type in (
+                "N",
+                "DA",
+                "DAB",
+                "DAV",
+                "DAZ",
+                "DB",
+                "DBV",
+                "DBZ",
+                "DOV",
+                "DC",
+                "DCV",
+            ):
                 return Pics.neutron_16
             # blackhole
             if features.star_type == "H" and features.luminosity == "VII":
@@ -327,7 +339,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
             DialogKeys.SPANEL
         ] = None  #: Optional[VerticalScrolledFrame]
 
-        # bodys data
+        # bodies data
         self._data[DialogKeys.BODIES] = []
 
         # init log subsystem
@@ -472,7 +484,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
 
     def __system_show(self, system: db.TSystem) -> None:
         """Show system in frame."""
-        # destroy prewious data
+        # destroy previous data
         self.system = system
         self.__clear_rows()
         self.__system_summary(system)
@@ -505,9 +517,9 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
             tmp.append(
                 f"Spectral class: {features.star_type or ''}{features.subclass or ''} {features.luminosity or ''}"
             )
-            tmp.append(f"Sollar masses: {features.stellarmass:.3f}")
+            tmp.append(f"Solar masses: {features.stellarmass:.3f}")
             if features.radius:
-                tmp.append(f"Sollar radius: {int(features.radius)}")
+                tmp.append(f"Solar radius: {int(features.radius)}")
             if features.surfacetemperature:
                 tmp.append(
                     f"Surface temperature: {int(features.surfacetemperature or 0)} K"
@@ -614,7 +626,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
         # return sorted(out, key=lambda x: x.features.distance)
 
     def __clear_rows(self) -> None:
-        """Destroy prewious data."""
+        """Destroy previous data."""
         for item in self._data[DialogKeys.BODIES]:
             item[2].pack_forget()
             item[2].destroy()

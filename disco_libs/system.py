@@ -36,7 +36,7 @@ class _Keys(object, metaclass=ReadOnlyClass):
     ENGINE: str = "__engine__"
     HOME: str = "__home__"
     LINUX: str = "Linux"
-    LOGLVL: str = "__lvl__"
+    LOG_LVL: str = "__lvl__"
     MAC: str = "mac"
     NAME: str = "__name__"
     NT: str = "nt"
@@ -53,28 +53,28 @@ class Clip(BData):
 
     def __init__(self):
         """Create instance of class."""
-        setcb = getcb = None
+        set_cb = get_cb = None
         if os.name == _Keys.NT or platform.system() == _Keys.WINDOWS:
-            getcb = self.__win_get_clipboard
-            setcb = self.__win_set_clipboard
+            get_cb = self.__win_get_clipboard
+            set_cb = self.__win_set_clipboard
         elif os.name == _Keys.MAC or platform.system() == _Keys.DARWIN:
-            getcb = self.__mac_get_clipboard
-            setcb = self.__mac_set_clipboard
+            get_cb = self.__mac_get_clipboard
+            set_cb = self.__mac_set_clipboard
         elif os.name == _Keys.POSIX or platform.system() == _Keys.LINUX:
             xclipExists = os.system("which xclip > /dev/null") == 0
             if xclipExists:
-                getcb = self.__xclip_get_clipboard
-                setcb = self.__xclip_set_clipboard
+                get_cb = self.__xclip_get_clipboard
+                set_cb = self.__xclip_set_clipboard
             else:
                 xselExists = os.system("which xsel > /dev/null") == 0
                 if xselExists:
-                    getcb = self.__xsel_get_clipboard
-                    setcb = self.__xsel_set_clipboard
+                    get_cb = self.__xsel_get_clipboard
+                    set_cb = self.__xsel_set_clipboard
                 try:
                     import gtk
 
-                    getcb = self.__gtk_get_clipboard
-                    setcb = self.__gtk_set_clipboard
+                    get_cb = self.__gtk_get_clipboard
+                    set_cb = self.__gtk_set_clipboard
                 except Exception:
                     try:
                         import PyQt4.QtCore
@@ -82,8 +82,8 @@ class Clip(BData):
 
                         app = PyQt4.QApplication([])
                         cb = PyQt4.QtGui.QApplication.clipboard()
-                        getcb = self.__qt_get_clipboard
-                        setcb = self.__qt_set_clipboard
+                        get_cb = self.__qt_get_clipboard
+                        set_cb = self.__qt_set_clipboard
                     except:
                         print(
                             Raise.message(
@@ -92,12 +92,12 @@ class Clip(BData):
                                 currentframe(),
                             )
                         )
-        self._data[_Keys.COPY] = setcb
-        self._data[_Keys.PASTE] = getcb
+        self._data[_Keys.COPY] = set_cb
+        self._data[_Keys.PASTE] = get_cb
 
     @property
     def is_tool(self) -> bool:
-        """Return True if the tool is avaiable."""
+        """Return True if the tool is available."""
         return (
             self._data[_Keys.COPY] is not None and self._data[_Keys.PASTE] is not None
         )
@@ -423,27 +423,27 @@ class LogProcessor(BData):
     @property
     def loglevel(self) -> int:
         """Property that returns loglevel."""
-        if _Keys.LOGLVL not in self._data:
-            self._data[_Keys.LOGLVL] = 0
-        return self._data[_Keys.LOGLVL]
+        if _Keys.LOG_LVL not in self._data:
+            self._data[_Keys.LOG_LVL] = 0
+        return self._data[_Keys.LOG_LVL]
 
     @loglevel.setter
     def loglevel(self, arg: int) -> None:
         """Setter for log level parameter."""
-        if self._data[_Keys.LOGLVL] == arg:
+        if self._data[_Keys.LOG_LVL] == arg:
             log = Log(LogLevels().debug)
             log.log = "LogLevel has not changed"
             self.send(log)
             return
         ll_test = LogLevels()
         if isinstance(arg, int) and ll_test.has_key(arg):
-            self._data[_Keys.LOGLVL] = arg
+            self._data[_Keys.LOG_LVL] = arg
         else:
             tmp = "Unable to set LogLevel to {}, defaulted to INFO"
             log = Log(LogLevels().warning)
             log.log = tmp.format(arg)
             self.send(log)
-            self._data[_Keys.LOGLVL] = LogLevels().info
+            self._data[_Keys.LOG_LVL] = LogLevels().info
         self.__logger_init()
 
 

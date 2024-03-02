@@ -52,10 +52,10 @@ class DataAnalyzer(BData):
                 currentframe(),
             )
         print(system)
-        # count bodys
+        # count bodies
         self._data[_Keys.BODY_COUNT] = system.bodycount
 
-        # count scaned bodys
+        # count scanned bodies
         count = 0
         # for item in system.bodies:
         # pass
