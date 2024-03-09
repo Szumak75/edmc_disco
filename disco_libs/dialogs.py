@@ -137,6 +137,10 @@ class ImageHelper(NoDynamicAttributes):
         """Return base64 encoded image string."""
         return Pics.temp_16
 
+    def get_terraform_image(self) -> bytes:
+        """Returns base64 encoding image."""
+        return Pics.terraforming_16
+
     def get_first_image(self) -> bytes:
         """Return base64 encoded image string."""
         return Pics.first_16
@@ -713,6 +717,15 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
                     landable.image = img  # type: ignore
                     landable.pack(side=tk.RIGHT)
                     CreateToolTip(landable, "Planetary Landing")
+                # get terraformstate state
+                if features.terraformstate:
+                    img = tk.PhotoImage(data=ih.get_terraform_image())
+                    terraform = tk.Label(frame, image=img)
+                    terraform.image = img  # type: ignore
+                    terraform.pack(side=tk.RIGHT)
+                    CreateToolTip(
+                        terraform, f"Terraform state: {features.terraformstate}"
+                    )
                 # get humans city on the planet
                 if signals.count_humans_signals > 0:
                     img = tk.PhotoImage(data=ih.get_humans_image())
