@@ -38,13 +38,13 @@ class Disco(BLogProcessor, BLogClient):
         self.logger = LogClient(self.qlog)
 
         # logging thread
-        self.thlog = Thread(
+        self.th_log = Thread(
             target=self.th_logger, name=f"{self.data.pluginname} log worker"
         )
 
-        if self.thlog:
-            self.thlog.daemon = True
-            self.thlog.start()
+        if self.th_log:
+            self.th_log.daemon = True
+            self.th_log.start()
 
         if self.logger:
             self.logger.debug = f"{self.data.pluginname} object creation complete."

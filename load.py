@@ -64,8 +64,8 @@ def plugin_stop() -> None:
             f"{disco_object.data.pluginname}->plugin_stop: terminating the logger"
         )
     disco_object.qlog.put(None)
-    disco_object.thlog.join()
-    disco_object.thlog = None  # type: ignore
+    disco_object.th_log.join()
+    disco_object.th_log = None  # type: ignore
 
 
 def plugin_app(parent: tk.Frame) -> ttk.Button:

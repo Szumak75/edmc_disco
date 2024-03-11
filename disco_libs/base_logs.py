@@ -36,14 +36,14 @@ class BLogProcessor(BData):
     """
 
     @property
-    def thlog(self) -> Thread:
+    def th_log(self) -> Thread:
         """Give me thread logger handler."""
         if _Keys.THLOGGER not in self._data:
             self._data[_Keys.THLOGGER] = None
         return self._data[_Keys.THLOGGER]
 
-    @thlog.setter
-    def thlog(self, value: Thread) -> None:
+    @th_log.setter
+    def th_log(self, value: Thread) -> None:
         self._data[_Keys.THLOGGER] = value
 
     @property
