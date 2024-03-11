@@ -7,9 +7,7 @@
 """
 
 from inspect import currentframe
-from queue import Queue
 from threading import Thread
-from typing import Optional
 
 from jsktoolbox.raisetool import Raise
 
