@@ -115,8 +115,8 @@ class Clip(BData):
     def __win_get_clipboard(self) -> str:
         """Get windows clipboard data."""
         ctypes.windll.user32.OpenClipboard(0)  # type: ignore
-        pcontents = ctypes.windll.user32.GetClipboardData(1)  # type: ignore # 1 is CF_TEXT
-        data = ctypes.c_char_p(pcontents).value
+        p_contents = ctypes.windll.user32.GetClipboardData(1)  # type: ignore # 1 is CF_TEXT
+        data = ctypes.c_char_p(p_contents).value
         # ctypes.windll.kernel32.GlobalUnlock(pcontents)
         ctypes.windll.user32.CloseClipboard()  # type: ignore
         return data  # type: ignore
@@ -151,15 +151,15 @@ class Clip(BData):
     def __mac_set_clipboard(self, text: str) -> None:
         """Set MacOS clipboard data."""
         text = str(text)
-        outf = os.popen("pbcopy", "w")
-        outf.write(text)
-        outf.close()
+        out = os.popen("pbcopy", "w")
+        out.write(text)
+        out.close()
 
     def __mac_get_clipboard(self) -> str:
         """Get MacOS clipboard data."""
-        outf = os.popen("pbpaste", "r")
-        content = outf.read()
-        outf.close()
+        out = os.popen("pbpaste", "r")
+        content = out.read()
+        out.close()
         return content
 
     def __gtk_get_clipboard(self) -> str:
@@ -186,29 +186,29 @@ class Clip(BData):
     def __xclip_set_clipboard(self, text: str) -> None:
         """Set xclip clipboard data."""
         text = str(text)
-        outf = os.popen("xclip -selection c", "w")
-        outf.write(text)
-        outf.close()
+        out = os.popen("xclip -selection c", "w")
+        out.write(text)
+        out.close()
 
     def __xclip_get_clipboard(self) -> str:
         """Get xclip clipboard data."""
-        outf = os.popen("xclip -selection c -o", "r")
-        content = outf.read()
-        outf.close()
+        out = os.popen("xclip -selection c -o", "r")
+        content = out.read()
+        out.close()
         return content
 
     def __xsel_set_clipboard(self, text: str) -> None:
         """Set xsel clipboard data."""
         text = str(text)
-        outf = os.popen("xsel -i", "w")
-        outf.write(text)
-        outf.close()
+        out = os.popen("xsel -i", "w")
+        out.write(text)
+        out.close()
 
     def __xsel_get_clipboard(self) -> str:
         """Get xsel clipboard data."""
-        outf = os.popen("xsel -o", "r")
-        content = outf.read()
-        outf.close()
+        out = os.popen("xsel -o", "r")
+        content = out.read()
+        out.close()
         return content
 
 
@@ -368,15 +368,15 @@ class LogProcessor(BData):
         self._data[_Keys.ENGINE] = logging.getLogger(self._data[_Keys.NAME])
         self._data[_Keys.ENGINE].setLevel(LogLevels().debug)
 
-        hlog = RotatingFileHandler(
+        log_handler = RotatingFileHandler(
             filename=os.path.join(Env().tmpdir, f"{self._data[_Keys.NAME]}.log"),
             maxBytes=100000,
             backupCount=5,
         )
 
-        hlog.setLevel(self.loglevel)
-        hlog.setFormatter(logging.Formatter("%(asctime)s %(message)s"))
-        self._data[_Keys.ENGINE].addHandler(hlog)
+        log_handler.setLevel(self.loglevel)
+        log_handler.setFormatter(logging.Formatter("%(asctime)s %(message)s"))
+        self._data[_Keys.ENGINE].addHandler(log_handler)
         self._data[_Keys.ENGINE].info("Logger initialization complete")
 
     def close(self) -> None:

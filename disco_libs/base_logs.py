@@ -24,9 +24,9 @@ class _Keys(object, metaclass=ReadOnlyClass):
     """
 
     LOGGER: str = "__logger_client__"
-    LPENGINE: str = "__engine__"
-    LQUEUE: str = "__logger_queue__"
-    THLOGGER: str = "__th_logger__"
+    LOG_PROCESSOR: str = "__engine__"
+    LOG_QUEUE: str = "__logger_queue__"
+    TH_LOGGER: str = "__th_logger__"
 
 
 class BLogProcessor(BData):
@@ -38,20 +38,20 @@ class BLogProcessor(BData):
     @property
     def th_log(self) -> Thread:
         """Give me thread logger handler."""
-        if _Keys.THLOGGER not in self._data:
-            self._data[_Keys.THLOGGER] = None
-        return self._data[_Keys.THLOGGER]
+        if _Keys.TH_LOGGER not in self._data:
+            self._data[_Keys.TH_LOGGER] = None
+        return self._data[_Keys.TH_LOGGER]
 
     @th_log.setter
     def th_log(self, value: Thread) -> None:
-        self._data[_Keys.THLOGGER] = value
+        self._data[_Keys.TH_LOGGER] = value
 
     @property
     def qlog(self) -> Queue:
         """Give me access to queue handler."""
-        if _Keys.LQUEUE not in self._data:
-            self._data[_Keys.LQUEUE] = Queue()
-        return self._data[_Keys.LQUEUE]
+        if _Keys.LOG_QUEUE not in self._data:
+            self._data[_Keys.LOG_QUEUE] = Queue()
+        return self._data[_Keys.LOG_QUEUE]
 
     @qlog.setter
     def qlog(self, value: Queue) -> None:
@@ -63,19 +63,19 @@ class BLogProcessor(BData):
                 self._c_name,
                 currentframe(),
             )
-        self._data[_Keys.LQUEUE] = value
+        self._data[_Keys.LOG_QUEUE] = value
 
     @property
     def log_processor(self) -> LogProcessor:
         """Give me handler for log processor."""
-        if _Keys.LPENGINE not in self._data:
-            self._data[_Keys.LPENGINE] = None
-        return self._data[_Keys.LPENGINE]
+        if _Keys.LOG_PROCESSOR not in self._data:
+            self._data[_Keys.LOG_PROCESSOR] = None
+        return self._data[_Keys.LOG_PROCESSOR]
 
     @log_processor.setter
     def log_processor(self, value: LogProcessor) -> None:
         """Setter for log processor instance."""
-        self._data[_Keys.LPENGINE] = value
+        self._data[_Keys.LOG_PROCESSOR] = value
 
 
 class BLogClient(BData):

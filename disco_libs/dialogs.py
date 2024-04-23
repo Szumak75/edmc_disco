@@ -37,30 +37,30 @@ class ImageHelper(NoDynamicAttributes):
     def get_geo_image(self, body: db.TBody) -> bytes:
         """Return base64 encoded image string."""
         signals: db.TBodySignals = body.signals
-        gcount: int = signals.count_geo_signals
+        g_count: int = signals.count_geo_signals
         codexes: db.TBodyCodexes = body.codexes
         test: List[bool] = []
         for item in codexes.codexes:
             codex: db.TCodex = item
             if "Geology" in codex.subcategory_localised:
                 test.append(True)
-        if gcount <= len(test):
+        if g_count <= len(test):
             return Pics.geologic_16
         return Pics.scan_geologic_16
 
     def get_bio_image(self, body: db.TBody) -> bytes:
         """Return base64 encoded image string."""
         signals: db.TBodySignals = body.signals
-        bcount: int = signals.count_bio_signals
+        b_count: int = signals.count_bio_signals
         genuses: db.TBodyGenuses = body.genuses
         test: List[bool] = []
         for item in genuses.genuses:
             genus: db.TGenus = item
-            for iscan in genus.scan:
-                scan: db.TGenusScan = iscan
+            for item_scan in genus.scan:
+                scan: db.TGenusScan = item_scan
                 if scan:
                     test.append(scan.done)
-        if bcount <= len(test) and all(test):
+        if b_count <= len(test) and all(test):
             return Pics.genomic_16
         return Pics.scan_genomic_16
 
@@ -77,8 +77,8 @@ class ImageHelper(NoDynamicAttributes):
         for item in genuses.genuses:
             genus: db.TGenus = item
             name: str = genus.genus_localised
-            for iscan in genus.scan:
-                scan: db.TGenusScan = iscan
+            for item_scan in genus.scan:
+                scan: db.TGenusScan = item_scan
                 if scan:
                     name = (
                         scan.species_localised
@@ -139,7 +139,7 @@ class ImageHelper(NoDynamicAttributes):
 
     def get_terraform_image(self) -> bytes:
         """Returns base64 encoding image."""
-        return Pics.terraforming_16
+        return Pics.terraform_16
 
     def get_first_image(self) -> bytes:
         """Return base64 encoded image string."""
@@ -185,7 +185,7 @@ class ImageHelper(NoDynamicAttributes):
             if features.planet_class and "gas giant" in features.planet_class:
                 return Pics.gassy_16
             if features.atmosferetype == "EarthLike":
-                return Pics.planet_earthlike_16
+                return Pics.planet_earth_like_16
             if features.atmosfere:
                 return Pics.planet_atm_16
             return Pics.planet_16
@@ -207,15 +207,15 @@ class DiscoMainDialog(BLogClient, DiscoData, NoDynamicAttributes):
         self,
         parent: tk.Frame,
         log_queue: Queue,
-        ddata: DiscoData,
+        disco_data: DiscoData,
     ) -> None:
         """Initialize datasets."""
         DiscoData.__init__(self)
-        if isinstance(ddata, DiscoData):
-            self._data = ddata._data
+        if isinstance(disco_data, DiscoData):
+            self._data = disco_data._data
         else:
             raise Raise.error(
-                f"Expected DiscoData type, received:'{type(ddata)}'.",
+                f"Expected DiscoData type, received:'{type(disco_data)}'.",
                 TypeError,
                 self._c_name,
                 currentframe(),
@@ -289,13 +289,13 @@ class DiscoMainDialog(BLogClient, DiscoData, NoDynamicAttributes):
 
     def debug(self, currentframe: Optional[FrameType], message: str = "") -> None:
         """Build debug message."""
-        pname: str = f"{self.pluginname}"
-        cname: str = f"{self._c_name}"
-        mname: str = f"{currentframe.f_code.co_name}" if currentframe else ""
+        p_name: str = f"{self.pluginname}"
+        c_name: str = f"{self._c_name}"
+        m_name: str = f"{currentframe.f_code.co_name}" if currentframe else ""
         if message != "":
             message = f": {message}"
         if self.logger:
-            self.logger.debug = f"{pname}->{cname}.{mname}{message}"
+            self.logger.debug = f"{p_name}->{c_name}.{m_name}{message}"
 
 
 class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
@@ -331,16 +331,16 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
         ] = None  #: Optional[tk.StringVar]
         self._data[DialogKeys.WIDGETS][DialogKeys.SYSTEM] = None  #: Optional[tk.Entry]
         self._data[DialogKeys.WIDGETS][
-            DialogKeys.SBUTTON
+            DialogKeys.S_BUTTON
         ] = None  #: Optional[tk.Button]
         self._data[DialogKeys.WIDGETS][
-            DialogKeys.FDATA
+            DialogKeys.F_DATA
         ] = None  #: Optional[tk.LabelFrame]
         self._data[DialogKeys.WIDGETS][
             DialogKeys.SCROLLBAR
         ] = None  #: Optional[tk.Scrollbar]
         self._data[DialogKeys.WIDGETS][
-            DialogKeys.SPANEL
+            DialogKeys.S_PANEL
         ] = None  #: Optional[VerticalScrolledFrame]
 
         # bodies data
@@ -421,33 +421,35 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
         system_name.focus_set()
         self._data[DialogKeys.WIDGETS][DialogKeys.SYSTEM] = system_name
 
-        bsearch_img = tk.PhotoImage(data=Pics.SEARCH_16)
-        bsearch = tk.Button(command_frame, image=bsearch_img, command=self.__search_cb)
-        bsearch.image = bsearch_img  # type: ignore
-        bsearch.grid(row=0, column=2, sticky=tk.E, padx=5)
-        CreateToolTip(bsearch, "Find system.")
-        self._data[DialogKeys.WIDGETS][DialogKeys.SBUTTON] = bsearch
+        button_search_img = tk.PhotoImage(data=Pics.SEARCH_16)
+        button_search = tk.Button(
+            command_frame, image=button_search_img, command=self.__search_cb
+        )
+        button_search.image = button_search_img  # type: ignore
+        button_search.grid(row=0, column=2, sticky=tk.E, padx=5)
+        CreateToolTip(button_search, "Find system.")
+        self._data[DialogKeys.WIDGETS][DialogKeys.S_BUTTON] = button_search
 
         # create data panel
         data_frame = tk.LabelFrame(self, text=" System ")
         data_frame.grid(
             row=r_data_idx, column=0, columnspan=2, padx=5, pady=5, sticky=tk.NSEW
         )
-        self._data[DialogKeys.WIDGETS][DialogKeys.FDATA] = data_frame
+        self._data[DialogKeys.WIDGETS][DialogKeys.F_DATA] = data_frame
 
         # create scrolled panel
-        spanel = VerticalScrolledTkFrame(data_frame)
-        spanel.pack(ipadx=1, ipady=1, fill=tk.BOTH, expand=tk.TRUE)
-        self._data[DialogKeys.WIDGETS][DialogKeys.SPANEL] = spanel
+        s_panel = VerticalScrolledTkFrame(data_frame)
+        s_panel.pack(ipadx=1, ipady=1, fill=tk.BOTH, expand=tk.TRUE)
+        self._data[DialogKeys.WIDGETS][DialogKeys.S_PANEL] = s_panel
 
         # create status panel
         status_frame = tk.Frame(self)
         status_frame.grid(row=r_status_idx, column=0, sticky=tk.EW)
 
-        status_lframe = tk.LabelFrame(status_frame, text="")
-        status_lframe.pack(side=tk.LEFT, fill=tk.X, expand=tk.TRUE, padx=5, pady=5)
+        status_label_frame = tk.LabelFrame(status_frame, text="")
+        status_label_frame.pack(side=tk.LEFT, fill=tk.X, expand=tk.TRUE, padx=5, pady=5)
         status_string = tk.StringVar()
-        status = tk.Label(status_lframe, textvariable=status_string)
+        status = tk.Label(status_label_frame, textvariable=status_string)
         status.pack(side=tk.LEFT)
         self._data[DialogKeys.WIDGETS][DialogKeys.STATUS] = status_string
 
@@ -473,17 +475,17 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
             return
 
         # search database
-        tsystem: Optional[db.TSystem] = self.db_processor.get_system_by_name(system)
-        if tsystem is None:
+        t_system: Optional[db.TSystem] = self.db_processor.get_system_by_name(system)
+        if t_system is None:
             self.status = f"System '{system}' not found in local database."
             return
         if self.logger:
-            self.logger.debug = f"System found: {tsystem}"
-            self.logger.debug = f"SystemName: {tsystem.name}"
-            self.logger.debug = f"Bodies count: {tsystem.bodycount}"
+            self.logger.debug = f"System found: {t_system}"
+            self.logger.debug = f"SystemName: {t_system.name}"
+            self.logger.debug = f"Bodies count: {t_system.bodycount}"
 
         # show system
-        self.__system_show(tsystem)
+        self.__system_show(t_system)
         # self.logger.debug = f"After Show: {self._data}"
 
     def __system_show(self, system: db.TSystem) -> None:
@@ -558,7 +560,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
 
         # frame
         frame = tk.Frame(
-            self._data[DialogKeys.WIDGETS][DialogKeys.SPANEL].interior,
+            self._data[DialogKeys.WIDGETS][DialogKeys.S_PANEL].interior,
             borderwidth=1,
             relief=tk.GROOVE,
         )
@@ -653,7 +655,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
 
         # [2] frame
         frame = tk.Frame(
-            self._data[DialogKeys.WIDGETS][DialogKeys.SPANEL].interior,
+            self._data[DialogKeys.WIDGETS][DialogKeys.S_PANEL].interior,
             # background=color1 if count % 2 else color2,
             relief=tk.GROOVE,
             borderwidth=1,
@@ -741,27 +743,27 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
                 # get biological signals count
                 if signals.count_bio_signals > 0:
                     img = tk.PhotoImage(data=ih.get_bio_image(body))
-                    cbio = tk.Label(
+                    count_bio = tk.Label(
                         frame,
                         text=f"{signals.count_bio_signals }",
                         compound=tk.LEFT,
                         image=img,
                     )
-                    cbio.image = img  # type: ignore
-                    cbio.pack(side=tk.RIGHT)
-                    CreateToolTip(cbio, ih.get_bio_descript(body))
+                    count_bio.image = img  # type: ignore
+                    count_bio.pack(side=tk.RIGHT)
+                    CreateToolTip(count_bio, ih.get_bio_descript(body))
                 # get geological signals count
                 if signals.count_geo_signals > 0:
                     img = tk.PhotoImage(data=ih.get_geo_image(body))
-                    cgeo = tk.Label(
+                    count_geo = tk.Label(
                         frame,
                         text=f"{signals.count_geo_signals}",
                         compound=tk.LEFT,
                         image=img,
                     )
-                    cgeo.image = img  # type: ignore
-                    cgeo.pack(side=tk.RIGHT)
-                    CreateToolTip(cgeo, ih.get_geo_descript(body))
+                    count_geo.image = img  # type: ignore
+                    count_geo.pack(side=tk.RIGHT)
+                    CreateToolTip(count_geo, ih.get_geo_descript(body))
                 # first mapped
                 if features.mapped_first:
                     img = tk.PhotoImage(data=ih.get_map_image())
@@ -812,13 +814,13 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
 
     def debug(self, currentframe: Optional[FrameType], message: str = "") -> None:
         """Build debug message."""
-        pname: str = f"{self.pluginname}"
-        cname: str = f"{self._c_name}"
-        mname: str = f"{currentframe.f_code.co_name}" if currentframe else ""
+        p_name: str = f"{self.pluginname}"
+        c_name: str = f"{self._c_name}"
+        m_name: str = f"{currentframe.f_code.co_name}" if currentframe else ""
         if message != "":
             message = f": {message}"
         if self.logger:
-            self.logger.debug = f"{pname}->{cname}.{mname}{message}"
+            self.logger.debug = f"{p_name}->{c_name}.{m_name}{message}"
 
     @property
     def status(self) -> object:

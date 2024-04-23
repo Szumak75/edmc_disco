@@ -85,7 +85,7 @@ class Database(BData):
             )
 
     def __create_engine(self) -> Engine:
-        engine: Engine = create_engine(
+        engine = create_engine(
             f"sqlite+pysqlite:///{self.db_path}",
             echo=self._data[_Keys.DEBUG],
         )
@@ -96,7 +96,7 @@ class Database(BData):
                 self._c_name,
                 currentframe(),
             )
-        return engine
+        return engine # type: ignore
 
     @property
     def session(self) -> Session:
@@ -134,7 +134,7 @@ class DBProcessor(BData):
             self._data[_Keys.SESSION].close()
         self._data[_Keys.SESSION] = None
 
-    def strtime(self, arg: str) -> int:
+    def str_time(self, arg: str) -> int:
         """Timestamp from logs in local time convert to game time string.
 
         input: 2023-01-01T03:01:43Z
@@ -153,9 +153,7 @@ class DBProcessor(BData):
         if "SystemAddress" not in entry:
             return None
         session: Session = self._data[_Keys.SESSION]
-        system: Optional[TSystem] = self.__get__system(
-            entry["SystemAddress"]
-        )
+        system: Optional[TSystem] = self.__get__system(entry["SystemAddress"])
         if not system:
             system = db.TSystem()
             system.event_parser(entry)
@@ -163,14 +161,14 @@ class DBProcessor(BData):
             system.features.event_parser(entry)
             # add primary star
             if "Body" in entry:
-                pstar = db.TBody()
-                pstar.event_parser(entry)
-                system.bodies.append(pstar)
+                p_star = db.TBody()
+                p_star.event_parser(entry)
+                system.bodies.append(p_star)
             session.add(system)
             session.commit()
         else:
             # update
-            if system.timestamp <= self.strtime(entry["timestamp"]):
+            if system.timestamp <= self.str_time(entry["timestamp"]):
                 system.timestamp = entry["timestamp"]
                 # update features
                 system.features.event_parser(entry)
@@ -182,9 +180,7 @@ class DBProcessor(BData):
         if "SystemAddress" not in entry:
             return None
         session: Session = self._data[_Keys.SESSION]
-        system: Optional[TSystem] = self.__get__system(
-            entry["SystemAddress"]
-        )
+        system: Optional[TSystem] = self.__get__system(entry["SystemAddress"])
         if not system:
             return None
         else:
@@ -203,10 +199,8 @@ class DBProcessor(BData):
         if "BodyID" not in entry:
             return None
         session: Session = self._data[_Keys.SESSION]
-        system: Optional[TSystem] = self.__get__system(
-            entry["SystemAddress"]
-        )
-        if system and system.timestamp <= self.strtime(entry["timestamp"]):
+        system: Optional[TSystem] = self.__get__system(entry["SystemAddress"])
+        if system and system.timestamp <= self.str_time(entry["timestamp"]):
             body: Optional[db.TBody] = system.get_body(entry["BodyID"])
             if not body:
                 body = db.TBody()
@@ -231,12 +225,10 @@ class DBProcessor(BData):
         if "BodyID" not in entry:
             return None
         session: Session = self._data[_Keys.SESSION]
-        system: Optional[TSystem] = self.__get__system(
-            entry["SystemAddress"]
-        )
+        system: Optional[TSystem] = self.__get__system(entry["SystemAddress"])
         if entry["event"] != "SAAScanComplete":
             return system
-        if system and system.timestamp <= self.strtime(entry["timestamp"]):
+        if system and system.timestamp <= self.str_time(entry["timestamp"]):
             body: Optional[db.TBody] = system.get_body(entry["BodyID"])
             if body:
                 body.features.mapped_first = True
@@ -250,10 +242,8 @@ class DBProcessor(BData):
         if "BodyID" not in entry:
             return None
         session: Session = self._data[_Keys.SESSION]
-        system: Optional[TSystem] = self.__get__system(
-            entry["SystemAddress"]
-        )
-        if system and system.timestamp <= self.strtime(entry["timestamp"]):
+        system: Optional[TSystem] = self.__get__system(entry["SystemAddress"])
+        if system and system.timestamp <= self.str_time(entry["timestamp"]):
             body: Optional[db.TBody] = system.get_body(entry["BodyID"])
             if not body:
                 body = db.TBody()
@@ -272,11 +262,9 @@ class DBProcessor(BData):
         if "BodyID" not in entry and "Body" not in entry:
             return None
         session: Session = self._data[_Keys.SESSION]
-        system: Optional[TSystem] = self.__get__system(
-            entry["SystemAddress"]
-        )
+        system: Optional[TSystem] = self.__get__system(entry["SystemAddress"])
         # print(system)
-        if system and system.timestamp <= self.strtime(entry["timestamp"]):
+        if system and system.timestamp <= self.str_time(entry["timestamp"]):
             body_id = -1
             if "BodyID" in entry:
                 body_id = entry["BodyID"]
@@ -297,10 +285,8 @@ class DBProcessor(BData):
         if "BodyID" not in entry:
             return None
         session: Session = self._data[_Keys.SESSION]
-        system: Optional[TSystem] = self.__get__system(
-            entry["SystemAddress"]
-        )
-        if system and system.timestamp <= self.strtime(entry["timestamp"]):
+        system: Optional[TSystem] = self.__get__system(entry["SystemAddress"])
+        if system and system.timestamp <= self.str_time(entry["timestamp"]):
             body: Optional[db.TBody] = system.get_body(entry["BodyID"])
             if not body:
                 return None
@@ -309,9 +295,7 @@ class DBProcessor(BData):
                 session.commit()
         return system
 
-    def __add_null_parents(
-        self, system: Optional[db.TSystem], entry: Dict
-    ) -> None:
+    def __add_null_parents(self, system: Optional[db.TSystem], entry: Dict) -> None:
         if system is None:
             return None
         if "Parents" in entry:

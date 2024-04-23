@@ -23,11 +23,11 @@ class _Keys(object, metaclass=ReadOnlyClass):
 
     CMDR: str = "cmdr"
     DIALOG: str = "dialog"
-    JUMPRANGE: str = "jump_range"
-    PLUGINNAME: str = "pluginname"
+    JUMP_RANGE: str = "jump_range"
+    PLUGIN_NAME: str = "pluginname"
     PROCESSOR: str = "processor"
     SHUTDOWN: str = "shutdown"
-    STARSSYSTEM: str = "stars_system"
+    STARS_SYSTEM: str = "stars_system"
     SYSTEM: str = "system"
     VERSION: str = "version"
 
@@ -38,19 +38,19 @@ class SimpleData(BData):
     def __init__(self) -> None:
         """Initialize dataset."""
         self._data[_Keys.CMDR] = ""
-        self._data[_Keys.PLUGINNAME] = ""
+        self._data[_Keys.PLUGIN_NAME] = ""
         self._data[_Keys.VERSION] = ""
         self._data[_Keys.SHUTDOWN] = False
 
     @property
     def pluginname(self) -> str:
         """Give me pluginname."""
-        return self._data[_Keys.PLUGINNAME]
+        return self._data[_Keys.PLUGIN_NAME]
 
     @pluginname.setter
     def pluginname(self, value: str) -> None:
         if value is not None and isinstance(value, str):
-            self._data[_Keys.PLUGINNAME] = value
+            self._data[_Keys.PLUGIN_NAME] = value
 
     @property
     def version(self) -> str:
@@ -148,41 +148,41 @@ class RscanData(SimpleData):
     def __init__(self) -> None:
         """Initialize dataset."""
         SimpleData.__init__(self)
-        self._data[_Keys.JUMPRANGE] = None
-        self._data[_Keys.STARSSYSTEM] = StarsSystem()
+        self._data[_Keys.JUMP_RANGE] = None
+        self._data[_Keys.STARS_SYSTEM] = StarsSystem()
 
     def __repr__(self) -> str:
         """Give me class dump."""
         return (
             f"{self._c_name}(cmdr='{self._data[_Keys.CMDR]}', "
-            f"pluginname='{self._data[_Keys.PLUGINNAME]}', "
+            f"pluginname='{self._data[_Keys.PLUGIN_NAME]}', "
             f"version='{self._data[_Keys.VERSION]}', "
-            f"jumprange={self._data[_Keys.JUMPRANGE]}, "
-            f"{self._data[_Keys.STARSSYSTEM]})"
+            f"jumprange={self._data[_Keys.JUMP_RANGE]}, "
+            f"{self._data[_Keys.STARS_SYSTEM]})"
         )
 
     @property
-    def starsystem(self) -> StarsSystem:
+    def star_system(self) -> StarsSystem:
         """Give me StarsSystem object."""
-        return self._data[_Keys.STARSSYSTEM]
+        return self._data[_Keys.STARS_SYSTEM]
 
-    @starsystem.setter
-    def starsystem(self, value: StarsSystem) -> None:
+    @star_system.setter
+    def star_system(self, value: StarsSystem) -> None:
         if value is None:
-            self._data[_Keys.STARSSYSTEM] = StarsSystem()
+            self._data[_Keys.STARS_SYSTEM] = StarsSystem()
         elif isinstance(value, StarsSystem):
-            self._data[_Keys.STARSSYSTEM] = value
+            self._data[_Keys.STARS_SYSTEM] = value
 
     @property
-    def jumprange(self) -> Optional[float]:
-        """Give me jumprange."""
-        return self._data[_Keys.JUMPRANGE]
+    def jump_range(self) -> Optional[float]:
+        """Give me jump range."""
+        return self._data[_Keys.JUMP_RANGE]
 
-    @jumprange.setter
-    def jumprange(self, value: Union[str, int, float]) -> None:
+    @jump_range.setter
+    def jump_range(self, value: Union[str, int, float]) -> None:
         if value is not None and isinstance(value, (str, int, float)):
             try:
-                self._data[_Keys.JUMPRANGE] = float(value)
+                self._data[_Keys.JUMP_RANGE] = float(value)
             except Exception:
                 pass
 
