@@ -27,7 +27,7 @@ class Disco(BLogProcessor, BLogClient):
 
         # data
         self.data.pluginname = "EDDisco"
-        self.data.version = "1.0.4-dev"
+        self.data.version = "1.0.4"
 
         # database
         self.data.db_processor = DBProcessor(Database(False).session)
