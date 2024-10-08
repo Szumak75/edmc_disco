@@ -22,7 +22,6 @@ from disco.jsktoolbox.edmctool.base import BLogClient
 from disco.jsktoolbox.edmctool.logs import LogClient
 
 
-from disco.database import DBProcessor
 import disco.db_models as db
 from disco.data import DiscoData
 from disco.pics import Pics
