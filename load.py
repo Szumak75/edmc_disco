@@ -8,15 +8,15 @@
 
 import tkinter as tk
 from tkinter import ttk
-from typing import Dict, Optional, Tuple
-
-from jsktoolbox.tktool.widgets import CreateToolTip
+from typing import Dict, Optional
 
 from config import config
+from disco.jsktoolbox.tktool.widgets import CreateToolTip
+from disco.jsktoolbox.edmctool.logs import LogLevels
 
-from disco_libs.system import LogLevels
-from disco_libs.dialogs import DiscoMainDialog
-from disco_libs.disco import Disco
+
+from disco.dialogs import DiscoMainDialog
+from disco.disco import Disco
 
 disco_object = Disco()
 

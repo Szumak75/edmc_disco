@@ -11,7 +11,7 @@
 import json
 from sys import stdin
 
-from disco_libs.database import Database, DBProcessor
+from disco.database import Database, DBProcessor
 
 if __name__ == "__main__":
     print("Starting Journal Importer")
