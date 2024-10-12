@@ -122,7 +122,7 @@ def journal_entry(
     """
     test = False
 
-    if entry["event"] == "FSDJump":
+    if entry["event"] in ("FSDJump", "CarrierJump"):
         disco_object.data.system = disco_object.data.db_processor.add_system(entry)  # type: ignore
         test = True
         disco_object.logger.debug = f"FSDJump: {disco_object.data.system}"
