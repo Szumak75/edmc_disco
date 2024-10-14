@@ -25,32 +25,28 @@ if __name__ == "__main__":
         entry = json.loads(line)
         if EDKeys.EVENT in entry:
             out = None
-            # print(entry)
-            # if entry['event'] in ('FSDJump', 'Scan', ):
-            #     print(f"{counter}: {entry}")
-            #     print('')
             if entry[EDKeys.EVENT] == EDKeys.FSD_JUMP:
                 out = processor.add_system(entry)
                 # print(f"{counter}::::{out}")
             elif entry[EDKeys.EVENT] == EDKeys.SCAN and entry["ScanType"] in (
-                "AutoScan",
-                "Detailed",
+                EDKeys.AUTO_SCAN,
+                EDKeys.DETAILED,
                 "Basic",
                 "NavBeaconDetail",
             ):
                 out = processor.add_body(entry)
-            elif entry[EDKeys.EVENT] == "FSSDiscoveryScan":
+            elif entry[EDKeys.EVENT] == EDKeys.FSS_DISCOVERY_SCAN:
                 out = processor.update_system(entry)
-            elif entry[EDKeys.EVENT] == "FSSBodySignals":
+            elif entry[EDKeys.EVENT] == EDKeys.FSS_BODY_SIGNALS:
                 out = processor.add_signal(entry)
-            elif entry[EDKeys.EVENT] == "SAASignalsFound":
+            elif entry[EDKeys.EVENT] == EDKeys.SAA_SIGNALS_FOUND:
                 processor.add_signal(entry)
                 out = processor.add_genus(entry)
             elif entry[EDKeys.EVENT] == "CodexEntry":
                 # print(f"XXXX:::{entry}:::XXXX")
                 out = processor.add_codex(entry)
                 # print(f"{counter}::::{out}")
-            elif entry[EDKeys.EVENT] == "ScanOrganic":
+            elif entry[EDKeys.EVENT] == EDKeys.SCAN_ORGANIC:
                 # print(f"XXXX:::{entry}:::XXXX")
                 out = processor.add_genus(entry)
                 # print(f"{counter}::::{out}")
