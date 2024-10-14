@@ -10,16 +10,23 @@
     "python.analysis.typeCheckingMode": "basic",
     "cSpell.words": [
         "AFMU",
+        "Callsign",
         "Datalink",
         "Dropship",
         "edmctool",
+        "FLEETCARRIER",
+        "gameversion",
         "Healt",
+        "Landable",
         "LOADOUT",
         "Localised",
+        "Motherlode",
         "MULTICREW",
+        "Periapsis",
         "POWERPLAY",
         "prefs",
         "REBUY",
-        "SUPERCRUISE"
+        "SUPERCRUISE",
+        "Telepresence"
     ]
 }
