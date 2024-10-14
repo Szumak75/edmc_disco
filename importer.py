@@ -11,6 +11,7 @@
 import json
 from sys import stdin
 
+from disco.jsktoolbox.edmctool.ed_keys import EDKeys
 from disco.database import Database, DBProcessor
 
 if __name__ == "__main__":
@@ -22,38 +23,38 @@ if __name__ == "__main__":
     for line in stdin:
         counter += 1
         entry = json.loads(line)
-        if "event" in entry:
+        if EDKeys.EVENT in entry:
             out = None
             # print(entry)
             # if entry['event'] in ('FSDJump', 'Scan', ):
             #     print(f"{counter}: {entry}")
             #     print('')
-            if entry["event"] == "FSDJump":
+            if entry[EDKeys.EVENT] == EDKeys.FSD_JUMP:
                 out = processor.add_system(entry)
                 # print(f"{counter}::::{out}")
-            elif entry["event"] == "Scan" and entry["ScanType"] in (
+            elif entry[EDKeys.EVENT] == EDKeys.SCAN and entry["ScanType"] in (
                 "AutoScan",
                 "Detailed",
                 "Basic",
                 "NavBeaconDetail",
             ):
                 out = processor.add_body(entry)
-            elif entry["event"] == "FSSDiscoveryScan":
+            elif entry[EDKeys.EVENT] == "FSSDiscoveryScan":
                 out = processor.update_system(entry)
-            elif entry["event"] == "FSSBodySignals":
+            elif entry[EDKeys.EVENT] == "FSSBodySignals":
                 out = processor.add_signal(entry)
-            elif entry["event"] == "SAASignalsFound":
+            elif entry[EDKeys.EVENT] == "SAASignalsFound":
                 processor.add_signal(entry)
                 out = processor.add_genus(entry)
-            elif entry["event"] == "CodexEntry":
+            elif entry[EDKeys.EVENT] == "CodexEntry":
                 # print(f"XXXX:::{entry}:::XXXX")
                 out = processor.add_codex(entry)
                 # print(f"{counter}::::{out}")
-            elif entry["event"] == "ScanOrganic":
+            elif entry[EDKeys.EVENT] == "ScanOrganic":
                 # print(f"XXXX:::{entry}:::XXXX")
                 out = processor.add_genus(entry)
                 # print(f"{counter}::::{out}")
-            elif entry["event"] == "SAAScanComplete":
+            elif entry[EDKeys.EVENT] == "SAAScanComplete":
                 out = processor.mapped_body(entry)
 
             if out:

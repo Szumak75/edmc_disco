@@ -13,7 +13,7 @@ from typing import Dict, Optional
 from config import config
 from disco.jsktoolbox.tktool.widgets import CreateToolTip
 from disco.jsktoolbox.edmctool.logs import LogLevels
-
+from disco.jsktoolbox.edmctool.ed_keys import EDKeys
 
 from disco.dialogs import DiscoMainDialog
 from disco.disco import Disco
@@ -135,33 +135,39 @@ def journal_entry(
         disco_object.data.system = disco_object.data.db_processor.add_body(entry)  # type: ignore
         test = True
         disco_object.logger.debug = f"Scan: {disco_object.data.system}"
-    elif entry["event"] == "FSSDiscoveryScan":
+    elif entry[EDKeys.EVENT] == EDKeys.FSS_DISCOVERY_SCAN:
         disco_object.data.system = disco_object.data.db_processor.update_system(entry)  # type: ignore
         test = True
-        disco_object.logger.debug = f"FSSDiscoveryScan: {disco_object.data.system}"
-    elif entry["event"] == "FSSBodySignals":
+        disco_object.logger.debug = (
+            f"{EDKeys.FSS_DISCOVERY_SCAN}: {disco_object.data.system}"
+        )
+    elif entry[EDKeys.EVENT] == EDKeys.FSS_BODY_SIGNALS:
         disco_object.data.system = disco_object.data.db_processor.add_signal(entry)  # type: ignore
         test = True
-        disco_object.logger.debug = f"FSSBodySignals: {disco_object.data.system}"
-    elif entry["event"] == "SAASignalsFound":
+        disco_object.logger.debug = (
+            f"{EDKeys.FSS_BODY_SIGNALS}: {disco_object.data.system}"
+        )
+    elif entry[EDKeys.EVENT] == EDKeys.SAA_SIGNALS_FOUND:
         disco_object.data.db_processor.add_signal(entry)
         disco_object.data.system = disco_object.data.db_processor.add_genus(entry)  # type: ignore
         test = True
-        disco_object.logger.debug = f"SAASignalsFound: {disco_object.data.system}"
-    elif entry["event"] == "CodexEntry":
+        disco_object.logger.debug = (
+            f"{EDKeys.SAA_SIGNALS_FOUND}: {disco_object.data.system}"
+        )
+    elif entry[EDKeys.EVENT] == "CodexEntry":
         disco_object.data.system = disco_object.data.db_processor.add_codex(entry)  # type: ignore
         test = True
         disco_object.logger.debug = f"CodexEntry: {disco_object.data.system}"
-    elif entry["event"] == "ScanOrganic":
+    elif entry[EDKeys.EVENT] == EDKeys.SCAN_ORGANIC:
         disco_object.data.system = disco_object.data.db_processor.add_genus(entry)  # type: ignore
         test = True
-        disco_object.logger.debug = f"ScanOrganic: {disco_object.data.system}"
-    elif entry["event"] == "SAAScanComplete":
+        disco_object.logger.debug = f"{EDKeys.SCAN_ORGANIC}: {disco_object.data.system}"
+    elif entry[EDKeys.EVENT] == "SAAScanComplete":
         disco_object.data.system = disco_object.data.db_processor.mapped_body(entry)  # type: ignore
         test = True
-    elif entry["event"] == "Location" and "StarSystem" in entry:
+    elif entry[EDKeys.EVENT] == "Location" and EDKeys.STAR_SYSTEM in entry:
         disco_object.data.system = disco_object.data.db_processor.get_system_by_name(
-            entry["StarSystem"]
+            entry[EDKeys.STAR_SYSTEM]
         )  # type: ignore
         test = True
     if test:
