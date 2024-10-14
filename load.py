@@ -122,19 +122,19 @@ def journal_entry(
     """
     test = False
 
-    if entry["event"] == "FSDJump":
+    if entry[EDKeys.EVENT] == EDKeys.FSD_JUMP:
         disco_object.data.system = disco_object.data.db_processor.add_system(entry)  # type: ignore
         test = True
-        disco_object.logger.debug = f"FSDJump: {disco_object.data.system}"
-    elif entry["event"] == "Scan" and entry["ScanType"] in (
-        "AutoScan",
-        "Detailed",
+        disco_object.logger.debug = f"{EDKeys.FSD_JUMP}: {disco_object.data.system}"
+    elif entry[EDKeys.EVENT] == EDKeys.SCAN and entry["ScanType"] in (
+        EDKeys.AUTO_SCAN,
+        EDKeys.DETAILED,
         "Basic",
         "NavBeaconDetail",
     ):
         disco_object.data.system = disco_object.data.db_processor.add_body(entry)  # type: ignore
         test = True
-        disco_object.logger.debug = f"Scan: {disco_object.data.system}"
+        disco_object.logger.debug = f"{EDKeys.SCAN}: {disco_object.data.system}"
     elif entry[EDKeys.EVENT] == EDKeys.FSS_DISCOVERY_SCAN:
         disco_object.data.system = disco_object.data.db_processor.update_system(entry)  # type: ignore
         test = True
