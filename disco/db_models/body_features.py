@@ -12,11 +12,13 @@ from sqlalchemy import Boolean, Float, ForeignKey, Integer, String
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Mapped, mapped_column
 
+from disco.jsktoolbox.edmctool.ed_keys import EDKeys
+
 
 class TBodyFeatures(DiscoBase):
     """Table of Body Features."""
 
-    __tablename__:str = "body_features"
+    __tablename__: str = "body_features"
 
     id: Mapped[int] = mapped_column(
         primary_key=True, nullable=False, autoincrement=True
@@ -120,77 +122,101 @@ class TBodyFeatures(DiscoBase):
         Analyze dict from journal and import data into the object.
         """
         if (
-            "AbsoluteMagnitude" in entry
-            and self.absolutemagnitude != entry["AbsoluteMagnitude"]
+            EDKeys.ABSOLUTE_MAGNITUDE in entry
+            and self.absolutemagnitude != entry[EDKeys.ABSOLUTE_MAGNITUDE]
         ):
-            self.absolutemagnitude = entry["AbsoluteMagnitude"]
-        if "Atmosphere" in entry and self.atmosfere != entry["Atmosphere"]:
-            self.atmosfere = entry["Atmosphere"]
-        if "AtmosphereType" in entry and self.atmosferetype != entry["AtmosphereType"]:
-            self.atmosferetype = entry["AtmosphereType"]
-        if "AxialTilt" in entry and self.axialtilt != entry["AxialTilt"]:
-            self.axialtilt = entry["AxialTilt"]
-        if "BodyType" in entry and self.body_type != entry["BodyType"]:
-            self.body_type = entry["BodyType"]
-        elif "PlanetClass" in entry:
-            self.body_type = "Planet"
-            self.planet_class = entry["PlanetClass"]
-        elif "Cluster" in entry["BodyName"]:
-            self.body_type = "Cluster"
-        if "WasDiscovered" in entry and not self.discovered:
-            self.discovered = entry["WasDiscovered"]
+            self.absolutemagnitude = entry[EDKeys.ABSOLUTE_MAGNITUDE]
+        if EDKeys.ATMOSPHERE in entry and self.atmosfere != entry[EDKeys.ATMOSPHERE]:
+            self.atmosfere = entry[EDKeys.ATMOSPHERE]
         if (
-            "DistanceFromArrivalLS" in entry
-            and self.distance != entry["DistanceFromArrivalLS"]
+            EDKeys.ATMOSPHERE_TYPE in entry
+            and self.atmosferetype != entry[EDKeys.ATMOSPHERE_TYPE]
         ):
-            self.distance = entry["DistanceFromArrivalLS"]
-        if "Eccentricity" in entry and self.eccentricity != entry["Eccentricity"]:
-            self.eccentricity = entry["Eccentricity"]
-        if "Landable" in entry and self.landable != entry["Landable"]:
-            self.landable = entry["Landable"]
-        if "Luminosity" in entry and self.luminosity != entry["Luminosity"]:
-            self.luminosity = entry["Luminosity"]
-        if "WasMapped" in entry and not self.mapped:
-            self.mapped = entry["WasMapped"]
+            self.atmosferetype = entry[EDKeys.ATMOSPHERE_TYPE]
+        if EDKeys.AXIAL_TILT in entry and self.axialtilt != entry[EDKeys.AXIAL_TILT]:
+            self.axialtilt = entry[EDKeys.AXIAL_TILT]
+        if EDKeys.BODY_TYPE in entry and self.body_type != entry[EDKeys.BODY_TYPE]:
+            self.body_type = entry[EDKeys.BODY_TYPE]
+        elif EDKeys.PLANET_CLASS in entry:
+            self.body_type = "Planet"
+            self.planet_class = entry[EDKeys.PLANET_CLASS]
+        elif "Cluster" in entry[EDKeys.BODY_NAME]:
+            self.body_type = "Cluster"
+        if EDKeys.WAS_DISCOVERED in entry and not self.discovered:
+            self.discovered = entry[EDKeys.WAS_DISCOVERED]
+        if (
+            EDKeys.DISTANCE_FROM_ARRIVAL_LS in entry
+            and self.distance != entry[EDKeys.DISTANCE_FROM_ARRIVAL_LS]
+        ):
+            self.distance = entry[EDKeys.DISTANCE_FROM_ARRIVAL_LS]
+        if (
+            EDKeys.ECCENTRICITY in entry
+            and self.eccentricity != entry[EDKeys.ECCENTRICITY]
+        ):
+            self.eccentricity = entry[EDKeys.ECCENTRICITY]
+        if EDKeys.LANDABLE in entry and self.landable != entry[EDKeys.LANDABLE]:
+            self.landable = entry[EDKeys.LANDABLE]
+        if EDKeys.LUMINOSITY in entry and self.luminosity != entry[EDKeys.LUMINOSITY]:
+            self.luminosity = entry[EDKeys.LUMINOSITY]
+        if EDKeys.WAS_MAPPED in entry and not self.mapped:
+            self.mapped = entry[EDKeys.WAS_MAPPED]
         if "MassEM" in entry and self.massem != entry["MassEM"]:
             self.massem = entry["MassEM"]
         if (
-            "OrbitalInclination" in entry
-            and self.orbitalinclination != entry["OrbitalInclination"]
+            EDKeys.ORBITAL_INCLINATION in entry
+            and self.orbitalinclination != entry[EDKeys.ORBITAL_INCLINATION]
         ):
-            self.orbitalinclination = entry["OrbitalInclination"]
-        if "OrbitalPeriod" in entry and self.orbitalperiod != entry["OrbitalPeriod"]:
-            self.orbitalperiod = entry["OrbitalPeriod"]
-        if "Periapsis" in entry and self.periapsis != entry["Periapsis"]:
-            self.periapsis = entry["Periapsis"]
-        if "Radius" in entry and self.radius != entry["Radius"]:
-            self.radius = entry["Radius"]
-        if "RotationPeriod" in entry and self.rotationperiod != entry["RotationPeriod"]:
-            self.rotationperiod = entry["RotationPeriod"]
-        if "SemiMajorAxis" in entry and self.semimajoraxis != entry["SemiMajorAxis"]:
-            self.semimajoraxis = entry["SemiMajorAxis"]
-        if "StarType" in entry and self.star_type != entry["StarType"]:
-            self.star_type = entry["StarType"]
-        if "StellarMass" in entry and self.stellarmass != entry["StellarMass"]:
-            self.stellarmass = entry["StellarMass"]
-        if "Subclass" in entry and self.subclass != entry["Subclass"]:
-            self.subclass = entry["Subclass"]
-        if "SurfaceGravity" in entry and self.surfacegravity != entry["SurfaceGravity"]:
-            self.surfacegravity = entry["SurfaceGravity"]
+            self.orbitalinclination = entry[EDKeys.ORBITAL_INCLINATION]
         if (
-            "SurfacePressure" in entry
-            and self.surfacepressure != entry["SurfacePressure"]
+            EDKeys.ORBITAL_PERIOD in entry
+            and self.orbitalperiod != entry[EDKeys.ORBITAL_PERIOD]
         ):
-            self.surfacepressure = entry["SurfacePressure"]
+            self.orbitalperiod = entry[EDKeys.ORBITAL_PERIOD]
+        if EDKeys.PERIAPSIS in entry and self.periapsis != entry[EDKeys.PERIAPSIS]:
+            self.periapsis = entry[EDKeys.PERIAPSIS]
+        if EDKeys.RADIUS in entry and self.radius != entry[EDKeys.RADIUS]:
+            self.radius = entry[EDKeys.RADIUS]
         if (
-            "SurfaceTemperature" in entry
-            and self.surfacetemperature != entry["SurfaceTemperature"]
+            EDKeys.ROTATION_PERIOD in entry
+            and self.rotationperiod != entry[EDKeys.ROTATION_PERIOD]
         ):
-            self.surfacetemperature = entry["SurfaceTemperature"]
-        if "TerraformState" in entry and self.terraformstate != entry["TerraformState"]:
-            self.terraformstate = entry["TerraformState"]
-        if "Volcanism" in entry and self.volcanism != entry["Volcanism"]:
-            self.volcanism = entry["Volcanism"]
+            self.rotationperiod = entry[EDKeys.ROTATION_PERIOD]
+        if (
+            EDKeys.SEMI_MAJOR_AXIS in entry
+            and self.semimajoraxis != entry[EDKeys.SEMI_MAJOR_AXIS]
+        ):
+            self.semimajoraxis = entry[EDKeys.SEMI_MAJOR_AXIS]
+        if EDKeys.STAR_TYPE in entry and self.star_type != entry[EDKeys.STAR_TYPE]:
+            self.star_type = entry[EDKeys.STAR_TYPE]
+        if (
+            EDKeys.STELLAR_MASS in entry
+            and self.stellarmass != entry[EDKeys.STELLAR_MASS]
+        ):
+            self.stellarmass = entry[EDKeys.STELLAR_MASS]
+        if EDKeys.SUBCLASS in entry and self.subclass != entry[EDKeys.SUBCLASS]:
+            self.subclass = entry[EDKeys.SUBCLASS]
+        if (
+            EDKeys.SURFACE_GRAVITY in entry
+            and self.surfacegravity != entry[EDKeys.SURFACE_GRAVITY]
+        ):
+            self.surfacegravity = entry[EDKeys.SURFACE_GRAVITY]
+        if (
+            EDKeys.SURFACE_PRESSURE in entry
+            and self.surfacepressure != entry[EDKeys.SURFACE_PRESSURE]
+        ):
+            self.surfacepressure = entry[EDKeys.SURFACE_PRESSURE]
+        if (
+            EDKeys.SURFACE_TEMPERATURE in entry
+            and self.surfacetemperature != entry[EDKeys.SURFACE_TEMPERATURE]
+        ):
+            self.surfacetemperature = entry[EDKeys.SURFACE_TEMPERATURE]
+        if (
+            EDKeys.TERRAFORM_STATE in entry
+            and self.terraformstate != entry[EDKeys.TERRAFORM_STATE]
+        ):
+            self.terraformstate = entry[EDKeys.TERRAFORM_STATE]
+        if EDKeys.VOLCANISM in entry and self.volcanism != entry[EDKeys.VOLCANISM]:
+            self.volcanism = entry[EDKeys.VOLCANISM]
 
     @hybrid_property
     def absolutemagnitude(self) -> Optional[float]:

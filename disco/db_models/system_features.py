@@ -7,10 +7,12 @@ Created on 30 jan 2023.
 
 from typing import Optional
 
-from disco.db_models.base import DiscoBase
 from sqlalchemy import ForeignKey, Integer, String
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Mapped, mapped_column
+
+from disco.jsktoolbox.edmctool.ed_keys import EDKeys
+from disco.db_models.base import DiscoBase
 
 
 class TSystemFeatures(DiscoBase):
@@ -42,15 +44,15 @@ class TSystemFeatures(DiscoBase):
 
         Analyze dict from journal and import data into the object.
         """
-        if "SystemAllegiance" in entry and entry["SystemAllegiance"] != self.allegiance:
-            self.allegiance = entry["SystemAllegiance"]
+        if EDKeys.SYSTEM_ALLEGIANCE in entry and entry[EDKeys.SYSTEM_ALLEGIANCE] != self.allegiance:
+            self.allegiance = entry[EDKeys.SYSTEM_ALLEGIANCE]
         if (
-            "SystemSecurity_Localised" in entry
-            and entry["SystemSecurity_Localised"] != self.security
+            EDKeys.SYSTEM_SECURITY_LOCALISED in entry
+            and entry[EDKeys.SYSTEM_SECURITY_LOCALISED] != self.security
         ):
-            self.security = entry["SystemSecurity_Localised"]
-        if "Population" in entry and entry["Population"] != self.population:
-            self.population = entry["Population"]
+            self.security = entry[EDKeys.SYSTEM_SECURITY_LOCALISED]
+        if EDKeys.POPULATION in entry and entry[EDKeys.POPULATION] != self.population:
+            self.population = entry[EDKeys.POPULATION]
 
     @hybrid_property
     def allegiance(self) -> Optional[str]:

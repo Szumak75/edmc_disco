@@ -18,6 +18,7 @@ from sqlalchemy.engine.base import Engine
 from disco.jsktoolbox.basetool.data import BData
 from disco.jsktoolbox.raisetool import Raise
 from disco.jsktoolbox.attribtool import ReadOnlyClass
+from disco.jsktoolbox.edmctool.ed_keys import EDKeys
 
 import disco.db_models as db
 from disco.db_models.system import TSystem
@@ -154,14 +155,14 @@ class DBProcessor(BData):
         if "SystemAddress" not in entry:
             return None
         session: Session = self._data[_Keys.SESSION]
-        system: Optional[TSystem] = self.__get__system(entry["SystemAddress"])
+        system: Optional[TSystem] = self.__get__system(entry[EDKeys.SYSTEM_ADDRESS])
         if not system:
             system = db.TSystem()
             system.event_parser(entry)
             # add feature
             system.features.event_parser(entry)
             # add primary star
-            if "Body" in entry:
+            if EDKeys.BODY in entry:
                 p_star = db.TBody()
                 p_star.event_parser(entry)
                 system.bodies.append(p_star)
@@ -169,7 +170,7 @@ class DBProcessor(BData):
             session.commit()
         else:
             # update
-            if system.timestamp <= self.str_time(entry["timestamp"]):
+            if system.timestamp <= self.str_time(entry[EDKeys.TIMESTAMP]):
                 system.timestamp = entry["timestamp"]
                 # update features
                 system.features.event_parser(entry)
@@ -178,40 +179,40 @@ class DBProcessor(BData):
 
     def update_system(self, entry: Dict) -> Optional[db.TSystem]:
         """Update TSystem information about discovered BodyCount."""
-        if "SystemAddress" not in entry:
+        if EDKeys.SYSTEM_ADDRESS not in entry:
             return None
         session: Session = self._data[_Keys.SESSION]
-        system: Optional[TSystem] = self.__get__system(entry["SystemAddress"])
+        system: Optional[TSystem] = self.__get__system(entry[EDKeys.SYSTEM_ADDRESS])
         if not system:
             return None
         else:
             #  update
-            if "BodyCount" in entry:
-                system.bodycount = entry["BodyCount"]
-            if "NonBodyCount" in entry:
-                system.nonbodycount = entry["NonBodyCount"]
+            if EDKeys.BODY_COUNT in entry:
+                system.bodycount = entry[EDKeys.BODY_COUNT]
+            if EDKeys.NON_BODY_COUNT in entry:
+                system.nonbodycount = entry[EDKeys.NON_BODY_COUNT]
             session.commit()
         return system
 
     def add_body(self, entry: Dict) -> Optional[db.TSystem]:
         """Check and add body after scan."""
-        if "SystemAddress" not in entry:
+        if EDKeys.SYSTEM_ADDRESS not in entry:
             return None
-        if "BodyID" not in entry:
+        if EDKeys.BODY_ID not in entry:
             return None
         session: Session = self._data[_Keys.SESSION]
-        system: Optional[TSystem] = self.__get__system(entry["SystemAddress"])
-        if system and system.timestamp <= self.str_time(entry["timestamp"]):
-            body: Optional[db.TBody] = system.get_body(entry["BodyID"])
+        system: Optional[TSystem] = self.__get__system(entry[EDKeys.SYSTEM_ADDRESS])
+        if system and system.timestamp <= self.str_time(entry[EDKeys.TIMESTAMP]):
+            body: Optional[db.TBody] = system.get_body(entry[EDKeys.BODY_ID])
             if not body:
                 body = db.TBody()
                 system.bodies.append(body)
             body.event_parser(entry)
             body.features.event_parser(entry)
-            if entry["event"] == "Scan" and entry["ScanType"] in (
-                "Basic",
-                "AutoScan",
-                "Detailed",
+            if entry[EDKeys.EVENT] == EDKeys.SCAN and entry[EDKeys.SCAN_TYPE] in (
+                EDKeys.BASIC,
+                EDKeys.AUTO_SCAN,
+                EDKeys.DETAILED,
             ):
                 body.features.discovered_first = True
             # add null parents if needed
@@ -221,16 +222,16 @@ class DBProcessor(BData):
 
     def mapped_body(self, entry: Dict) -> Optional[db.TSystem]:
         """Check and update mapped body."""
-        if "SystemAddress" not in entry:
+        if EDKeys.SYSTEM_ADDRESS not in entry:
             return None
-        if "BodyID" not in entry:
+        if EDKeys.BODY_ID not in entry:
             return None
         session: Session = self._data[_Keys.SESSION]
-        system: Optional[TSystem] = self.__get__system(entry["SystemAddress"])
-        if entry["event"] != "SAAScanComplete":
+        system: Optional[TSystem] = self.__get__system(entry[EDKeys.SYSTEM_ADDRESS])
+        if entry[EDKeys.EVENT] != EDKeys.SAA_SCAN_COMPLETE:
             return system
-        if system and system.timestamp <= self.str_time(entry["timestamp"]):
-            body: Optional[db.TBody] = system.get_body(entry["BodyID"])
+        if system and system.timestamp <= self.str_time(entry[EDKeys.TIMESTAMP]):
+            body: Optional[db.TBody] = system.get_body(entry[EDKeys.BODY_ID])
             if body:
                 body.features.mapped_first = True
                 session.commit()
@@ -238,69 +239,69 @@ class DBProcessor(BData):
 
     def add_signal(self, entry: Dict) -> Optional[db.TSystem]:
         """Check and add discovered signal."""
-        if "SystemAddress" not in entry:
+        if EDKeys.SYSTEM_ADDRESS not in entry:
             return None
-        if "BodyID" not in entry:
+        if EDKeys.BODY_ID not in entry:
             return None
         session: Session = self._data[_Keys.SESSION]
-        system: Optional[TSystem] = self.__get__system(entry["SystemAddress"])
-        if system and system.timestamp <= self.str_time(entry["timestamp"]):
-            body: Optional[db.TBody] = system.get_body(entry["BodyID"])
+        system: Optional[TSystem] = self.__get__system(entry[EDKeys.SYSTEM_ADDRESS])
+        if system and system.timestamp <= self.str_time(entry[EDKeys.TIMESTAMP]):
+            body: Optional[db.TBody] = system.get_body(entry[EDKeys.BODY_ID])
             if not body:
                 body = db.TBody()
                 system.bodies.append(body)
                 body.event_parser(entry)
                 session.commit()
             if body.signals.event_parser(entry):
-                system.timestamp = entry["timestamp"]
+                system.timestamp = entry[EDKeys.TIMESTAMP]
                 session.commit()
         return system
 
     def add_genus(self, entry: Dict) -> Optional[db.TSystem]:
         """Check and add discovered genuses."""
-        if "SystemAddress" not in entry:
+        if EDKeys.SYSTEM_ADDRESS not in entry:
             return None
-        if "BodyID" not in entry and "Body" not in entry:
+        if EDKeys.BODY_ID not in entry and EDKeys.BODY not in entry:
             return None
         session: Session = self._data[_Keys.SESSION]
-        system: Optional[TSystem] = self.__get__system(entry["SystemAddress"])
+        system: Optional[TSystem] = self.__get__system(entry[EDKeys.SYSTEM_ADDRESS])
         # print(system)
-        if system and system.timestamp <= self.str_time(entry["timestamp"]):
+        if system and system.timestamp <= self.str_time(entry[EDKeys.TIMESTAMP]):
             body_id = -1
-            if "BodyID" in entry:
-                body_id = entry["BodyID"]
-            elif "Body" in entry:
-                body_id = entry["Body"]
+            if EDKeys.BODY_ID in entry:
+                body_id = entry[EDKeys.BODY_ID]
+            elif EDKeys.BODY in entry:
+                body_id = entry[EDKeys.BODY]
             body: Optional[db.TBody] = system.get_body(body_id)
             if not body:
                 return None
             if body.genuses.event_parser(entry):
-                system.timestamp = entry["timestamp"]
+                system.timestamp = entry[EDKeys.TIMESTAMP]
                 session.commit()
         return system
 
     def add_codex(self, entry: Dict) -> Optional[db.TSystem]:
         """Check and add discovered codex."""
-        if "SystemAddress" not in entry:
+        if EDKeys.SYSTEM_ADDRESS not in entry:
             return None
-        if "BodyID" not in entry:
+        if EDKeys.BODY_ID not in entry:
             return None
         session: Session = self._data[_Keys.SESSION]
-        system: Optional[TSystem] = self.__get__system(entry["SystemAddress"])
-        if system and system.timestamp <= self.str_time(entry["timestamp"]):
-            body: Optional[db.TBody] = system.get_body(entry["BodyID"])
+        system: Optional[TSystem] = self.__get__system(entry[EDKeys.SYSTEM_ADDRESS])
+        if system and system.timestamp <= self.str_time(entry[EDKeys.TIMESTAMP]):
+            body: Optional[db.TBody] = system.get_body(entry[EDKeys.BODY_ID])
             if not body:
                 return None
             if body.codexes.event_parser(entry):
-                system.timestamp = entry["timestamp"]
+                system.timestamp = entry[EDKeys.TIMESTAMP]
                 session.commit()
         return system
 
     def __add_null_parents(self, system: Optional[db.TSystem], entry: Dict) -> None:
         if system is None:
             return None
-        if "Parents" in entry:
-            for parent in entry["Parents"]:
+        if EDKeys.PARENTS in entry:
+            for parent in entry[EDKeys.PARENTS]:
                 for k_var, v_var in parent.items():
                     test = False
                     for body in system.bodies:

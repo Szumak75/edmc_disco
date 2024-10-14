@@ -13,6 +13,7 @@ from sqlalchemy import Float, Integer, String
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from disco.jsktoolbox.edmctool.ed_keys import EDKeys
 from disco.db_models.base import DiscoBase
 from disco.db_models.body import TBody
 from disco.db_models.body_features import TBodyFeatures
@@ -64,18 +65,18 @@ class TSystem(DiscoBase):
         Analyze dict from journal and import data into the object.
         """
         ret = False
-        if "SystemAddress" in entry:
+        if EDKeys.SYSTEM_ADDRESS in entry:
             ret = True
-            self.systemaddress = entry["SystemAddress"]
-        if "StarSystem" in entry:
+            self.systemaddress = entry[EDKeys.SYSTEM_ADDRESS]
+        if EDKeys.STAR_SYSTEM in entry:
             ret = True
-            self.name = entry["StarSystem"]
-        if "timestamp" in entry:
+            self.name = entry[EDKeys.STAR_SYSTEM]
+        if EDKeys.TIMESTAMP in entry:
             ret = True
-            self.timestamp = entry["timestamp"]
-        if "StarPos" in entry:
+            self.timestamp = entry[EDKeys.TIMESTAMP]
+        if EDKeys.STAR_POS in entry:
             ret = True
-            self.star_pos = entry["StarPos"]
+            self.star_pos = entry[EDKeys.STAR_POS]
         return ret
 
     def get_body(self, body_id: int) -> Optional[TBody]:

@@ -28,11 +28,11 @@ if __name__ == "__main__":
             if entry[EDKeys.EVENT] == EDKeys.FSD_JUMP:
                 out = processor.add_system(entry)
                 # print(f"{counter}::::{out}")
-            elif entry[EDKeys.EVENT] == EDKeys.SCAN and entry["ScanType"] in (
+            elif entry[EDKeys.EVENT] == EDKeys.SCAN and entry[EDKeys.SCAN_TYPE] in (
                 EDKeys.AUTO_SCAN,
                 EDKeys.DETAILED,
-                "Basic",
-                "NavBeaconDetail",
+                EDKeys.BASIC,
+                EDKeys.NAV_BEACON_DETAIL,
             ):
                 out = processor.add_body(entry)
             elif entry[EDKeys.EVENT] == EDKeys.FSS_DISCOVERY_SCAN:
@@ -42,7 +42,7 @@ if __name__ == "__main__":
             elif entry[EDKeys.EVENT] == EDKeys.SAA_SIGNALS_FOUND:
                 processor.add_signal(entry)
                 out = processor.add_genus(entry)
-            elif entry[EDKeys.EVENT] == "CodexEntry":
+            elif entry[EDKeys.EVENT] == EDKeys.CODEX_ENTRY:
                 # print(f"XXXX:::{entry}:::XXXX")
                 out = processor.add_codex(entry)
                 # print(f"{counter}::::{out}")
@@ -50,7 +50,7 @@ if __name__ == "__main__":
                 # print(f"XXXX:::{entry}:::XXXX")
                 out = processor.add_genus(entry)
                 # print(f"{counter}::::{out}")
-            elif entry[EDKeys.EVENT] == "SAAScanComplete":
+            elif entry[EDKeys.EVENT] == EDKeys.SAA_SCAN_COMPLETE:
                 out = processor.mapped_body(entry)
 
             if out:

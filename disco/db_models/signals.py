@@ -7,9 +7,11 @@ Created on 30 jan 2023.
 
 from typing import List
 
-from disco.db_models.base import DiscoBase
 from sqlalchemy import ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from disco.jsktoolbox.edmctool.ed_keys import EDKeys
+from disco.db_models.base import DiscoBase
 
 
 class TSignal(DiscoBase):
@@ -63,21 +65,21 @@ class TBodySignals(DiscoBase):
         Analyze dict from journal and import data into the object.
         """
         ret = False
-        if "Signals" in entry and entry["Signals"]:
-            for esignal in entry["Signals"]:
+        if EDKeys.SIGNALS in entry and entry[EDKeys.SIGNALS]:
+            for esignal in entry[EDKeys.SIGNALS]:
                 test = False
                 for item in self.signals:
-                    if item.type == esignal["Type"]:
+                    if item.type == esignal[EDKeys.TYPE]:
                         test = True
-                        if item.count != esignal["Count"]:
-                            item.count = esignal["Count"]
+                        if item.count != esignal[EDKeys.COUNT]:
+                            item.count = esignal[EDKeys.COUNT]
                             ret = True
                 if not test:
                     signal = TSignal()
-                    signal.type = esignal["Type"]
-                    if "Type_Localised" in esignal:
-                        signal.type_localised = esignal["Type_Localised"]
-                    signal.count = esignal["Count"]
+                    signal.type = esignal[EDKeys.TYPE]
+                    if EDKeys.TYPE_LOCALISED in esignal:
+                        signal.type_localised = esignal[EDKeys.TYPE_LOCALISED]
+                    signal.count = esignal[EDKeys.COUNT]
                     self.signals.append(signal)
                     ret = True
         return ret

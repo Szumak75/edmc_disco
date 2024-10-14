@@ -8,6 +8,8 @@ Created on 30 jan 2023.
 from sqlalchemy import ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from disco.jsktoolbox.edmctool.ed_keys import EDKeys
+
 from disco.db_models.base import DiscoBase
 from disco.db_models.body_features import TBodyFeatures
 from disco.db_models.genuses import TBodyGenuses
@@ -18,7 +20,7 @@ from disco.db_models.codex import TBodyCodexes
 class TBody(DiscoBase):
     """Table of Bodies."""
 
-    __tablename__:str = "bodies"
+    __tablename__: str = "bodies"
 
     id: Mapped[int] = mapped_column(
         primary_key=True, nullable=False, autoincrement=True
@@ -62,16 +64,16 @@ class TBody(DiscoBase):
 
         Analyze dict from journal and import data into the object.
         """
-        if "Body" in entry and entry["Body"] != self.name:
-            self.name = entry["Body"]
-        if "BodyName" in entry and entry["BodyName"] != self.name:
-            self.name = entry["BodyName"]
-        if "BodyID" in entry and entry["BodyID"] != self.bodyid:
-            self.bodyid = entry["BodyID"]
-        if "Parents" in entry:
-            if entry["Parents"]:
-                if self.parentid != list(entry["Parents"][0].values())[0]:
-                    self.parentid = list(entry["Parents"][0].values())[0]
+        if EDKeys.BODY in entry and entry[EDKeys.BODY] != self.name:
+            self.name = entry[EDKeys.BODY]
+        if EDKeys.BODY_NAME in entry and entry[EDKeys.BODY_NAME] != self.name:
+            self.name = entry[EDKeys.BODY_NAME]
+        if EDKeys.BODY_ID in entry and entry[EDKeys.BODY_ID] != self.bodyid:
+            self.bodyid = entry[EDKeys.BODY_ID]
+        if EDKeys.PARENTS in entry:
+            if entry[EDKeys.PARENTS]:
+                if self.parentid != list(entry[EDKeys.PARENTS][0].values())[0]:
+                    self.parentid = list(entry[EDKeys.PARENTS][0].values())[0]
 
 
 # #[EOF]#######################################################################

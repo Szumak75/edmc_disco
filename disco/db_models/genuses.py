@@ -10,6 +10,7 @@ from typing import List, Dict, Optional
 from sqlalchemy import ForeignKey, String, Integer, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from disco.jsktoolbox.edmctool.ed_keys import EDKeys
 from disco.db_models.base import DiscoBase
 
 
@@ -95,37 +96,37 @@ class TBodyGenuses(DiscoBase):
         Analyse dict from journal and import data into the object.
         """
         ret = False
-        if "Genuses" in entry and entry["Genuses"]:
-            for e_genus in entry["Genuses"]:
+        if EDKeys.GENUSES in entry and entry[EDKeys.GENUSES]:
+            for e_genus in entry[EDKeys.GENUSES]:
                 test = False
                 for item in self.genuses:
                     if (
-                        item.genus == e_genus["Genus"]
-                        and item.genus_localised == e_genus["Genus_Localised"]
+                        item.genus == e_genus[EDKeys.GENUS]
+                        and item.genus_localised == e_genus[EDKeys.GENUS_LOCALISED]
                     ):
                         test = True
                         ret = True
                 if not test:
                     tmp = TGenus()
-                    tmp.genus = e_genus["Genus"]
-                    tmp.genus_localised = e_genus["Genus_Localised"]
+                    tmp.genus = e_genus[EDKeys.GENUS]
+                    tmp.genus_localised = e_genus[EDKeys.GENUS_LOCALISED]
                     self.genuses.append(tmp)
                     ret = True
-        elif entry["event"] == "ScanOrganic":
+        elif entry[EDKeys.EVENT] == EDKeys.SCAN_ORGANIC:
             for item in self.genuses:
                 genuses: TGenus = item
 
                 if (
-                    genuses.genus == entry["Genus"]
-                    and genuses.genus_localised == entry["Genus_Localised"]
+                    genuses.genus == entry[EDKeys.GENUS]
+                    and genuses.genus_localised == entry[EDKeys.GENUS_LOCALISED]
                 ):
                     scan: Optional[TGenusScan] = None
-                    if entry.get("Variant", "") != "":
+                    if entry.get(EDKeys.VARIANT, "") != "":
                         # search for scan with variant
                         for item_scan in genuses.scan:
                             if (
                                 item_scan.variant_localised
-                                == entry["Variant_Localised"]
+                                == entry[EDKeys.VARIANT_LOCALISED]
                             ):
                                 scan = item_scan
                                 break
@@ -135,26 +136,26 @@ class TBodyGenuses(DiscoBase):
                         for item_scan in genuses.scan:
                             if (
                                 item_scan.species_localised
-                                == entry["Species_Localised"]
+                                == entry[EDKeys.SPECIES_LOCALISED]
                             ):
                                 scan = item_scan
                                 break
                     if not scan:
                         scan = TGenusScan()
-                        scan.species = entry["Species"]
-                        scan.species_localised = entry["Species_Localised"]
-                        scan.variant = entry.get("Variant", "")
-                        scan.variant_localised = entry.get("Variant_Localised", "")
+                        scan.species = entry[EDKeys.SPECIES]
+                        scan.species_localised = entry[EDKeys.SPECIES_LOCALISED]
+                        scan.variant = entry.get(EDKeys.VARIANT, "")
+                        scan.variant_localised = entry.get(EDKeys.VARIANT_LOCALISED, "")
                         genuses.scan.append(scan)
 
                     if scan.done:
                         ret = True
                         break
-                    if entry["ScanType"] == "Log":
+                    if entry[EDKeys.SCAN_TYPE] == "Log":
                         scan.count = 1
-                    elif entry["ScanType"] == "Sample":
+                    elif entry[EDKeys.SCAN_TYPE] == "Sample":
                         scan.count += 1
-                    if entry["ScanType"] == "Analyse":
+                    if entry[EDKeys.SCAN_TYPE] == "Analyse":
                         scan.done = True
 
                     ret = True

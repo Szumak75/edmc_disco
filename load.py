@@ -126,11 +126,11 @@ def journal_entry(
         disco_object.data.system = disco_object.data.db_processor.add_system(entry)  # type: ignore
         test = True
         disco_object.logger.debug = f"{EDKeys.FSD_JUMP}: {disco_object.data.system}"
-    elif entry[EDKeys.EVENT] == EDKeys.SCAN and entry["ScanType"] in (
+    elif entry[EDKeys.EVENT] == EDKeys.SCAN and entry[EDKeys.SCAN_TYPE] in (
         EDKeys.AUTO_SCAN,
         EDKeys.DETAILED,
-        "Basic",
-        "NavBeaconDetail",
+        EDKeys.BASIC,
+        EDKeys.NAV_BEACON_DETAIL,
     ):
         disco_object.data.system = disco_object.data.db_processor.add_body(entry)  # type: ignore
         test = True
@@ -154,18 +154,18 @@ def journal_entry(
         disco_object.logger.debug = (
             f"{EDKeys.SAA_SIGNALS_FOUND}: {disco_object.data.system}"
         )
-    elif entry[EDKeys.EVENT] == "CodexEntry":
+    elif entry[EDKeys.EVENT] == EDKeys.CODEX_ENTRY:
         disco_object.data.system = disco_object.data.db_processor.add_codex(entry)  # type: ignore
         test = True
-        disco_object.logger.debug = f"CodexEntry: {disco_object.data.system}"
+        disco_object.logger.debug = f"{EDKeys.CODEX_ENTRY}: {disco_object.data.system}"
     elif entry[EDKeys.EVENT] == EDKeys.SCAN_ORGANIC:
         disco_object.data.system = disco_object.data.db_processor.add_genus(entry)  # type: ignore
         test = True
         disco_object.logger.debug = f"{EDKeys.SCAN_ORGANIC}: {disco_object.data.system}"
-    elif entry[EDKeys.EVENT] == "SAAScanComplete":
+    elif entry[EDKeys.EVENT] == EDKeys.SAA_SCAN_COMPLETE:
         disco_object.data.system = disco_object.data.db_processor.mapped_body(entry)  # type: ignore
         test = True
-    elif entry[EDKeys.EVENT] == "Location" and EDKeys.STAR_SYSTEM in entry:
+    elif entry[EDKeys.EVENT] == EDKeys.LOCATION and EDKeys.STAR_SYSTEM in entry:
         disco_object.data.system = disco_object.data.db_processor.get_system_by_name(
             entry[EDKeys.STAR_SYSTEM]
         )  # type: ignore

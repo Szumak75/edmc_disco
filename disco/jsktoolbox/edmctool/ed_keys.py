@@ -433,6 +433,7 @@ class EDKeys(object, metaclass=ReadOnlyClass):
     RING_CLASS: str = "RingClass"
     ROLE: str = "Role"
     ROTATION_PERIOD: str = "RotationPeriod"
+    SAA_SCAN_COMPLETE: str = "SAAScanComplete"
     SAA_SIGNALS_FOUND: str = "SAASignalsFound"
     SCAN: str = "Scan"
     SCANNED: str = "Scanned"

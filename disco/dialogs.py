@@ -20,7 +20,7 @@ from disco.jsktoolbox.attribtool import NoDynamicAttributes
 from disco.jsktoolbox.tktool.widgets import CreateToolTip, VerticalScrolledTkFrame
 from disco.jsktoolbox.edmctool.base import BLogClient
 from disco.jsktoolbox.edmctool.logs import LogClient
-
+from disco.jsktoolbox.edmctool.ed_keys import EDKeys
 
 import disco.db_models as db
 from disco.data import DiscoData
@@ -192,7 +192,7 @@ class ImageHelper(NoDynamicAttributes):
         # ring or cluster
         if (
             features.body_type
-            and features.body_type in ("Ring", "Cluster")
+            and features.body_type in ("Cluster", EDKeys.RING)
             or body.name.endswith(" Ring")
         ):
             return Pics.belt_16
@@ -782,8 +782,8 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
                     CreateToolTip(first, "First discovered")
             elif not body.name:
                 features: db.TBodyFeatures = body.features
-                if features.body_type and features.body_type == "Ring":
-                    name = "Ring"
+                if features.body_type and features.body_type == EDKeys.RING:
+                    name = EDKeys.RING
             img_byte: Optional[bytes] = ih.get_body_image(body)
             if img_byte:
                 img = tk.PhotoImage(data=img_byte)

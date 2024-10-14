@@ -10,13 +10,14 @@ from typing import List, Dict
 from sqlalchemy import Float, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from disco.jsktoolbox.edmctool.ed_keys import EDKeys
 from disco.db_models.base import DiscoBase
 
 
 class TCodex(DiscoBase):
     """Table of Codex."""
 
-    __tablename__:str = "codex"
+    __tablename__: str = "codex"
 
     id: Mapped[int] = mapped_column(
         primary_key=True, nullable=False, autoincrement=True
@@ -55,7 +56,7 @@ class TCodex(DiscoBase):
 class TBodyCodexes(DiscoBase):
     """Table of Body Codexes."""
 
-    __tablename__:str = "body_codexes"
+    __tablename__: str = "body_codexes"
 
     id: Mapped[int] = mapped_column(
         primary_key=True, nullable=False, autoincrement=True
@@ -78,27 +79,27 @@ class TBodyCodexes(DiscoBase):
         Analyze dict from journal and import data into the object.
         """
         ret = False
-        if entry["event"] == "CodexEntry":
+        if entry[EDKeys.EVENT] == EDKeys.CODEX_ENTRY:
             test = False
             for item in self.codexes:
                 if (
-                    item.name == entry["Name"]
-                    and item.name_localised == entry["Name_Localised"]
+                    item.name == entry[EDKeys.NAME]
+                    and item.name_localised == entry[EDKeys.NAME_LOCALISED]
                 ):
                     test = True
                     ret = True
             if not test:
                 tmp = TCodex()
-                tmp.name = entry["Name"]
-                tmp.name_localised = entry["Name_Localised"]
-                tmp.category = entry["Category"]
-                tmp.category_localised = entry["Category_Localised"]
-                tmp.subcategory = entry["SubCategory"]
-                tmp.subcategory_localised = entry["SubCategory_Localised"]
-                if "Latitude" in entry:
-                    tmp.latitude = entry["Latitude"]
-                if "Longitude" in entry:
-                    tmp.longitude = entry["Longitude"]
+                tmp.name = entry[EDKeys.NAME]
+                tmp.name_localised = entry[EDKeys.NAME_LOCALISED]
+                tmp.category = entry[EDKeys.CATEGORY]
+                tmp.category_localised = entry[EDKeys.CATEGORY_LOCALISED]
+                tmp.subcategory = entry[EDKeys.SUB_CATEGORY]
+                tmp.subcategory_localised = entry[EDKeys.SUB_CATEGORY_LOCALISED]
+                if EDKeys.LATITUDE in entry:
+                    tmp.latitude = entry[EDKeys.LATITUDE]
+                if EDKeys.LONGITUDE in entry:
+                    tmp.longitude = entry[EDKeys.LONGITUDE]
                 self.codexes.append(tmp)
                 ret = True
 
