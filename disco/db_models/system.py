@@ -133,7 +133,7 @@ class TSystem(DiscoBase):
             if features.star_type:
                 count += 1
                 continue
-            if features.body_type and features.body_type == "Planet":
+            if features.body_type and features.body_type == EDKeys.PLANET:
                 count += 1
                 continue
 

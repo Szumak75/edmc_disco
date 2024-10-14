@@ -138,10 +138,10 @@ class TBodyFeatures(DiscoBase):
         if EDKeys.BODY_TYPE in entry and self.body_type != entry[EDKeys.BODY_TYPE]:
             self.body_type = entry[EDKeys.BODY_TYPE]
         elif EDKeys.PLANET_CLASS in entry:
-            self.body_type = "Planet"
+            self.body_type = EDKeys.PLANET
             self.planet_class = entry[EDKeys.PLANET_CLASS]
-        elif "Cluster" in entry[EDKeys.BODY_NAME]:
-            self.body_type = "Cluster"
+        elif EDKeys.CLUSTER in entry[EDKeys.BODY_NAME]:
+            self.body_type = EDKeys.CLUSTER
         if EDKeys.WAS_DISCOVERED in entry and not self.discovered:
             self.discovered = entry[EDKeys.WAS_DISCOVERED]
         if (
@@ -160,8 +160,8 @@ class TBodyFeatures(DiscoBase):
             self.luminosity = entry[EDKeys.LUMINOSITY]
         if EDKeys.WAS_MAPPED in entry and not self.mapped:
             self.mapped = entry[EDKeys.WAS_MAPPED]
-        if "MassEM" in entry and self.massem != entry["MassEM"]:
-            self.massem = entry["MassEM"]
+        if EDKeys.MASS_EM in entry and self.massem != entry[EDKeys.MASS_EM]:
+            self.massem = entry[EDKeys.MASS_EM]
         if (
             EDKeys.ORBITAL_INCLINATION in entry
             and self.orbitalinclination != entry[EDKeys.ORBITAL_INCLINATION]

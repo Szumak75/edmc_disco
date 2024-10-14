@@ -151,11 +151,11 @@ class TBodyGenuses(DiscoBase):
                     if scan.done:
                         ret = True
                         break
-                    if entry[EDKeys.SCAN_TYPE] == "Log":
+                    if entry[EDKeys.SCAN_TYPE] == EDKeys.LOG:
                         scan.count = 1
-                    elif entry[EDKeys.SCAN_TYPE] == "Sample":
+                    elif entry[EDKeys.SCAN_TYPE] == EDKeys.SAMPLE:
                         scan.count += 1
-                    if entry[EDKeys.SCAN_TYPE] == "Analyse":
+                    if entry[EDKeys.SCAN_TYPE] == EDKeys.ANALYSE:
                         scan.done = True
 
                     ret = True
