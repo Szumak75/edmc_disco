@@ -10,6 +10,7 @@
 
 import json
 from sys import stdin
+from typing import Dict
 
 from disco.jsktoolbox.edmctool.ed_keys import EDKeys
 
@@ -17,6 +18,7 @@ if __name__ == "__main__":
     print("Starting Journal keys extractor.")
 
     counter = 0
+    keys: Dict = {}
 
     for line in stdin:
         counter += 1
