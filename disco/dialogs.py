@@ -23,9 +23,9 @@ from disco.jsktoolbox.edmctool.logs import LogClient
 from disco.jsktoolbox.edmctool.ed_keys import EDKeys
 
 import disco.db_models as db
-from disco.data import DiscoData
 from disco.pics import Pics
 from disco.dialogs_helper import DialogKeys
+from disco.data import DiscoData
 
 
 class ImageHelper(NoDynamicAttributes):
@@ -212,7 +212,8 @@ class DiscoMainDialog(BLogClient, DiscoData, NoDynamicAttributes):
         """Initialize datasets."""
         DiscoData.__init__(self)
         if isinstance(disco_data, DiscoData):
-            self._data = disco_data._data
+            for keys in disco_data._data.keys():
+                self._data[keys] = disco_data._data[keys]
         else:
             raise Raise.error(
                 f"Expected DiscoData type, received:'{type(disco_data)}'.",
@@ -316,7 +317,8 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
 
         DiscoData.__init__(self)
         if isinstance(data, Dict):
-            self._data = data
+            for keys in data.keys():
+                self._data[keys] = data[keys]
         else:
             raise Raise.error(
                 f"Expected Dict type, received: '{type(data)}'.",
