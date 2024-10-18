@@ -8,6 +8,7 @@
 
 from inspect import currentframe
 from threading import Thread
+from queue import Queue
 
 from disco.jsktoolbox.raisetool import Raise
 from disco.jsktoolbox.edmctool.base import BLogClient, BLogProcessor
@@ -24,20 +25,20 @@ class Disco(BLogProcessor, BLogClient):
         """Constructor."""
 
         # data
-        self.data.pluginname = "EDDisco"
+        self.data.plugin_name = "EDDisco"
         self.data.version = "1.1.0"
 
         # database
         self.data.db_processor = DBProcessor(Database(False).session)
 
         # logging subsystem
-        # self.qlog = Queue()
-        self.log_processor = LogProcessor(self.data.pluginname)
+        self.qlog = Queue()
+        self.log_processor = LogProcessor(self.data.plugin_name)
         self.logger = LogClient(self.qlog)
 
         # logging thread
         self.th_log = Thread(
-            target=self.th_logger, name=f"{self.data.pluginname} log worker"
+            target=self.th_logger, name=f"{self.data.plugin_name} log worker"
         )
 
         if self.th_log:
@@ -45,7 +46,7 @@ class Disco(BLogProcessor, BLogClient):
             self.th_log.start()
 
         if self.logger:
-            self.logger.debug = f"{self.data.pluginname} object creation complete."
+            self.logger.debug = f"{self.data.plugin_name} object creation complete."
 
     @property
     def data(self) -> DiscoData:

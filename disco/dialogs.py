@@ -289,7 +289,7 @@ class DiscoMainDialog(BLogClient, DiscoData, NoDynamicAttributes):
 
     def debug(self, currentframe: Optional[FrameType], message: str = "") -> None:
         """Build debug message."""
-        p_name: str = f"{self.pluginname}"
+        p_name: str = f"{self.plugin_name}"
         c_name: str = f"{self._c_name}"
         m_name: str = f"{currentframe.f_code.co_name}" if currentframe else ""
         if message != "":
@@ -374,7 +374,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
     def __build_frame(self) -> None:
         """Create window."""
         self.debug(currentframe(), f"Data: {self._data}")
-        self.title(self.pluginname)
+        self.title(self.plugin_name)
         self.geometry("700x600")
         self.minsize(height=500, width=400)
         # grid configuration
@@ -816,7 +816,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
 
     def debug(self, currentframe: Optional[FrameType], message: str = "") -> None:
         """Build debug message."""
-        p_name: str = f"{self.pluginname}"
+        p_name: str = f"{self.plugin_name}"
         c_name: str = f"{self._c_name}"
         m_name: str = f"{currentframe.f_code.co_name}" if currentframe else ""
         if message != "":

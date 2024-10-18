@@ -43,12 +43,12 @@ class SimpleData(BData):
         self._data[_Keys.SHUTDOWN] = False
 
     @property
-    def pluginname(self) -> str:
+    def plugin_name(self) -> str:
         """Give me pluginname."""
         return self._data[_Keys.PLUGIN_NAME]
 
-    @pluginname.setter
-    def pluginname(self, value: str) -> None:
+    @plugin_name.setter
+    def plugin_name(self, value: str) -> None:
         if value is not None and isinstance(value, str):
             self._data[_Keys.PLUGIN_NAME] = value
 
