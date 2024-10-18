@@ -47,22 +47,22 @@ class ScansAnalysis(BData):
                 self._c_name,
                 currentframe(),
             )
-        self._data[_Keys.BODY] = body
+        self._set_data(key=_Keys.BODY, value=body, set_default_type=TBody)
 
     @property
     def body(self) -> TBody:
         """Return TBody object."""
-        return self._data[_Keys.BODY]
+        return self._get_data(key=_Keys.BODY)  # type: ignore
 
     @property
     def features(self) -> TBodyFeatures:
         """Return TBodyFeatures object."""
-        return self._data[_Keys.BODY].features
+        return self.body.features
 
     @property
     def _genuses(self) -> List[TGenus]:
         """Return TBodyGeuses List."""
-        item: TBodyGenuses = self._data[_Keys.BODY].genuses
+        item: TBodyGenuses = self.body.genuses
         return item.genuses
 
     @property
@@ -74,7 +74,7 @@ class ScansAnalysis(BData):
     @property
     def _codexes(self) -> List[TCodex]:
         """Return TBodyCodexes List."""
-        item: TBodyCodexes = self._data[_Keys.BODY].codexes
+        item: TBodyCodexes = self.body.codexes
         return item.codexes
 
 

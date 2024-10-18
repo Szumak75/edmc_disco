@@ -50,22 +50,14 @@ class Disco(BLogProcessor, BLogClient):
 
     @property
     def data(self) -> DiscoData:
-        """Give me data access."""
-        if "disco" not in self._data:
-            self._data["disco"] = DiscoData()
-        return self._data["disco"]
+        """Return data access."""
+        if self._get_data(key="disco", default_value=None) is None:
+            self._set_data(key="disco", value=DiscoData(), set_default_type=DiscoData)
+        return self._get_data(key="disco")  # type: ignore
 
     @data.setter
     def data(self, value: DiscoData) -> None:
-        if isinstance(value, DiscoData):
-            self._data["disco"] = value
-        else:
-            raise Raise.error(
-                f"Expected DiscoData type, received: '{type(value)}'.",
-                TypeError,
-                self._c_name,
-                currentframe(),
-            )
+        self._set_data(key="disco", value=value, set_default_type=DiscoData)
 
     def th_logger(self) -> None:
         """Def th_logger - thread logs processor."""
