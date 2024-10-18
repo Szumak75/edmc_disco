@@ -66,20 +66,20 @@ class TBodySignals(DiscoBase):
         """
         ret = False
         if EDKeys.SIGNALS in entry and entry[EDKeys.SIGNALS]:
-            for esignal in entry[EDKeys.SIGNALS]:
+            for e_signal in entry[EDKeys.SIGNALS]:
                 test = False
                 for item in self.signals:
-                    if item.type == esignal[EDKeys.TYPE]:
+                    if item.type == e_signal[EDKeys.TYPE]:
                         test = True
-                        if item.count != esignal[EDKeys.COUNT]:
-                            item.count = esignal[EDKeys.COUNT]
+                        if item.count != e_signal[EDKeys.COUNT]:
+                            item.count = e_signal[EDKeys.COUNT]
                             ret = True
                 if not test:
                     signal = TSignal()
-                    signal.type = esignal[EDKeys.TYPE]
-                    if EDKeys.TYPE_LOCALISED in esignal:
-                        signal.type_localised = esignal[EDKeys.TYPE_LOCALISED]
-                    signal.count = esignal[EDKeys.COUNT]
+                    signal.type = e_signal[EDKeys.TYPE]
+                    if EDKeys.TYPE_LOCALISED in e_signal:
+                        signal.type_localised = e_signal[EDKeys.TYPE_LOCALISED]
+                    signal.count = e_signal[EDKeys.COUNT]
                     self.signals.append(signal)
                     ret = True
         return ret
