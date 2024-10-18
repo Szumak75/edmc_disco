@@ -11,7 +11,7 @@ import tkinter as tk
 from inspect import currentframe
 from datetime import datetime
 from queue import Queue, SimpleQueue
-from tkinter import Button, ttk
+from tkinter import ttk
 from types import FrameType
 from typing import Dict, List, Optional, Union, Any
 

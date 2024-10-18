@@ -6,11 +6,9 @@
   Purpose: main class
 """
 
-from inspect import currentframe
 from threading import Thread
 from queue import Queue
 
-from disco.jsktoolbox.raisetool import Raise
 from disco.jsktoolbox.edmctool.base import BLogClient, BLogProcessor
 from disco.jsktoolbox.edmctool.logs import LogClient, LogProcessor
 
