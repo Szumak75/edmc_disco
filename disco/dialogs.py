@@ -320,6 +320,7 @@ class DiscoSystemDialog(tk.Toplevel, TkBase, DiscoData, BLogClient):
         self.widgets[DialogKeys.F_DATA] = None  #: Optional[tk.LabelFrame]
         self.widgets[DialogKeys.SCROLLBAR] = None  #: Optional[tk.Scrollbar]
         self.widgets[DialogKeys.S_PANEL] = None  #: Optional[VerticalScrolledFrame]
+        self.widgets[DialogKeys.S_MENU] = None  #: Optional[tk.Menu]
 
         # bodies data
         self.bodies = []
@@ -373,6 +374,19 @@ class DiscoSystemDialog(tk.Toplevel, TkBase, DiscoData, BLogClient):
         self.title(self.plugin_name)
         self.geometry("700x600")
         self.minsize(height=500, width=400)
+        # menu
+        menubar = tk.Menu(self)
+        self.config(menu=menubar)
+        search_bio_menu = tk.Menu(
+            menubar,
+            tearoff=0,
+        )
+        search_bio_menu.add_cascade(label="Nearest", command=self.__search_bio_cb)
+        search_bio_menu.add_cascade(
+            label="Nearest unexplored", command=self.__search_unx_bio_cb
+        )
+        menubar.add_cascade(label="Search Bio", menu=search_bio_menu)
+        self.widgets[DialogKeys.S_MENU] = menubar
         # grid configuration
         self.columnconfigure(0, weight=100)
         self.columnconfigure(1, weight=1)
@@ -485,6 +499,12 @@ class DiscoSystemDialog(tk.Toplevel, TkBase, DiscoData, BLogClient):
         # show system
         self.__system_show(t_system)
         # self.logger.debug = f"After Show: {self._data}"
+
+    def __search_bio_cb(self, event=None) -> None:
+        """Search system button callback."""
+
+    def __search_unx_bio_cb(self, event=None) -> None:
+        """Search system button callback."""
 
     def __system_show(self, system: db.TSystem) -> None:
         """Show system in frame."""
