@@ -8,17 +8,17 @@
 
 import tkinter as tk
 from tkinter import ttk
-from typing import Dict, Optional, Tuple
-
-from jsktoolbox.tktool.widgets import CreateToolTip
+from typing import Dict, Optional
 
 from config import config
+from disco.jsktoolbox.tktool.widgets import CreateToolTip
+from disco.jsktoolbox.edmctool.logs import LogLevels
+from disco.jsktoolbox.edmctool.ed_keys import EDKeys
 
-from disco_libs.system import LogLevels
-from disco_libs.dialogs import DiscoMainDialog
-from disco_libs.disco import Disco
+from disco.dialogs import DiscoMainDialog
+from disco.disco import Disco
 
-disco_object = Disco()
+disco = Disco()
 
 
 def plugin_start3(plugin_dir: str) -> str:
@@ -27,45 +27,38 @@ def plugin_start3(plugin_dir: str) -> str:
     plugin_dir:     plugin directory
     return:         local name of the plugin
     """
-    if disco_object.logger:
-        disco_object.logger.debug = (
-            f"{disco_object.data.pluginname}->plugin_start3 start..."
-        )
+    if disco.logger:
+        disco.logger.debug = f"{disco.data.plugin_name}->plugin_start3 start..."
     # loglevel set from config
-    if disco_object.log_processor:
-        disco_object.log_processor.loglevel = LogLevels().get(
+    if disco.log_processor:
+        disco.log_processor.loglevel = LogLevels().get(
             config.get_str("loglevel")
         )  # type: ignore
-    if disco_object.logger:
-        disco_object.logger.debug = (
-            f"{disco_object.data.pluginname}->plugin_start3 done."
-        )
-    return f"{disco_object.data.pluginname}"
+    if disco.logger:
+        disco.logger.debug = f"{disco.data.plugin_name}->plugin_start3 done."
+    return f"{disco.data.plugin_name}"
 
 
 def plugin_stop() -> None:
     """Stop plugin if EDMC is closing."""
-    if disco_object.logger:
-        disco_object.logger.debug = (
-            f"{disco_object.data.pluginname}->plugin_stop: start..."
-        )
-    disco_object.data.shutting_down = True
-    if disco_object.logger:
-        disco_object.logger.debug = (
-            f"{disco_object.data.pluginname}->plugin_stop: shut down flag is set"
+    if disco.logger:
+        disco.logger.debug = f"{disco.data.plugin_name}->plugin_stop: start..."
+    disco.data.shutting_down = True
+    if disco.logger:
+        disco.logger.debug = (
+            f"{disco.data.plugin_name}->plugin_stop: shut down flag is set"
         )
     # something to do
 
-    disco_object.data.db_processor.close()
+    disco.data.db_processor.close()
 
     # shut down logger at last
-    if disco_object.logger:
-        disco_object.logger.debug = (
-            f"{disco_object.data.pluginname}->plugin_stop: terminating the logger"
+    if disco.logger:
+        disco.logger.debug = (
+            f"{disco.data.plugin_name}->plugin_stop: terminating the logger"
         )
-    disco_object.qlog.put(None)
-    disco_object.th_log.join()
-    disco_object.th_log = None  # type: ignore
+    disco.qlog.put(None)
+    disco.th_log.join()
 
 
 def plugin_app(parent: tk.Frame) -> ttk.Button:
@@ -73,15 +66,13 @@ def plugin_app(parent: tk.Frame) -> ttk.Button:
 
     parent:     The root EDMarketConnector window
     """
-    if disco_object.data.dialog is None:
-        disco_object.data.dialog = DiscoMainDialog(
-            parent, disco_object.qlog, disco_object.data
-        )
-    button = disco_object.data.dialog.button()  # type: ignore
+    if disco.data.dialog is None:
+        disco.data.dialog = DiscoMainDialog(parent, disco.qlog, disco.data)
+    button = disco.data.dialog.button # type: ignore
     CreateToolTip(
         button,
         [
-            f"{disco_object.data.pluginname} v{disco_object.data.version}",
+            f"{disco.data.plugin_name} v{disco.data.version}",
             "",
             "Show or search for discovered system data.",
         ],
@@ -95,12 +86,10 @@ def prefs_changed(cmdr: str, is_beta: bool) -> None:
     cmdr:       The current commander
     is_beta:    If the game is currently a beta version
     """
-    disco_object.logger.debug = (
-        f"{disco_object.data.pluginname}->prefs_changed: start..."
-    )
+    disco.logger.debug = f"{disco.data.plugin_name}->prefs_changed: start..."
     # set loglevel after config update
-    disco_object.log_processor.loglevel = LogLevels().get(config.get_str("loglevel"))  # type: ignore
-    disco_object.logger.debug = f"{disco_object.data.pluginname}->prefs_changed: done."
+    disco.log_processor.loglevel = LogLevels().get(config.get_str("loglevel"))  # type: ignore
+    disco.logger.debug = f"{disco.data.plugin_name}->prefs_changed: done."
 
 
 def journal_entry(
@@ -122,51 +111,51 @@ def journal_entry(
     """
     test = False
 
-    if entry["event"] in ("FSDJump", "CarrierJump"):
-        disco_object.data.system = disco_object.data.db_processor.add_system(entry)  # type: ignore
+    if entry[EDKeys.EVENT] == EDKeys.FSD_JUMP:
+        disco.data.system = disco.data.db_processor.add_system(entry)  # type: ignore
         test = True
-        disco_object.logger.debug = f"FSDJump: {disco_object.data.system}"
-    elif entry["event"] == "Scan" and entry["ScanType"] in (
-        "AutoScan",
-        "Detailed",
-        "Basic",
-        "NavBeaconDetail",
+        disco.logger.debug = f"{EDKeys.FSD_JUMP}: {disco.data.system}"
+    elif entry[EDKeys.EVENT] == EDKeys.SCAN and entry[EDKeys.SCAN_TYPE] in (
+        EDKeys.AUTO_SCAN,
+        EDKeys.DETAILED,
+        EDKeys.BASIC,
+        EDKeys.NAV_BEACON_DETAIL,
     ):
-        disco_object.data.system = disco_object.data.db_processor.add_body(entry)  # type: ignore
+        disco.data.system = disco.data.db_processor.add_body(entry)  # type: ignore
         test = True
-        disco_object.logger.debug = f"Scan: {disco_object.data.system}"
-    elif entry["event"] == "FSSDiscoveryScan":
-        disco_object.data.system = disco_object.data.db_processor.update_system(entry)  # type: ignore
+        disco.logger.debug = f"{EDKeys.SCAN}: {disco.data.system}"
+    elif entry[EDKeys.EVENT] == EDKeys.FSS_DISCOVERY_SCAN:
+        disco.data.system = disco.data.db_processor.update_system(entry)  # type: ignore
         test = True
-        disco_object.logger.debug = f"FSSDiscoveryScan: {disco_object.data.system}"
-    elif entry["event"] == "FSSBodySignals":
-        disco_object.data.system = disco_object.data.db_processor.add_signal(entry)  # type: ignore
+        disco.logger.debug = f"{EDKeys.FSS_DISCOVERY_SCAN}: {disco.data.system}"
+    elif entry[EDKeys.EVENT] == EDKeys.FSS_BODY_SIGNALS:
+        disco.data.system = disco.data.db_processor.add_signal(entry)  # type: ignore
         test = True
-        disco_object.logger.debug = f"FSSBodySignals: {disco_object.data.system}"
-    elif entry["event"] == "SAASignalsFound":
-        disco_object.data.db_processor.add_signal(entry)
-        disco_object.data.system = disco_object.data.db_processor.add_genus(entry)  # type: ignore
+        disco.logger.debug = f"{EDKeys.FSS_BODY_SIGNALS}: {disco.data.system}"
+    elif entry[EDKeys.EVENT] == EDKeys.SAA_SIGNALS_FOUND:
+        disco.data.db_processor.add_signal(entry)
+        disco.data.system = disco.data.db_processor.add_genus(entry)  # type: ignore
         test = True
-        disco_object.logger.debug = f"SAASignalsFound: {disco_object.data.system}"
-    elif entry["event"] == "CodexEntry":
-        disco_object.data.system = disco_object.data.db_processor.add_codex(entry)  # type: ignore
+        disco.logger.debug = f"{EDKeys.SAA_SIGNALS_FOUND}: {disco.data.system}"
+    elif entry[EDKeys.EVENT] == EDKeys.CODEX_ENTRY:
+        disco.data.system = disco.data.db_processor.add_codex(entry)  # type: ignore
         test = True
-        disco_object.logger.debug = f"CodexEntry: {disco_object.data.system}"
-    elif entry["event"] == "ScanOrganic":
-        disco_object.data.system = disco_object.data.db_processor.add_genus(entry)  # type: ignore
+        disco.logger.debug = f"{EDKeys.CODEX_ENTRY}: {disco.data.system}"
+    elif entry[EDKeys.EVENT] == EDKeys.SCAN_ORGANIC:
+        disco.data.system = disco.data.db_processor.add_genus(entry)  # type: ignore
         test = True
-        disco_object.logger.debug = f"ScanOrganic: {disco_object.data.system}"
-    elif entry["event"] == "SAAScanComplete":
-        disco_object.data.system = disco_object.data.db_processor.mapped_body(entry)  # type: ignore
+        disco.logger.debug = f"{EDKeys.SCAN_ORGANIC}: {disco.data.system}"
+    elif entry[EDKeys.EVENT] == EDKeys.SAA_SCAN_COMPLETE:
+        disco.data.system = disco.data.db_processor.mapped_body(entry)  # type: ignore
         test = True
-    elif entry["event"] == "Location" and "StarSystem" in entry:
-        disco_object.data.system = disco_object.data.db_processor.get_system_by_name(
-            entry["StarSystem"]
+    elif entry[EDKeys.EVENT] == EDKeys.LOCATION and EDKeys.STAR_SYSTEM in entry:
+        disco.data.system = disco.data.db_processor.get_system_by_name(
+            entry[EDKeys.STAR_SYSTEM]
         )  # type: ignore
         test = True
     if test:
-        dialog = disco_object.data.dialog
-        dialog.update(disco_object.data.system)  # type: ignore
+        dialog = disco.data.dialog
+        dialog.update(disco.data.system)  # type: ignore
 
 
 # #[EOF]#######################################################################
