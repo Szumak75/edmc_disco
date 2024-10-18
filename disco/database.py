@@ -23,7 +23,7 @@ from disco.jsktoolbox.edmctool.ed_keys import EDKeys
 import disco.db_models as db
 from disco.db_models.system import TSystem
 
-from disco.jsktoolbox.edmctool.system import EnvLocal as Env
+from disco.jsktoolbox.edmctool.system import EnvLocal
 
 
 class _Keys(object, metaclass=ReadOnlyClass):
@@ -113,7 +113,8 @@ class Database(BData):
     @property
     def db_path(self) -> str:
         """Return database path."""
-        return f"{Env().plugin_dir}/data/{self._data[_Keys.DB]}"
+        print(f"{EnvLocal().plugin_dir}/data/{self._data[_Keys.DB]}")
+        return f"{EnvLocal().plugin_dir}/data/{self._data[_Keys.DB]}"
 
 
 class DBProcessor(BData):
