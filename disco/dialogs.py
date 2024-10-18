@@ -11,13 +11,14 @@ import tkinter as tk
 from inspect import currentframe
 from datetime import datetime
 from queue import Queue, SimpleQueue
-from tkinter import ttk
+from tkinter import Button, ttk
 from types import FrameType
 from typing import Dict, List, Optional, Union, Any
 
 from disco.jsktoolbox.raisetool import Raise
 from disco.jsktoolbox.attribtool import NoDynamicAttributes
 from disco.jsktoolbox.tktool.widgets import CreateToolTip, VerticalScrolledTkFrame
+from disco.jsktoolbox.tktool.base import TkBase
 from disco.jsktoolbox.edmctool.base import BLogClient
 from disco.jsktoolbox.edmctool.logs import LogClient
 from disco.jsktoolbox.edmctool.ed_keys import EDKeys
@@ -64,7 +65,7 @@ class ImageHelper(NoDynamicAttributes):
             return Pics.genomic_16
         return Pics.scan_genomic_16
 
-    def get_bio_descript(self, body: db.TBody) -> List[str]:
+    def get_bio_description(self, body: db.TBody) -> List[str]:
         """Return description about biological discoveries."""
         tmp: List[str] = []
         genuses: db.TBodyGenuses = body.genuses
@@ -100,7 +101,7 @@ class ImageHelper(NoDynamicAttributes):
             tmp.append("Detailed surface scanning needed.")
         return tmp
 
-    def get_geo_descript(self, body: db.TBody) -> List[str]:
+    def get_geo_description(self, body: db.TBody) -> List[str]:
         """Return description about geological discoveries."""
         tmp: List[str] = []
         codexes: db.TBodyCodexes = body.codexes
@@ -223,52 +224,42 @@ class DiscoMainDialog(BLogClient, DiscoData, NoDynamicAttributes):
             )
 
         # init log subsystem
-        if isinstance(log_queue, Queue):
-            self.logger = LogClient(log_queue)
-        else:
-            raise Raise.error(
-                f"Expected Queue type, received: '{type(log_queue)}'.",
-                TypeError,
-                self._c_name,
-                currentframe(),
-            )
+        self.logger = LogClient(log_queue)
 
-        if isinstance(parent, tk.Frame):
-            self._data[DialogKeys.PARENT] = parent
-        else:
-            raise Raise.error(
-                f"Expected tk.Frame type, received: '{type(parent)}'",
-                TypeError,
-                self._c_name,
-                currentframe(),
-            )
+        self._set_data(key=DialogKeys.PARENT, value=parent, set_default_type=tk.Frame)
 
         # created dialogs
-        self._data[DialogKeys.WINDOWS] = []
+        self._set_data(key=DialogKeys.WINDOWS, value=[], set_default_type=List)
 
+    @property
     def button(self) -> ttk.Button:
         """Create the button for main application frame."""
-        if DialogKeys.BUTTON not in self._data or self._data[DialogKeys.BUTTON] is None:
-            self._data[DialogKeys.BUTTON] = ttk.Button(
-                self._data[DialogKeys.PARENT],
-                text="Search System",
-                command=self.__bt_callback,
-                default=tk.ACTIVE,
+        if self._get_data(key=DialogKeys.BUTTON, default_value=None) is None:
+            self._set_data(
+                key=DialogKeys.BUTTON,
+                value=ttk.Button(
+                    self._data[DialogKeys.PARENT],
+                    text="Search System",
+                    command=self.__bt_callback,
+                    default=tk.ACTIVE,
+                ),
+                set_default_type=ttk.Button,
             )
-            self._data[DialogKeys.BUTTON].grid(sticky=tk.NSEW)
-        return self._data[DialogKeys.BUTTON]
+            self._get_data(DialogKeys.BUTTON).grid(sticky=tk.NSEW)  # type: ignore
+        return self._get_data(DialogKeys.BUTTON)  # type: ignore
 
     def update(self, system: db.TSystem) -> None:
         """Update dialog."""
         self.system = system
-        button: ttk.Button = self._data[DialogKeys.BUTTON]
         if self.system is not None and self.system.name != "":
-            button[DialogKeys.TEXT] = f"{self.system.name} [{self.system.progress}]"
+            self.button[DialogKeys.TEXT] = (
+                f"{self.system.name} [{self.system.progress}]"
+            )
         if self.logger:
             self.logger.debug = f"UPDATE: {self._data}"
 
         # propagate update
-        for window in self._data[DialogKeys.WINDOWS]:
+        for window in self._get_data(key=DialogKeys.WINDOWS):  # type:ignore
             if not window.is_closed:
                 window.update(system)
 
@@ -276,16 +267,16 @@ class DiscoMainDialog(BLogClient, DiscoData, NoDynamicAttributes):
         """Run main button callback."""
         self.debug(currentframe(), "click!")
         # purge closed window from list
-        for window in self._data[DialogKeys.WINDOWS]:
+        for window in self._get_data(key=DialogKeys.WINDOWS):  # type:ignore
             if window.is_closed:
-                self._data[DialogKeys.WINDOWS].remove(window)
+                self._get_data(key=DialogKeys.WINDOWS).remove(window)  # type: ignore
         # create new window
         if self.logger:
             window = DiscoSystemDialog(self.logger.queue, self._data)
-            self._data[DialogKeys.WINDOWS].append(window)
+            self._get_data(key=DialogKeys.WINDOWS).append(window)  # type: ignore
             self.debug(
                 currentframe(),
-                f"numbers of windows: {len(self._data[DialogKeys.WINDOWS])}",
+                f"numbers of windows: {len(self._get_data(key=DialogKeys.WINDOWS))}",  # type: ignore
             )
 
     def debug(self, currentframe: Optional[FrameType], message: str = "") -> None:
@@ -299,15 +290,8 @@ class DiscoMainDialog(BLogClient, DiscoData, NoDynamicAttributes):
             self.logger.debug = f"{p_name}->{c_name}.{m_name}{message}"
 
 
-class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
+class DiscoSystemDialog(tk.Toplevel, TkBase, DiscoData, BLogClient):
     """Create new window for showing system features."""
-
-    _w = None
-    widgetName = None
-    master = None  # type: ignore
-    tk = None  # type: ignore
-    _name = None
-    children = None  # type: ignore
 
     def __init__(
         self, log_queue: Union[Queue, SimpleQueue], data: Dict, master=None
@@ -755,7 +739,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
                     )
                     count_bio.image = img  # type: ignore
                     count_bio.pack(side=tk.RIGHT)
-                    CreateToolTip(count_bio, ih.get_bio_descript(body))
+                    CreateToolTip(count_bio, ih.get_bio_description(body))
                 # get geological signals count
                 if signals.count_geo_signals > 0:
                     img = tk.PhotoImage(data=ih.get_geo_image(body))
@@ -767,7 +751,7 @@ class DiscoSystemDialog(tk.Toplevel, DiscoData, BLogClient):
                     )
                     count_geo.image = img  # type: ignore
                     count_geo.pack(side=tk.RIGHT)
-                    CreateToolTip(count_geo, ih.get_geo_descript(body))
+                    CreateToolTip(count_geo, ih.get_geo_description(body))
                 # first mapped
                 if features.mapped_first:
                     img = tk.PhotoImage(data=ih.get_map_image())

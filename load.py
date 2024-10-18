@@ -68,7 +68,7 @@ def plugin_app(parent: tk.Frame) -> ttk.Button:
     """
     if disco.data.dialog is None:
         disco.data.dialog = DiscoMainDialog(parent, disco.qlog, disco.data)
-    button = disco.data.dialog.button()  # type: ignore
+    button = disco.data.dialog.button # type: ignore
     CreateToolTip(
         button,
         [

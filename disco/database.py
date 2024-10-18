@@ -53,15 +53,17 @@ class DataAnalyzer(BData):
                 self._c_name,
                 currentframe(),
             )
-        print(system)
+        # print(system)
         # count bodies
-        self._data[_Keys.BODY_COUNT] = system.bodycount
+        self._set_data(
+            key=_Keys.BODY_COUNT, value=system.bodycount, set_default_type=int
+        )
 
         # count scanned bodies
         count = 0
         # for item in system.bodies:
         # pass
-        self._data[_Keys.BODY_SCAN] = count
+        self._set_data(key=_Keys.BODY_SCAN, value=count, set_default_type=int)
 
 
 class Database(BData):
@@ -69,15 +71,17 @@ class Database(BData):
 
     def __init__(self, debug: bool) -> None:
         """Database initialization instance."""
-        self._data[_Keys.DB] = "disco.db"
-        self._data[_Keys.DEBUG] = debug
+        self._set_data(key=_Keys.DB, value="disco.db", set_default_type=str)
+        self._set_data(key=_Keys.DEBUG, value=debug, set_default_type=bool)
 
         # create engine
-        self._data[_Keys.ENGINE] = self.__create_engine()
+        self._set_data(
+            key=_Keys.ENGINE, value=self.__create_engine(), set_default_type=Engine
+        )
 
-        if self._data[_Keys.ENGINE] is not None:
+        if self.engine is not None:
             # metadata
-            db.DiscoBase.metadata.create_all(self._data[_Keys.ENGINE])
+            db.DiscoBase.metadata.create_all(self.engine)
         else:
             raise Raise.error(
                 "Database creation error.",
@@ -89,7 +93,7 @@ class Database(BData):
     def __create_engine(self) -> Engine:
         engine = create_engine(
             f"sqlite+pysqlite:///{self.db_path}",
-            echo=self._data[_Keys.DEBUG],
+            echo=self._get_data(key=_Keys.DEBUG),
         )
         if engine is None:
             raise Raise.error(
@@ -98,7 +102,7 @@ class Database(BData):
                 self._c_name,
                 currentframe(),
             )
-        return engine  # type: ignore
+        return engine
 
     @property
     def session(self) -> Session:
@@ -108,12 +112,11 @@ class Database(BData):
     @property
     def engine(self) -> Engine:
         """Return database engine."""
-        return self._data[_Keys.ENGINE]
+        return self._get_data(key=_Keys.ENGINE)  # type: ignore
 
     @property
     def db_path(self) -> str:
         """Return database path."""
-        print(f"{EnvLocal().plugin_dir}/data/{self._data[_Keys.DB]}")
         return f"{EnvLocal().plugin_dir}/data/{self._data[_Keys.DB]}"
 
 
@@ -122,20 +125,25 @@ class DBProcessor(BData):
 
     def __init__(self, session: Session) -> None:
         """Create instance of class."""
-        if session is None or not isinstance(session, Session):
-            raise Raise.error(
-                "Expected Session type.",
-                TypeError,
-                self._c_name,
-                currentframe(),
-            )
-        self._data[_Keys.SESSION] = session
+        # self._set_data(key=_Keys.SESSION, value=session, set_default_type=Optional[Session])
+        self.session = session
+
+    @property
+    def session(self) -> Optional[Session]:
+        """Get session handler."""
+        return self._get_data(key=_Keys.SESSION)
+
+    @session.setter
+    def session(self, value: Optional[Session]) -> None:
+        self._set_data(
+            key=_Keys.SESSION, value=value, set_default_type=Optional[Session]
+        )
 
     def close(self) -> None:
         """Close database session."""
-        if self._data[_Keys.SESSION] is not None:
-            self._data[_Keys.SESSION].close()
-        self._data[_Keys.SESSION] = None
+        if self.session is not None:
+            self.session.close()
+        self.session = None
 
     def str_time(self, arg: str) -> int:
         """Timestamp from logs in local time convert to game time string.
@@ -153,9 +161,9 @@ class DBProcessor(BData):
 
     def add_system(self, entry: Dict) -> Optional[db.TSystem]:
         """Check and add system after FSDJump."""
-        if "SystemAddress" not in entry:
+        if "SystemAddress" not in entry or self.session is None:
             return None
-        session: Session = self._data[_Keys.SESSION]
+
         system: Optional[TSystem] = self.__get__system(entry[EDKeys.SYSTEM_ADDRESS])
         if not system:
             system = db.TSystem()
@@ -167,22 +175,22 @@ class DBProcessor(BData):
                 p_star = db.TBody()
                 p_star.event_parser(entry)
                 system.bodies.append(p_star)
-            session.add(system)
-            session.commit()
+            self.session.add(system)
+            self.session.commit()
         else:
             # update
             if system.timestamp <= self.str_time(entry[EDKeys.TIMESTAMP]):
-                system.timestamp = entry["timestamp"]
+                system.timestamp = entry[EDKeys.TIMESTAMP]
                 # update features
                 system.features.event_parser(entry)
-                session.commit()
+                self.session.commit()
         return system
 
     def update_system(self, entry: Dict) -> Optional[db.TSystem]:
         """Update TSystem information about discovered BodyCount."""
-        if EDKeys.SYSTEM_ADDRESS not in entry:
+        if EDKeys.SYSTEM_ADDRESS not in entry or self.session is None:
             return None
-        session: Session = self._data[_Keys.SESSION]
+
         system: Optional[TSystem] = self.__get__system(entry[EDKeys.SYSTEM_ADDRESS])
         if not system:
             return None
@@ -192,16 +200,15 @@ class DBProcessor(BData):
                 system.bodycount = entry[EDKeys.BODY_COUNT]
             if EDKeys.NON_BODY_COUNT in entry:
                 system.nonbodycount = entry[EDKeys.NON_BODY_COUNT]
-            session.commit()
+            self.session.commit()
         return system
 
     def add_body(self, entry: Dict) -> Optional[db.TSystem]:
         """Check and add body after scan."""
-        if EDKeys.SYSTEM_ADDRESS not in entry:
+        if EDKeys.SYSTEM_ADDRESS not in entry or self.session is None:
             return None
         if EDKeys.BODY_ID not in entry:
             return None
-        session: Session = self._data[_Keys.SESSION]
         system: Optional[TSystem] = self.__get__system(entry[EDKeys.SYSTEM_ADDRESS])
         if system and system.timestamp <= self.str_time(entry[EDKeys.TIMESTAMP]):
             body: Optional[db.TBody] = system.get_body(entry[EDKeys.BODY_ID])
@@ -218,16 +225,15 @@ class DBProcessor(BData):
                 body.features.discovered_first = True
             # add null parents if needed
             self.__add_null_parents(system, entry)
-            session.commit()
+            self.session.commit()
         return system
 
     def mapped_body(self, entry: Dict) -> Optional[db.TSystem]:
         """Check and update mapped body."""
-        if EDKeys.SYSTEM_ADDRESS not in entry:
+        if EDKeys.SYSTEM_ADDRESS not in entry or self.session is None:
             return None
         if EDKeys.BODY_ID not in entry:
             return None
-        session: Session = self._data[_Keys.SESSION]
         system: Optional[TSystem] = self.__get__system(entry[EDKeys.SYSTEM_ADDRESS])
         if entry[EDKeys.EVENT] != EDKeys.SAA_SCAN_COMPLETE:
             return system
@@ -235,16 +241,15 @@ class DBProcessor(BData):
             body: Optional[db.TBody] = system.get_body(entry[EDKeys.BODY_ID])
             if body:
                 body.features.mapped_first = True
-                session.commit()
+                self.session.commit()
         return system
 
     def add_signal(self, entry: Dict) -> Optional[db.TSystem]:
         """Check and add discovered signal."""
-        if EDKeys.SYSTEM_ADDRESS not in entry:
+        if EDKeys.SYSTEM_ADDRESS not in entry or self.session is None:
             return None
         if EDKeys.BODY_ID not in entry:
             return None
-        session: Session = self._data[_Keys.SESSION]
         system: Optional[TSystem] = self.__get__system(entry[EDKeys.SYSTEM_ADDRESS])
         if system and system.timestamp <= self.str_time(entry[EDKeys.TIMESTAMP]):
             body: Optional[db.TBody] = system.get_body(entry[EDKeys.BODY_ID])
@@ -252,19 +257,18 @@ class DBProcessor(BData):
                 body = db.TBody()
                 system.bodies.append(body)
                 body.event_parser(entry)
-                session.commit()
+                self.session.commit()
             if body.signals.event_parser(entry):
                 system.timestamp = entry[EDKeys.TIMESTAMP]
-                session.commit()
+                self.session.commit()
         return system
 
     def add_genus(self, entry: Dict) -> Optional[db.TSystem]:
         """Check and add discovered genuses."""
-        if EDKeys.SYSTEM_ADDRESS not in entry:
+        if EDKeys.SYSTEM_ADDRESS not in entry or self.session is None:
             return None
         if EDKeys.BODY_ID not in entry and EDKeys.BODY not in entry:
             return None
-        session: Session = self._data[_Keys.SESSION]
         system: Optional[TSystem] = self.__get__system(entry[EDKeys.SYSTEM_ADDRESS])
         # print(system)
         if system and system.timestamp <= self.str_time(entry[EDKeys.TIMESTAMP]):
@@ -278,16 +282,15 @@ class DBProcessor(BData):
                 return None
             if body.genuses.event_parser(entry):
                 system.timestamp = entry[EDKeys.TIMESTAMP]
-                session.commit()
+                self.session.commit()
         return system
 
     def add_codex(self, entry: Dict) -> Optional[db.TSystem]:
         """Check and add discovered codex."""
-        if EDKeys.SYSTEM_ADDRESS not in entry:
+        if EDKeys.SYSTEM_ADDRESS not in entry or self.session is None:
             return None
         if EDKeys.BODY_ID not in entry:
             return None
-        session: Session = self._data[_Keys.SESSION]
         system: Optional[TSystem] = self.__get__system(entry[EDKeys.SYSTEM_ADDRESS])
         if system and system.timestamp <= self.str_time(entry[EDKeys.TIMESTAMP]):
             body: Optional[db.TBody] = system.get_body(entry[EDKeys.BODY_ID])
@@ -295,7 +298,7 @@ class DBProcessor(BData):
                 return None
             if body.codexes.event_parser(entry):
                 system.timestamp = entry[EDKeys.TIMESTAMP]
-                session.commit()
+                self.session.commit()
         return system
 
     def __add_null_parents(self, system: Optional[db.TSystem], entry: Dict) -> None:
@@ -317,20 +320,26 @@ class DBProcessor(BData):
         return None
 
     def __get__system(self, system_address: int) -> Optional[db.TSystem]:
-        session: Session = self._data[_Keys.SESSION]
         return (
-            session.query(db.TSystem)
-            .filter(db.TSystem.systemaddress == system_address)
-            .first()
+            (
+                self.session.query(db.TSystem)
+                .filter(db.TSystem.systemaddress == system_address)
+                .first()
+            )
+            if self.session
+            else None
         )
 
     def get_system_by_name(self, system_name: str) -> Optional[db.TSystem]:
         """Get TSystem by name."""
-        session: Session = self._data[_Keys.SESSION]
         return (
-            session.query(db.TSystem)
-            .filter(func.lower(db.TSystem.name) == func.lower(system_name))
-            .first()
+            (
+                self.session.query(db.TSystem)
+                .filter(func.lower(db.TSystem.name) == func.lower(system_name))
+                .first()
+            )
+            if self.session
+            else None
         )
 
 
