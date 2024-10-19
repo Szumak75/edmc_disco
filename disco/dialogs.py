@@ -15,6 +15,7 @@ from tkinter import ttk
 from types import FrameType
 from typing import Dict, List, Optional, Union, Any
 
+from disco.jsktoolbox.basetool.data import BData
 from disco.jsktoolbox.raisetool import Raise
 from disco.jsktoolbox.attribtool import NoDynamicAttributes
 from disco.jsktoolbox.tktool.widgets import CreateToolTip, VerticalScrolledTkFrame
@@ -22,11 +23,89 @@ from disco.jsktoolbox.tktool.base import TkBase
 from disco.jsktoolbox.edmctool.base import BLogClient
 from disco.jsktoolbox.edmctool.logs import LogClient
 from disco.jsktoolbox.edmctool.ed_keys import EDKeys
+from disco.jsktoolbox.edmctool.data import RscanData
+from disco.jsktoolbox.edmctool.stars import StarsSystem
 
 import disco.db_models as db
 from disco.pics import Pics
 from disco.dialogs_helper import DialogKeys
 from disco.data import DiscoData
+
+
+class _BDiscoDialog(BData):
+    """Base class for Disco Dialogs."""
+
+    @property
+    def _button(self) -> ttk.Button:
+        return self._get_data(key=DialogKeys.BUTTON, default_value=None)  # type: ignore
+
+    @_button.setter
+    def _button(self, value: ttk.Button) -> None:
+        self._set_data(key=DialogKeys.BUTTON, value=value, set_default_type=ttk.Button)
+
+    @property
+    def _parent(self) -> tk.Frame:
+        return self._get_data(key=DialogKeys.PARENT, default_value=None)  # type: ignore
+
+    @_parent.setter
+    def _parent(self, value: tk.Frame) -> None:
+        self._set_data(key=DialogKeys.PARENT, value=value, set_default_type=tk.Frame)
+
+    @property
+    def _r_data(self) -> RscanData:
+        return self._get_data(key=DialogKeys.DATA)  # type: ignore
+
+    @_r_data.setter
+    def _r_data(self, value: RscanData) -> None:
+        self._set_data(key=DialogKeys.DATA, value=value, set_default_type=RscanData)
+
+    @property
+    def _fonts(self) -> BData:
+        if self._get_data(key=DialogKeys.FONT_KEY, default_value=None) is None:  # type: ignore
+            self._set_data(
+                key=DialogKeys.FONT_KEY, value=BData(), set_default_type=BData
+            )
+        return self._get_data(key=DialogKeys.FONT_KEY)  # type: ignore
+
+    @property
+    def _tools(self) -> BData:
+        if self._get_data(key=DialogKeys.TOOLS_KEY, default_value=None) is None:  # type: ignore
+            self._set_data(
+                key=DialogKeys.TOOLS_KEY, value=BData(), set_default_type=BData
+            )
+        return self._get_data(key=DialogKeys.TOOLS_KEY)  # type: ignore
+
+    @property
+    def _widgets(self) -> BData:
+        if self._get_data(key=DialogKeys.WIDGETS_KEY, default_value=None) is None:  # type: ignore
+            self._set_data(
+                key=DialogKeys.WIDGETS_KEY, value=BData(), set_default_type=BData
+            )
+        return self._get_data(key=DialogKeys.WIDGETS_KEY)  # type: ignore
+
+    @property
+    def _windows(self) -> List["DiscoSystemDialog"]:
+        return self._get_data(key=DialogKeys.WINDOWS, default_value=None)  # type: ignore
+
+    @_windows.setter
+    def _windows(self, value: List) -> None:
+        self._set_data(key=DialogKeys.WINDOWS, value=value, set_default_type=List)
+
+    @property
+    def _stars(self) -> List:
+        return self._get_data(key=DialogKeys.STARS, default_value=None)  # type: ignore
+
+    @_stars.setter
+    def _stars(self, value: List) -> None:
+        self._set_data(key=DialogKeys.STARS, value=value, set_default_type=List)
+
+    @property
+    def _start(self) -> StarsSystem:
+        return self._get_data(key=DialogKeys.START, default_value=None)  # type: ignore
+
+    @_start.setter
+    def _start(self, value: StarsSystem) -> None:
+        self._set_data(key=DialogKeys.START, value=value, set_default_type=StarsSystem)
 
 
 class ImageHelper(NoDynamicAttributes):
@@ -855,6 +934,80 @@ class DiscoSystemDialog(tk.Toplevel, TkBase, DiscoData, BLogClient):
                 self.widgets[DialogKeys.STATUS].set(f"{message}")
             else:
                 self.widgets[DialogKeys.STATUS].set("")
+
+
+class DiscoSearchSystem(tk.Toplevel, TkBase, _BDiscoDialog, DiscoData, BLogClient):
+    """Dialog for search system."""
+
+    def __init__(
+        self, log_queue: Union[Queue, SimpleQueue], data: Dict, master=None
+    ) -> None:
+        """Initialize dialog."""
+        super().__init__(master=master)
+
+        DiscoData.__init__(self)
+        if isinstance(data, Dict):
+            for keys in data.keys():
+                self._data[keys] = data[keys]
+        else:
+            raise Raise.error(
+                f"Expected Dict type, received: '{type(data)}'.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
+
+        # init log subsystem
+        if isinstance(log_queue, Queue):
+            self.logger = LogClient(log_queue)
+        else:
+            raise Raise.error(
+                f"Expected Queue type, received: '{type(log_queue)}'.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
+
+        self._set_data(key=DialogKeys.CLOSED, value=False, set_default_type=bool)
+        #  widgets container
+        self._widgets._set_data(
+            key=DialogKeys.STATUS, value=None, set_default_type=Optional[tk.StringVar]
+        )
+
+        self.debug(currentframe(), "Initialize dataset")
+        #  some other init
+
+        # create frame
+        self.__build_frame()
+
+        # end work
+        self.debug(currentframe(), "Constructor work done")
+
+    def __build_frame(self) -> None:
+        """Create window."""
+        self.debug(currentframe(), f"Data: {self._data}")
+        self.title(self.plugin_name)
+        self.geometry("700x600")
+        self.minsize(height=500, width=400)
+
+        # closing event
+        self.protocol("WM_DELETE_WINDOW", self.__on_closing)
+
+    def __on_closing(self) -> None:
+        """Run on closing event."""
+        self.debug(currentframe(), "Window is closing now.")
+        self._set_data(key=DialogKeys.CLOSED, value=True)
+        self.destroy()
+
+    def debug(self, currentframe: Optional[FrameType], message: str = "") -> None:
+        """Build debug message."""
+        p_name: str = f"{self.plugin_name}"
+        c_name: str = f"{self._c_name}"
+        m_name: str = f"{currentframe.f_code.co_name}" if currentframe else ""
+        if message != "":
+            message = f": {message}"
+        if self.logger:
+            self.logger.debug = f"{p_name}->{c_name}.{m_name}{message}"
 
 
 # #[EOF]#######################################################################

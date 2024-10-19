@@ -14,6 +14,12 @@ class DialogKeys(object, metaclass=ReadOnlyClass):
     """Keys container class for dialogs."""
 
     BODIES: str = "_bodies_"
+    DATA: str = "__r_data__"
+    FONT_KEY: str = "__fonts_keys__"
+    TOOLS_KEY: str = "__tools_key__"
+    WIDGETS_KEY: str = "__widgets_key__"
+    STARS: str = "__stars__"
+    START: str = "__start__"
     BUTTON: str = "_button_"
     CLOSED: str = "_closed_"
     F_DATA: str = "_f_data_"
