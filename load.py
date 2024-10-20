@@ -68,7 +68,7 @@ def plugin_app(parent: tk.Frame) -> ttk.Button:
     """
     if disco.data.dialog is None:
         disco.data.dialog = DiscoMainDialog(parent, disco.qlog, disco.data)
-    button = disco.data.dialog.button # type: ignore
+    button = disco.data.dialog.button  # type: ignore
     CreateToolTip(
         button,
         [
@@ -111,14 +111,17 @@ def journal_entry(
     """
     test = False
 
-    if entry[EDKeys.EVENT] == EDKeys.FSD_JUMP:
+    if entry[EDKeys.EVENT] in (EDKeys.FSD_JUMP, EDKeys.CARRIER_JUMP):
         disco.data.system = disco.data.db_processor.add_system(entry)  # type: ignore
         test = True
-        disco.logger.debug = f"{EDKeys.FSD_JUMP}: {disco.data.system}"
+        if entry[EDKeys.EVENT] == EDKeys.FSD_JUMP:
+            disco.logger.debug = f"{EDKeys.FSD_JUMP}: {disco.data.system}"
+        else:
+            disco.logger.debug = f"{EDKeys.CARRIER_JUMP}: {disco.data.system}"
     elif entry[EDKeys.EVENT] == EDKeys.SCAN and entry[EDKeys.SCAN_TYPE] in (
         EDKeys.AUTO_SCAN,
-        EDKeys.DETAILED,
         EDKeys.BASIC,
+        EDKeys.DETAILED,
         EDKeys.NAV_BEACON_DETAIL,
     ):
         disco.data.system = disco.data.db_processor.add_body(entry)  # type: ignore
