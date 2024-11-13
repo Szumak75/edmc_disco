@@ -25,7 +25,7 @@ if __name__ == "__main__":
         entry = json.loads(line)
         if EDKeys.EVENT in entry:
             out = None
-            if entry[EDKeys.EVENT] == EDKeys.FSD_JUMP:
+            if entry[EDKeys.EVENT] in (EDKeys.FSD_JUMP, EDKeys.CARRIER_JUMP):
                 out = processor.add_system(entry)
                 # print(f"{counter}::::{out}")
             elif entry[EDKeys.EVENT] == EDKeys.SCAN and entry[EDKeys.SCAN_TYPE] in (
