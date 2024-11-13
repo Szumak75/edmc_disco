@@ -59,7 +59,7 @@ class TSystemFeatures(DiscoBase):
         """Get allegiance feature."""
         return self._allegiance
 
-    @allegiance.inplace.setter # type: ignore
+    @allegiance.inplace.setter 
     def _allegiance_setter(self, value: Optional[str]) -> None:
         if not value:
             value = ""
@@ -74,7 +74,7 @@ class TSystemFeatures(DiscoBase):
         """Get security feature."""
         return self._population
 
-    @population.inplace.setter # type: ignore
+    @population.inplace.setter
     def _population_setter(self, value: int) -> None:
         if not value:
             value = 0
@@ -86,7 +86,7 @@ class TSystemFeatures(DiscoBase):
         """Get security feature."""
         return self._security
 
-    @security.inplace.setter # type: ignore
+    @security.inplace.setter
     def _security_setter(self, value: Optional[str]) -> None:
         if not value:
             value = ""
