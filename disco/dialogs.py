@@ -327,7 +327,7 @@ class DiscoMainDialog(BLogClient, DiscoData, NoDynamicAttributes):
             self._get_data(DialogKeys.BUTTON).grid(sticky=tk.NSEW)  # type: ignore
         return self._get_data(DialogKeys.BUTTON)  # type: ignore
 
-    def update(self, system: db.TSystem) -> None:
+    def dialog_update(self, system: db.TSystem) -> None:
         """Update dialog."""
         self.system = system
         if self.system is not None and self.system.name != "":
@@ -340,7 +340,7 @@ class DiscoMainDialog(BLogClient, DiscoData, NoDynamicAttributes):
         # propagate update
         for window in self._get_data(key=DialogKeys.WINDOWS):  # type:ignore
             if not window.is_closed:
-                window.update(system)
+                window.dialog_update(system)
 
     def __bt_callback(self) -> None:
         """Run main button callback."""
