@@ -157,8 +157,8 @@ def journal_entry(
         )  # type: ignore
         test = True
     if test:
-        dialog:DiscoSystemDialog = disco.data.dialog # type: ignore
-        dialog.update_dialog(disco.data.system)
+        dialog: DiscoSystemDialog = disco.data.dialog  # type: ignore
+        dialog.dialog_update(disco.data.system)
 
 
 # #[EOF]#######################################################################

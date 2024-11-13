@@ -897,7 +897,7 @@ class DiscoSystemDialog(tk.Toplevel, TkBase, DiscoData, BLogClient):
         # finish
         self.bodies.append(list_object)
 
-    def update_dialog(self, system: Optional[db.TSystem]) -> None:
+    def dialog_update(self, system: Optional[db.TSystem]) -> None:
         """Update dialog."""
         if self.system is None or system is None:
             return
