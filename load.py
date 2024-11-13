@@ -15,7 +15,7 @@ from disco.jsktoolbox.tktool.widgets import CreateToolTip
 from disco.jsktoolbox.edmctool.logs import LogLevels
 from disco.jsktoolbox.edmctool.ed_keys import EDKeys
 
-from disco.dialogs import DiscoMainDialog
+from disco.dialogs import DiscoMainDialog, DiscoSystemDialog
 from disco.disco import Disco
 
 disco = Disco()
@@ -157,8 +157,8 @@ def journal_entry(
         )  # type: ignore
         test = True
     if test:
-        dialog = disco.data.dialog
-        dialog.update(disco.data.system)  # type: ignore
+        dialog:DiscoSystemDialog = disco.data.dialog # type: ignore
+        dialog.update_dialog(disco.data.system)
 
 
 # #[EOF]#######################################################################

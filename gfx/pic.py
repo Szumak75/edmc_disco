@@ -30,6 +30,7 @@ files: list[str] = [
     "landable-16.png",
     "distance-16.png",
     "humans-16.png",
+    "human-16.png",
     "scoopable-16.png",
     "temp-16.png",
     "map-16.png",

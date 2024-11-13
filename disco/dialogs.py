@@ -199,7 +199,7 @@ class ImageHelper(NoDynamicAttributes):
 
     def get_humans_image(self) -> bytes:
         """Return base64 encoded image string."""
-        return Pics.humans_16
+        return Pics.human_16
 
     def get_scoopable_image(self) -> bytes:
         """Return base64 encoded image string."""
@@ -897,7 +897,7 @@ class DiscoSystemDialog(tk.Toplevel, TkBase, DiscoData, BLogClient):
         # finish
         self.bodies.append(list_object)
 
-    def update(self, system: db.TSystem) -> None:
+    def update_dialog(self, system: Optional[db.TSystem]) -> None:
         """Update dialog."""
         if self.system is None or system is None:
             return

@@ -14,18 +14,15 @@ class DialogKeys(object, metaclass=ReadOnlyClass):
     """Keys container class for dialogs."""
 
     BODIES: str = "_bodies_"
-    DATA: str = "__r_data__"
-    FONT_KEY: str = "__fonts_keys__"
-    TOOLS_KEY: str = "__tools_key__"
-    WIDGETS_KEY: str = "__widgets_key__"
-    STARS: str = "__stars__"
-    START: str = "__start__"
     BUTTON: str = "_button_"
     CLOSED: str = "_closed_"
+    DATA: str = "__r_data__"
     F_DATA: str = "_f_data_"
     ID: str = "_id_"
     PARENT: str = "_parent_"
     SCROLLBAR: str = "_scrollbar_"
+    STARS: str = "__stars__"
+    START: str = "__start__"
     STATUS: str = "_status_"
     SYSTEM: str = "_system_"
     S_BUTTON: str = "_s_button_"
@@ -39,6 +36,10 @@ class DialogKeys(object, metaclass=ReadOnlyClass):
     WIDGETS: str = "_widgets_"
     WINDOWS: str = "_windows_"
     WRAPLENGTH: str = "_wraplength_"
+
+    FONT_KEY: str = "__fonts_keys__"
+    TOOLS_KEY: str = "__tools_key__"
+    WIDGETS_KEY: str = "__widgets_key__"
 
 
 # #[EOF]#######################################################################
