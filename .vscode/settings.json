@@ -47,6 +47,7 @@
         "surfacepressure",
         "surfacetemperature",
         "systemaddress",
+        "tearoff",
         "Telepresence",
         "terraforming",
         "terraformstate"

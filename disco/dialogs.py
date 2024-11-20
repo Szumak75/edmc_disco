@@ -197,7 +197,7 @@ class ImageHelper(NoDynamicAttributes):
             tmp.append("Detailed surface scanning needed.")
         return tmp
 
-    def get_humans_image(self) -> bytes:
+    def get_human_image(self) -> bytes:
         """Return base64 encoded image string."""
         return Pics.human_16
 
@@ -625,7 +625,7 @@ class DiscoSystemDialog(tk.Toplevel, TkBase, DiscoData, BLogClient):
                 tmp.append(f"Solar radius: {int(features.radius)}")
             if features.surfacetemperature:
                 tmp.append(
-                    f"Surface temperature: {int(features.surfacetemperature or 0)} K"
+                    f"Surface temperature: {int(features.surfacetemperature or '??')} K"
                 )
         # planet
         if features.body_type and features.body_type == "Planet":
@@ -825,9 +825,9 @@ class DiscoSystemDialog(tk.Toplevel, TkBase, DiscoData, BLogClient):
                     CreateToolTip(
                         terraform, f"Terraform state: {features.terraformstate}"
                     )
-                # get humans city on the planet
+                # get human signals
                 if signals.count_humans_signals > 0:
-                    img = tk.PhotoImage(data=ih.get_humans_image())
+                    img = tk.PhotoImage(data=ih.get_human_image())
                     humans = tk.Label(
                         frame,
                         text=f"{signals.count_humans_signals}",
@@ -836,7 +836,7 @@ class DiscoSystemDialog(tk.Toplevel, TkBase, DiscoData, BLogClient):
                     )
                     humans.image = img  # type: ignore
                     humans.pack(side=tk.RIGHT)
-                    CreateToolTip(humans, "Planetary Base")
+                    CreateToolTip(humans, "Human signals")
                 # get biological signals count
                 if signals.count_bio_signals > 0:
                     img = tk.PhotoImage(data=ih.get_bio_image(body))
