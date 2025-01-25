@@ -46,6 +46,7 @@ class SimpleData(BData):
 
     @plugin_name.setter
     def plugin_name(self, value: str) -> None:
+        """Set plugin name."""
         self._set_data(
             key=_Keys.PLUGIN_NAME,
             value=value,
@@ -60,6 +61,7 @@ class SimpleData(BData):
 
     @version.setter
     def version(self, value: str) -> None:
+        """Set version string."""
         self._set_data(
             key=_Keys.VERSION,
             value=value,
@@ -72,6 +74,7 @@ class SimpleData(BData):
 
     @cmdr.setter
     def cmdr(self, value: str) -> None:
+        """Set commander name."""
         self._set_data(
             key=_Keys.CMDR,
             value=value,
@@ -84,6 +87,7 @@ class SimpleData(BData):
 
     @shutting_down.setter
     def shutting_down(self, value: bool) -> None:
+        """Set shutting_down flag."""
         self._set_data(
             key=_Keys.SHUTDOWN,
             value=value,
@@ -115,6 +119,7 @@ class DiscoData(SimpleData):
 
     @db_processor.setter
     def db_processor(self, value: DBProcessor) -> None:
+        """Set database processor."""
         self._set_data(
             key=_Keys.PROCESSOR,
             value=value,
@@ -144,6 +149,7 @@ class DiscoData(SimpleData):
 
     @system.setter
     def system(self, value: TSystem) -> None:
+        """Set TSystem dataset."""
         self._set_data(
             key=_Keys.SYSTEM,
             value=value,

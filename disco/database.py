@@ -135,6 +135,7 @@ class DBProcessor(BData):
 
     @session.setter
     def session(self, value: Optional[Session]) -> None:
+        """Set session handler."""
         self._set_data(
             key=_Keys.SESSION, value=value, set_default_type=Optional[Session]
         )
@@ -302,6 +303,7 @@ class DBProcessor(BData):
         return system
 
     def __add_null_parents(self, system: Optional[db.TSystem], entry: Dict) -> None:
+        """Add null parents to the system."""
         if system is None:
             return None
         if EDKeys.PARENTS in entry:
@@ -320,6 +322,7 @@ class DBProcessor(BData):
         return None
 
     def __get__system(self, system_address: int) -> Optional[db.TSystem]:
+        """Get system from database."""
         return (
             (
                 self.session.query(db.TSystem)

@@ -37,30 +37,37 @@ class _BDiscoDialog(BData):
 
     @property
     def _button(self) -> ttk.Button:
+        """Return the button widget."""
         return self._get_data(key=DialogKeys.BUTTON, default_value=None)  # type: ignore
 
     @_button.setter
     def _button(self, value: ttk.Button) -> None:
+        """Set the button widget."""
         self._set_data(key=DialogKeys.BUTTON, value=value, set_default_type=ttk.Button)
 
     @property
     def _parent(self) -> tk.Frame:
+        """Return the parent widget."""
         return self._get_data(key=DialogKeys.PARENT, default_value=None)  # type: ignore
 
     @_parent.setter
     def _parent(self, value: tk.Frame) -> None:
+        """Set the parent widget."""
         self._set_data(key=DialogKeys.PARENT, value=value, set_default_type=tk.Frame)
 
     @property
     def _r_data(self) -> RscanData:
+        """Return the RscanData object."""
         return self._get_data(key=DialogKeys.DATA)  # type: ignore
 
     @_r_data.setter
     def _r_data(self, value: RscanData) -> None:
+        """Set the RscanData object."""
         self._set_data(key=DialogKeys.DATA, value=value, set_default_type=RscanData)
 
     @property
     def _fonts(self) -> BData:
+        """Return the fonts object."""
         if self._get_data(key=DialogKeys.FONT_KEY, default_value=None) is None:  # type: ignore
             self._set_data(
                 key=DialogKeys.FONT_KEY, value=BData(), set_default_type=BData
@@ -69,6 +76,7 @@ class _BDiscoDialog(BData):
 
     @property
     def _tools(self) -> BData:
+        """Return the tools object."""
         if self._get_data(key=DialogKeys.TOOLS_KEY, default_value=None) is None:  # type: ignore
             self._set_data(
                 key=DialogKeys.TOOLS_KEY, value=BData(), set_default_type=BData
@@ -77,6 +85,7 @@ class _BDiscoDialog(BData):
 
     @property
     def _widgets(self) -> BData:
+        """Return the widgets object."""
         if self._get_data(key=DialogKeys.WIDGETS_KEY, default_value=None) is None:  # type: ignore
             self._set_data(
                 key=DialogKeys.WIDGETS_KEY, value=BData(), set_default_type=BData
@@ -85,26 +94,32 @@ class _BDiscoDialog(BData):
 
     @property
     def _windows(self) -> List["DiscoSystemDialog"]:
+        """Return the list of windows."""
         return self._get_data(key=DialogKeys.WINDOWS, default_value=None)  # type: ignore
 
     @_windows.setter
     def _windows(self, value: List) -> None:
+        """Set the list of windows."""
         self._set_data(key=DialogKeys.WINDOWS, value=value, set_default_type=List)
 
     @property
     def _stars(self) -> List:
+        """Return the list of stars."""
         return self._get_data(key=DialogKeys.STARS, default_value=None)  # type: ignore
 
     @_stars.setter
     def _stars(self, value: List) -> None:
+        """Set the list of stars."""
         self._set_data(key=DialogKeys.STARS, value=value, set_default_type=List)
 
     @property
     def _start(self) -> StarsSystem:
+        """Return the start object."""
         return self._get_data(key=DialogKeys.START, default_value=None)  # type: ignore
 
     @_start.setter
     def _start(self, value: StarsSystem) -> None:
+        """Set the start object."""
         self._set_data(key=DialogKeys.START, value=value, set_default_type=StarsSystem)
 
 

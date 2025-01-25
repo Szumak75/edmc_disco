@@ -21,7 +21,6 @@ class Disco(BLogProcessor, BLogClient):
 
     def __init__(self) -> None:
         """Constructor."""
-
         # data
         self.data.plugin_name = "EDDisco"
         self.data.version = "1.1.3-dev"
@@ -55,6 +54,7 @@ class Disco(BLogProcessor, BLogClient):
 
     @data.setter
     def data(self, value: DiscoData) -> None:
+        """Set data access."""
         self._set_data(key="disco", value=value, set_default_type=DiscoData)
 
     def th_logger(self) -> None:
