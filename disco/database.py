@@ -91,7 +91,7 @@ class Database(BData):
             )
 
     def __create_engine(self) -> Engine:
-        engine = create_engine(
+        engine: Engine = create_engine(
             f"sqlite+pysqlite:///{self.db_path}",
             echo=self._get_data(key=_Keys.DEBUG),
         )
