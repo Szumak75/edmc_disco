@@ -6,13 +6,10 @@
   Purpose: data container classes.
 """
 
-from inspect import currentframe
-from typing import Optional, Union
+from typing import Optional
 
 from disco.jsktoolbox.attribtool import ReadOnlyClass
 from disco.jsktoolbox.basetool.data import BData
-from disco.jsktoolbox.raisetool import Raise
-from disco.jsktoolbox.edmctool.stars import StarsSystem
 
 from disco.database import DBProcessor
 from disco.db_models.system import TSystem

@@ -260,7 +260,7 @@ class TBodyFeatures(DiscoBase):
 
     @hybrid_property
     def body_type(self) -> Optional[str]:
-        """Get bodytype feature."""
+        """Get body type feature."""
         return self._body_type
 
     @body_type.inplace.setter
@@ -484,7 +484,7 @@ class TBodyFeatures(DiscoBase):
 
     @hybrid_property
     def star_type(self) -> Optional[str]:
-        """Get startype feature."""
+        """Get star_type feature."""
         return self._star_type
 
     @star_type.inplace.setter

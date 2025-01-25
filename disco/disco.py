@@ -6,11 +6,9 @@
   Purpose: main class
 """
 
-from inspect import currentframe
 from threading import Thread
 from queue import Queue
 
-from disco.jsktoolbox.raisetool import Raise
 from disco.jsktoolbox.edmctool.base import BLogClient, BLogProcessor
 from disco.jsktoolbox.edmctool.logs import LogClient, LogProcessor
 
@@ -26,7 +24,7 @@ class Disco(BLogProcessor, BLogClient):
 
         # data
         self.data.plugin_name = "EDDisco"
-        self.data.version = "1.1.2"
+        self.data.version = "1.1.3-dev"
 
         # database
         self.data.db_processor = DBProcessor(Database(False).session)

@@ -59,7 +59,7 @@ class TSystemFeatures(DiscoBase):
         """Get allegiance feature."""
         return self._allegiance
 
-    @allegiance.inplace.setter
+    @allegiance.inplace.setter 
     def _allegiance_setter(self, value: Optional[str]) -> None:
         if not value:
             value = ""

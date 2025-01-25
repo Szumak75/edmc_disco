@@ -61,7 +61,7 @@ class ScansAnalysis(BData):
 
     @property
     def _genuses(self) -> List[TGenus]:
-        """Return TBodyGeuses List."""
+        """Return TBodyGenuses List."""
         item: TBodyGenuses = self.body.genuses
         return item.genuses
 

@@ -95,7 +95,7 @@ class TSystem(DiscoBase):
         """Get 'StarPos' list."""
         return [self.pos_x, self.pos_y, self.pos_z]
 
-    @star_pos.inplace.setter
+    @star_pos.inplace.setter # type: ignore
     def _star_pos_setter(self, value: List[float]) -> None:
         """Set 'StarPos' from list."""
         if isinstance(value, List) and len(value) == 3:
@@ -110,7 +110,7 @@ class TSystem(DiscoBase):
         """Get latest data timestamp."""
         return self._timestamp
 
-    @timestamp.inplace.setter
+    @timestamp.inplace.setter # type: ignore
     def _timestamp_setter(self, value: Union[int, str]) -> None:
         if isinstance(value, int):
             self._timestamp = value

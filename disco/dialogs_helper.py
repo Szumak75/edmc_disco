@@ -16,14 +16,18 @@ class DialogKeys(object, metaclass=ReadOnlyClass):
     BODIES: str = "_bodies_"
     BUTTON: str = "_button_"
     CLOSED: str = "_closed_"
+    DATA: str = "__r_data__"
     F_DATA: str = "_f_data_"
     ID: str = "_id_"
     PARENT: str = "_parent_"
-    S_BUTTON: str = "_s_button_"
     SCROLLBAR: str = "_scrollbar_"
-    S_PANEL: str = "_s_panel_"
+    STARS: str = "__stars__"
+    START: str = "__start__"
     STATUS: str = "_status_"
     SYSTEM: str = "_system_"
+    S_BUTTON: str = "_s_button_"
+    S_MENU: str = "_s_menu_"
+    S_PANEL: str = "_s_panel_"
     TEXT: str = "text"
     TT_TEXT: str = "_tool_tip_text_"
     TW: str = "_tw_"
@@ -32,6 +36,10 @@ class DialogKeys(object, metaclass=ReadOnlyClass):
     WIDGETS: str = "_widgets_"
     WINDOWS: str = "_windows_"
     WRAPLENGTH: str = "_wraplength_"
+
+    FONT_KEY: str = "__fonts_keys__"
+    TOOLS_KEY: str = "__tools_key__"
+    WIDGETS_KEY: str = "__widgets_key__"
 
 
 # #[EOF]#######################################################################
