@@ -456,6 +456,8 @@ class DiscoSystemDialog(tk.Toplevel, TkBase, DiscoData, BLogClient):
 
     @bodies.setter
     def bodies(self, value: List) -> None:
+        if self._get_data(key=DialogKeys.BODIES):
+            self._del_data(key=DialogKeys.BODIES)
         self._set_data(
             key=DialogKeys.BODIES,
             value=value,
