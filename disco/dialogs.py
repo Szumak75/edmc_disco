@@ -1,12 +1,13 @@
 # -*- coding: UTF-8 -*-
 """
-  Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-  Created: 19.12.2023
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 19.12.2023
 
-  Purpose:
+Purpose:
 """
 
 
+import stat
 import tkinter as tk
 from inspect import currentframe
 from datetime import datetime
@@ -18,7 +19,11 @@ from typing import Dict, List, Optional, Union, Any
 from disco.jsktoolbox.basetool.data import BData
 from disco.jsktoolbox.raisetool import Raise
 from disco.jsktoolbox.attribtool import NoDynamicAttributes
-from disco.jsktoolbox.tktool.widgets import CreateToolTip, VerticalScrolledTkFrame
+from disco.jsktoolbox.tktool.widgets import (
+    CreateToolTip,
+    VerticalScrolledTkFrame,
+    StatusBarTkFrame,
+)
 from disco.jsktoolbox.tktool.base import TkBase
 from disco.jsktoolbox.edmctool.base import BLogClient
 from disco.jsktoolbox.edmctool.logs import LogClient
@@ -471,19 +476,19 @@ class DiscoSystemDialog(tk.Toplevel, TkBase, DiscoData, BLogClient):
         self.title(self.plugin_name)
         self.geometry("700x600")
         self.minsize(height=500, width=400)
-        # menu
-        menubar = tk.Menu(self)
-        self.config(menu=menubar)
-        search_bio_menu = tk.Menu(
-            menubar,
-            tearoff=0,
-        )
-        search_bio_menu.add_cascade(label="Nearest", command=self.__search_bio_cb)
-        search_bio_menu.add_cascade(
-            label="Nearest unexplored", command=self.__search_unx_bio_cb
-        )
-        menubar.add_cascade(label="Search Bio", menu=search_bio_menu)
-        self.widgets[DialogKeys.S_MENU] = menubar
+        # menu TODO
+        # menubar = tk.Menu(self)
+        # self.config(menu=menubar)
+        # search_bio_menu = tk.Menu(
+        #     menubar,
+        #     tearoff=0,
+        # )
+        # search_bio_menu.add_cascade(label="Nearest", command=self.__search_bio_cb)
+        # search_bio_menu.add_cascade(
+        #     label="Nearest unexplored", command=self.__search_unx_bio_cb
+        # )
+        # menubar.add_cascade(label="Search Bio", menu=search_bio_menu)
+        # self.widgets[DialogKeys.S_MENU] = menubar
         # grid configuration
         self.columnconfigure(0, weight=100)
         self.columnconfigure(1, weight=1)
@@ -552,19 +557,12 @@ class DiscoSystemDialog(tk.Toplevel, TkBase, DiscoData, BLogClient):
         self.widgets[DialogKeys.S_PANEL] = s_panel
 
         # create status panel
-        status_frame = tk.Frame(self)
-        status_frame.grid(row=r_status_idx, column=0, sticky=tk.EW)
+        status_frame = StatusBarTkFrame(self)
+        status_frame.grid(row=r_status_idx, column=0, columnspan=2, sticky=tk.EW)
 
-        status_label_frame = tk.LabelFrame(status_frame, text="")
-        status_label_frame.pack(side=tk.LEFT, fill=tk.X, expand=tk.TRUE, padx=5, pady=5)
-        status_string = tk.StringVar()
-        status = tk.Label(status_label_frame, textvariable=status_string)
-        status.pack(side=tk.LEFT)
-        self.widgets[DialogKeys.STATUS] = status_string
+        self.widgets[DialogKeys.STATUS] = status_frame
+        status_frame.clear()
 
-        # size grip
-        sizegrip = ttk.Sizegrip(self)
-        sizegrip.grid(row=r_status_idx, column=1, padx=1, pady=1, sticky=tk.SE)
         # closing event
         self.protocol("WM_DELETE_WINDOW", self.__on_closing)
 
@@ -938,20 +936,18 @@ class DiscoSystemDialog(tk.Toplevel, TkBase, DiscoData, BLogClient):
             self.logger.debug = f"{p_name}->{c_name}.{m_name}{message}"
 
     @property
-    def status(self) -> object:
+    def status(self) -> StatusBarTkFrame:
         """Return status object."""
-        if DialogKeys.STATUS not in self.widgets:
-            return None
         return self.widgets[DialogKeys.STATUS]
 
     @status.setter
     def status(self, message: Optional[Union[str, int, float]]) -> None:
         """Set status message."""
-        if self.widgets[DialogKeys.STATUS] is not None:
+        if self.status is not None:
             if message:
-                self.widgets[DialogKeys.STATUS].set(f"{message}")
+                self.status.set(f"{message}")
             else:
-                self.widgets[DialogKeys.STATUS].set("")
+                self.status.clear()
 
 
 class DiscoSearchSystem(tk.Toplevel, TkBase, _BDiscoDialog, DiscoData, BLogClient):
@@ -987,9 +983,12 @@ class DiscoSearchSystem(tk.Toplevel, TkBase, _BDiscoDialog, DiscoData, BLogClien
             )
 
         self._set_data(key=DialogKeys.CLOSED, value=False, set_default_type=bool)
+
         #  widgets container
         self._widgets._set_data(
-            key=DialogKeys.STATUS, value=None, set_default_type=Optional[tk.StringVar]
+            key=DialogKeys.STATUS,
+            value=None,
+            set_default_type=Optional[StatusBarTkFrame],
         )
 
         self.debug(currentframe(), "Initialize dataset")
